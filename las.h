@@ -25,7 +25,7 @@
 #include "point.h"
 
 struct LasPoint
-{
+{ // 87 bytes in temporary file, 753 points per block
   xyz location;
   unsigned short intensity;
   unsigned short returnNum,nReturns;
