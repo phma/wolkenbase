@@ -6,7 +6,8 @@ include(CheckTypeSize)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-add_executable(wolkenbase wolkenbase.cpp)
+add_executable(wolkenbase angle.cpp binio.cpp cloud.cpp
+               las.cpp ldecimal.cpp point.cpp wolkenbase.cpp)
 
 set(CMAKE_CXX_FLAGS "-std=c++11")
 install(TARGETS wolkenbase DESTINATION bin)
