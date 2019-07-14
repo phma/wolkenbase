@@ -28,8 +28,17 @@
  * 3. Find the lowest point near the axis of the cylinder and examine a sphere
  *    of radius 0.5 meter.
  */
+#include <cmath>
+#include "las.h"
+using namespace std;
 
 int main(int argc,char **argv)
 {
+  LasPoint lPoint;
+  int i;
+  ofstream testFile("testfile");
+  lPoint.location=xyz(M_PI,exp(1),sqrt(2));
+  for (i=0;i<753;i++)
+    lPoint.write(testFile);
   return 0;
 }

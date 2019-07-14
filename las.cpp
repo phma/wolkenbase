@@ -28,6 +28,68 @@
 
 using namespace std;
 
+void LasPoint::read(istream &file)
+// Reads from the temporary file. To read from a LAS file, see LasHeader::readPoint.
+{
+  double x,y,z;
+  int flags;
+  x=readledouble(file);
+  y=readledouble(file);
+  z=readledouble(file);
+  location=xyz(x,y,z);
+  intensity=readleshort(file);
+  returnNum=readleshort(file);
+  nReturns=readleshort(file);
+  flags=file.get();
+  scanDirection=flags&1;
+  edgeLine=(flags>>1)&1;
+  classification=readleshort(file);
+  classificationFlags=readleshort(file);
+  scannerChannel=readleshort(file);
+  userData=readleshort(file);
+  waveIndex=readleshort(file);
+  pointSource=readleshort(file);
+  scanAngle=readleint(file);
+  gpsTime=readledouble(file);
+  nir=readleshort(file);
+  red=readleshort(file);
+  green=readleshort(file);
+  blue=readleshort(file);
+  waveformOffset=readlelong(file);
+  waveformTime=readlefloat(file);
+  xDir=readlefloat(file);
+  yDir=readlefloat(file);
+  zDir=readlefloat(file);
+}
+
+void LasPoint::write(ostream &file)
+{
+  writeledouble(file,location.getx());
+  writeledouble(file,location.gety());
+  writeledouble(file,location.getz());
+  writeleshort(file,intensity);
+  writeleshort(file,returnNum);
+  writeleshort(file,nReturns);
+  file.put(edgeLine*2+scanDirection);
+  writeleshort(file,classification);
+  writeleshort(file,classificationFlags);
+  writeleshort(file,scannerChannel);
+  writeleshort(file,userData);
+  writeleshort(file,waveIndex);
+  writeleshort(file,pointSource);
+  writeleint(file,scanAngle);
+  writeledouble(file,gpsTime);
+  writeleshort(file,nir);
+  writeleshort(file,red);
+  writeleshort(file,green);
+  writeleshort(file,blue);
+  writelelong(file,waveformOffset);
+  writelefloat(file,waveformTime);
+  writelefloat(file,xDir);
+  writelefloat(file,yDir);
+  writelefloat(file,zDir);
+}
+
 string read32(ifstream &file)
 {
   char buf[40];

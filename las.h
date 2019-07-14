@@ -24,8 +24,11 @@
 #include <iostream>
 #include "point.h"
 
-struct LasPoint
+class OctBlock;
+
+class LasPoint
 { // 87 bytes in temporary file, 753 points per block
+public:
   xyz location;
   unsigned short intensity;
   unsigned short returnNum,nReturns;
@@ -40,6 +43,11 @@ struct LasPoint
   unsigned short nir,red,green,blue;
   size_t waveformOffset;
   float waveformTime,xDir,yDir,zDir;
+//private:
+  void read(std::istream &file);
+  void write(std::ostream &file);
+  OctBlock *block;
+  friend class OctBlock;
 };
 
 class LasHeader
