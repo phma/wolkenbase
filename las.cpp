@@ -28,6 +28,16 @@
 
 using namespace std;
 
+LasPoint::LasPoint()
+{
+  block=nullptr;
+}
+
+LasPoint::LasPoint(OctBlock *parent)
+{
+  block=parent;
+}
+
 void LasPoint::read(istream &file)
 // Reads from the temporary file. To read from a LAS file, see LasHeader::readPoint.
 {

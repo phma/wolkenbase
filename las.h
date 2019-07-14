@@ -43,6 +43,8 @@ public:
   unsigned short nir,red,green,blue;
   size_t waveformOffset;
   float waveformTime,xDir,yDir,zDir;
+  LasPoint();
+  LasPoint(OctBlock *parent);
 //private:
   void read(std::istream &file);
   void write(std::ostream &file);

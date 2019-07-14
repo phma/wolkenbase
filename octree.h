@@ -20,6 +20,7 @@
  * along with Wolkenbase. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <map>
 #include "las.h"
 #define LASPOINT_SIZE 87
 #define RECORDS 753
@@ -30,10 +31,54 @@
  * 100<=RECORDS<=1000.
  */
 
+class OctStore;
+
 class Octree
 {
   xyz center;
   double side;
   uintptr_t sub[8]; // Even means Octree *; odd means a disk block.
   long long findBlock(xyz pnt);
+};
+
+class OctBlock
+{
+public:
+  OctBlock();
+  void write();
+  void markDirty();
+  void read(long long block);
+  void update();
+  void flush();
+  //void dump();
+  //bool isConsistent();
+private:
+  long long blockNumber;
+  bool dirty;
+  int lastUsed;
+  std::vector<LasPoint> points;
+  OctStore *store;
+  friend class OctStore;
+};
+
+class OctStore
+{
+public:
+  OctStore();
+  ~OctStore();
+  void flush();
+  void open(std::string fileName);
+  void close();
+  LasPoint &operator[](xyz key);
+  void dump();
+  bool isConsistent();
+private:
+  std::fstream file;
+  int nowUsed;
+  int leastRecentlyUsed();
+  OctBlock *getBlock(long long block,bool mustExist=false);
+  OctBlock *getBlock(xyz key);
+  std::map<int,OctBlock> blocks;
+  void split(int block,xyz camelStraw);
+  friend class OctBlock;
 };
