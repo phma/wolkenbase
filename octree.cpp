@@ -203,3 +203,7 @@ OctBlock *OctStore::getBlock(xyz key)
 {
   return getBlock(octRoot.findBlock(key));
 }
+
+void OctStore::split(int block,xyz camelStraw)
+{
+}
