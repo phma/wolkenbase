@@ -21,7 +21,7 @@
  */
 /* This program cleans a point cloud as follows:
  * 1. Read in the point cloud, storing it in a temporary file in blocks
- *    of 753 points and building an octree index.
+ *    of RECORDS points and building an octree index.
  * 2. Scan the point cloud's xy projection in Hilbert curve point sequences:
  *    1 point, 4 points, 16 points, etc., looking at cylinders with radius
  *    0.5 meter.
@@ -30,6 +30,7 @@
  */
 #include <cmath>
 #include "las.h"
+#include "octree.h"
 using namespace std;
 
 int main(int argc,char **argv)
@@ -38,7 +39,7 @@ int main(int argc,char **argv)
   int i;
   ofstream testFile("testfile");
   lPoint.location=xyz(M_PI,exp(1),sqrt(2));
-  for (i=0;i<753;i++)
+  for (i=0;i<RECORDS;i++)
     lPoint.write(testFile);
   return 0;
 }

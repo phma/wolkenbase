@@ -71,6 +71,7 @@ void LasPoint::read(istream &file)
   green=readleshort(file);
   blue=readleshort(file);
   waveformOffset=readlelong(file);
+  waveformSize=readleint(file);
   waveformTime=readlefloat(file);
   xDir=readlefloat(file);
   yDir=readlefloat(file);
@@ -99,6 +100,7 @@ void LasPoint::write(ostream &file)
   writeleshort(file,green);
   writeleshort(file,blue);
   writelelong(file,waveformOffset);
+  writeleint(file,waveformSize);
   writelefloat(file,waveformTime);
   writelefloat(file,xDir);
   writelefloat(file,yDir);

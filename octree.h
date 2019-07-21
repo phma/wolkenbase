@@ -22,13 +22,13 @@
 
 #include <map>
 #include "las.h"
-#define LASPOINT_SIZE 87
-#define RECORDS 753
-#define BLOCKSIZE 65536
+#define LASPOINT_SIZE 91
+#define RECORDS 45
+#define BLOCKSIZE 4096
 /* If a future version of LAS adds more fields, making the size of LasPoint
  * on disk bigger, these should be changed so that LASPOINT_SIZE*RECORDS is
- * equal to or slightly smaller than BLOCKSIZE, which is a power of 2, and
- * 100<=RECORDS<=1000.
+ * equal to or slightly smaller than BLOCKSIZE, which is a power of 2 at least
+ * 4096, and RECORDS<=1000.
  */
 
 class OctStore;

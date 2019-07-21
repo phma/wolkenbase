@@ -20,6 +20,8 @@
  * along with Wolkenbase. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef LAS_H
+#define LAS_H
 #include <string>
 #include <iostream>
 #include "point.h"
@@ -42,6 +44,7 @@ public:
   double gpsTime;
   unsigned short nir,red,green,blue;
   size_t waveformOffset;
+  unsigned int waveformSize;
   float waveformTime,xDir,yDir,zDir;
   LasPoint();
   LasPoint(OctBlock *parent);
@@ -83,3 +86,4 @@ public:
 };
 
 void readLas(std::string fileName);
+#endif
