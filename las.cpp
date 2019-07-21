@@ -38,6 +38,11 @@ LasPoint::LasPoint(OctBlock *parent)
   block=parent;
 }
 
+bool LasPoint::isEmpty()
+{
+  return location.isnan();
+}
+
 void LasPoint::read(istream &file)
 // Reads from the temporary file. To read from a LAS file, see LasHeader::readPoint.
 {

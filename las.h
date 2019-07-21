@@ -45,6 +45,7 @@ public:
   float waveformTime,xDir,yDir,zDir;
   LasPoint();
   LasPoint(OctBlock *parent);
+  bool isEmpty();
 //private:
   void read(std::istream &file);
   void write(std::ostream &file);

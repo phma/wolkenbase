@@ -35,10 +35,12 @@ class OctStore;
 
 class Octree
 {
+public:
+  long long findBlock(xyz pnt);
+private:
   xyz center;
   double side;
   uintptr_t sub[8]; // Even means Octree *; odd means a disk block.
-  long long findBlock(xyz pnt);
 };
 
 class OctBlock

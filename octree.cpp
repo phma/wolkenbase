@@ -19,8 +19,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Wolkenbase. If not, see <http://www.gnu.org/licenses/>.
  */
+#include <cassert>
 #include "octree.h"
 using namespace std;
+
+Octree octRoot;
 
 long long Octree::findBlock(xyz pnt)
 // Returns the disk block number that contains pnt, or -1 if none.
@@ -126,4 +129,77 @@ void OctStore::close()
 {
   flush();
   file.close();
+}
+
+LasPoint &OctStore::operator[](xyz key)
+{
+  int i,inx=-1;
+  OctBlock *pBlock=getBlock(key);
+  assert(pBlock);
+  for (i=0;i<2*RECORDS;i++)
+    if (pBlock->points[i%RECORDS].location==key || (i>=RECORDS && pBlock->points[i%RECORDS].isEmpty()))
+    {
+      inx=i%RECORDS;
+      break;
+    }
+  if (inx<0)
+  {
+    split(pBlock->blockNumber,key);
+    pBlock=getBlock(key);
+    for (i=0;i<RECORDS;i++)
+      if (pBlock->points[i%RECORDS].isEmpty())
+      {
+        inx=i;
+        break;
+      }
+  }
+  return pBlock->points[inx];
+}
+
+int OctStore::leastRecentlyUsed()
+{
+  int i,age,maxAge=-1,ret;
+  for (i=0;i<blocks.size();i++)
+  {
+    age=nowUsed-blocks[i].lastUsed;
+    if (age>maxAge)
+    {
+      maxAge=age;
+      ret=i;
+    }
+  }
+  return ret;
+}
+
+OctBlock *OctStore::getBlock(long long block,bool mustExist)
+{
+  streampos fileSize;
+  int lru,i;
+  bool found=false;
+  file.seekg(0,file.end);
+  fileSize=file.tellg();
+  lru=leastRecentlyUsed();
+  if (BLOCKSIZE*block>=fileSize && mustExist)
+    return nullptr;
+  else
+  {
+    for (i=0;i<blocks.size();i++)
+      if (blocks[i].blockNumber==block)
+      {
+        found=true;
+        lru=i;
+      }
+    if (!found)
+    {
+      blocks[lru].flush();
+      blocks[lru].read(block);
+    }
+    blocks[lru].update();
+    return &blocks[lru];
+  }
+}
+
+OctBlock *OctStore::getBlock(xyz key)
+{
+  return getBlock(octRoot.findBlock(key));
 }
