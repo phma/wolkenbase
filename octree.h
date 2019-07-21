@@ -78,6 +78,7 @@ private:
   std::fstream file;
   int nowUsed;
   int leastRecentlyUsed();
+  long long nBlocks;
   OctBlock *getBlock(long long block,bool mustExist=false);
   OctBlock *getBlock(xyz key);
   std::map<int,OctBlock> blocks;

@@ -201,7 +201,14 @@ OctBlock *OctStore::getBlock(long long block,bool mustExist)
 
 OctBlock *OctStore::getBlock(xyz key)
 {
-  return getBlock(octRoot.findBlock(key));
+  long long blknum=octRoot.findBlock(key);
+  if (blknum>=0)
+    return getBlock(blknum);
+  else
+  {
+    blknum=nBlocks++;
+    return getBlock(blknum);
+  }
 }
 
 void OctStore::split(int block,xyz camelStraw)
