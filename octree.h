@@ -23,8 +23,8 @@
 #include <map>
 #include "las.h"
 #define LASPOINT_SIZE 91
-#define RECORDS 45
-#define BLOCKSIZE 4096
+#define RECORDS 720
+#define BLOCKSIZE 65536
 /* If a future version of LAS adds more fields, making the size of LasPoint
  * on disk bigger, these should be changed so that LASPOINT_SIZE*RECORDS is
  * equal to or slightly smaller than BLOCKSIZE, which is a power of 2 at least

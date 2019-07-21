@@ -38,6 +38,7 @@ int main(int argc,char **argv)
   LasPoint lPoint;
   int i;
   ofstream testFile("testfile");
+  cout<<"Octree size is "<<sizeof(Octree)<<endl;
   lPoint.location=xyz(M_PI,exp(1),sqrt(2));
   for (i=0;i<RECORDS;i++)
     lPoint.write(testFile);
