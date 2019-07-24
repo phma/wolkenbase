@@ -37,8 +37,11 @@ int main(int argc,char **argv)
 {
   LasPoint lPoint;
   int i;
+  vector<LasHeader> files;
   ofstream testFile("testfile");
-  cout<<"Octree size is "<<sizeof(Octree)<<endl;
+  files.resize(1);
+  files[0].open("las file export.las");
+  cout<<files[0].numberPoints()<<" points\n";
   lPoint.location=xyz(M_PI,exp(1),sqrt(2));
   for (i=0;i<RECORDS;i++)
     lPoint.write(testFile);
