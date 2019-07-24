@@ -228,6 +228,16 @@ size_t LasHeader::numberPoints(int r)
   return nPoints[r];
 }
 
+xyz LasHeader::minCorner()
+{
+  return xyz(minX,minY,minZ);
+}
+
+xyz LasHeader::maxCorner()
+{
+  return xyz(maxX,maxY,maxZ);
+}
+
 LasPoint LasHeader::readPoint(size_t num)
 {
   LasPoint ret;

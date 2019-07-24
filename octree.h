@@ -30,6 +30,7 @@
  * equal to or slightly smaller than BLOCKSIZE, which is a power of 2 at least
  * 4096, and RECORDS<=1000.
  */
+#include <vector>
 
 class OctStore;
 
@@ -37,11 +38,22 @@ class Octree
 {
 public:
   long long findBlock(xyz pnt);
+  void sizeFit(std::vector<xyz> pnts);
+  xyz getCenter()
+  {
+    return center;
+  }
+  double getSide()
+  {
+    return side;
+  }
 private:
   xyz center;
   double side;
   uintptr_t sub[8]; // Even means Octree *; odd means a disk block.
 };
+
+extern Octree octRoot;
 
 class OctBlock
 {

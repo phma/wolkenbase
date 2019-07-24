@@ -82,6 +82,8 @@ public:
   bool isValid();
   void close();
   size_t numberPoints(int r=0);
+  xyz minCorner();
+  xyz maxCorner();
   LasPoint readPoint(size_t num);
 };
 

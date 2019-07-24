@@ -20,6 +20,7 @@
  * along with Wolkenbase. If not, see <http://www.gnu.org/licenses/>.
  */
 #include <cassert>
+#include <cmath>
 #include "octree.h"
 using namespace std;
 
@@ -39,6 +40,50 @@ long long Octree::findBlock(xyz pnt)
     return sub[i]>>1;
   else
     return ((Octree *)sub[i])->findBlock(pnt);
+}
+
+void Octree::sizeFit(vector<xyz> pnts)
+/* Computes side and center such that side is a power of 2, x, y, and z are multiples
+ * of side/16, and all points are in the resulting cube.
+ */
+{
+  double minx=HUGE_VAL,miny=HUGE_VAL,minz=HUGE_VAL;
+  double maxx=-HUGE_VAL,maxy=-HUGE_VAL,maxz=-HUGE_VAL;
+  double x,y,z;
+  int i;
+  for (i=0;i<pnts.size();i++)
+  {
+    if (pnts[i].east()>maxx)
+      maxx=pnts[i].east();
+    if (pnts[i].east()<minx)
+      minx=pnts[i].east();
+    if (pnts[i].north()>maxy)
+      maxy=pnts[i].north();
+    if (pnts[i].north()<miny)
+      miny=pnts[i].north();
+    if (pnts[i].elev()>maxz)
+      maxz=pnts[i].elev();
+    if (pnts[i].elev()<minz)
+      minz=pnts[i].elev();
+  }
+  if (maxz<=minz && maxy<=miny && maxx<=minx)
+    side=0;
+  else
+  {
+    side=(maxx+maxy+maxz-minx-miny-minz)/3;
+    side/=significand(side);
+    x=minx-side;
+    y=miny-side;
+    z=minz-side;
+    while (x+side<=maxx || y+side<=maxy || z+side<=maxz)
+    {
+      side*=2;
+      x=(rint((minx+maxx)/side*8)-8)*side/16;
+      y=(rint((miny+maxy)/side*8)-8)*side/16;
+      z=(rint((minz+maxz)/side*8)-8)*side/16;
+    }
+    center=xyz(x+side/2,y+side/2,z+side/2);
+  }
 }
 
 OctBlock::OctBlock()

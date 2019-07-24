@@ -30,6 +30,7 @@
  */
 #include <cmath>
 #include "las.h"
+#include "ldecimal.h"
 #include "octree.h"
 using namespace std;
 
@@ -38,10 +39,21 @@ int main(int argc,char **argv)
   LasPoint lPoint;
   int i;
   vector<LasHeader> files;
+  vector<xyz> limits;
+  xyz center;
   ofstream testFile("testfile");
   files.resize(1);
   files[0].open("las file export.las");
+  for (i=0;i<files.size();i++)
+  {
+    limits.push_back(files[i].minCorner());
+    limits.push_back(files[i].maxCorner());
+  }
+  octRoot.sizeFit(limits);
   cout<<files[0].numberPoints()<<" points\n";
+  center=octRoot.getCenter();
+  cout<<'('<<ldecimal(center.getx())<<','<<ldecimal(center.gety())<<','<<ldecimal(center.getz())<<")±";
+  cout<<octRoot.getSide()<<endl;
   lPoint.location=xyz(M_PI,exp(1),sqrt(2));
   for (i=0;i<RECORDS;i++)
     lPoint.write(testFile);
