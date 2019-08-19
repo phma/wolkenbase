@@ -102,6 +102,40 @@ void Octree::sizeFit(vector<xyz> pnts)
   }
 }
 
+void Octree::split(xyz pnt)
+/* Splits the block containing pnt into eight blocks. The subblock with pnt in it
+ * is the same as the original block; the others are set to none.
+ */
+{
+  int xbit,ybit,zbit,i;
+  uintptr_t blknum;
+  Octree *newblk;
+  xbit=pnt.getx()>=center.getx();
+  ybit=pnt.gety()>=center.gety();
+  zbit=pnt.getz()>=center.getz();
+  i=zbit*4+ybit*2+xbit;
+  if (sub[i]==0)
+    cerr<<"Can't split empty block\n";
+  else if (sub[i]&1)
+  {
+    blknum=sub[i];
+    sub[i]=(uintptr_t)(newblk=new Octree);
+    newblk->center=xyz(center.getx()+(2*xbit-1)*side/4,
+		       center.gety()+(2*ybit-1)*side/4,
+		       center.getz()+(2*zbit-1)*side/4);
+    newblk->side=side/2;
+    for (i=0;i<8;i++)
+      newblk->sub[i]=0;
+    xbit=pnt.getx()>=newblk->center.getx();
+    ybit=pnt.gety()>=newblk->center.gety();
+    zbit=pnt.getz()>=newblk->center.getz();
+    i=zbit*4+ybit*2+xbit;
+    newblk->sub[i]=blknum;
+  }
+  else
+    ((Octree *)sub[i])->split(pnt);
+}
+
 OctBlock::OctBlock()
 {
   int i;
@@ -281,6 +315,7 @@ OctBlock *OctStore::getBlock(xyz key)
   }
 }
 
-void OctStore::split(int block,xyz camelStraw)
+void OctStore::split(long long block,xyz camelStraw)
 {
+  octRoot.split(camelStraw);
 }

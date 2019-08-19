@@ -40,6 +40,7 @@ public:
   long long findBlock(xyz pnt);
   void setBlock(xyz pnt,long long blk);
   void sizeFit(std::vector<xyz> pnts);
+  void split(xyz pnt);
   xyz getCenter()
   {
     return center;
@@ -95,6 +96,6 @@ private:
   OctBlock *getBlock(long long block,bool mustExist=false);
   OctBlock *getBlock(xyz key);
   std::map<int,OctBlock> blocks;
-  void split(int block,xyz camelStraw);
+  void split(long long block,xyz camelStraw);
   friend class OctBlock;
 };

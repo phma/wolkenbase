@@ -60,7 +60,7 @@ int main(int argc,char **argv)
   for (i=0;i<RECORDS;i++)
     lPoint.write(testFile);
   octStore.open("store.oct");
-  for (j=0;j<RECORDS;j++)
+  for (j=0;j<RECORDS+1;j++)
   {
     lPoint=files[0].readPoint(j);
     octStore[lPoint.location]=lPoint;
