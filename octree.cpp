@@ -148,6 +148,7 @@ OctStore::OctStore()
 {
   int i;
   nowUsed=0;
+  nBlocks=0;
   for (i=0;i<9;i++)
   {
     blocks[i].store=this;
