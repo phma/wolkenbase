@@ -208,6 +208,7 @@ OctStore::OctStore()
 
 OctStore::~OctStore()
 {
+  flush();
   close();
 }
 
@@ -245,6 +246,8 @@ LasPoint &OctStore::operator[](xyz key)
       inx=i%RECORDS;
       break;
     }
+  if (i>=RECORDS)
+    pBlock->markDirty();
   if (inx<0)
   {
     split(pBlock->blockNumber,key);
@@ -253,6 +256,7 @@ LasPoint &OctStore::operator[](xyz key)
       if (pBlock->points[i%RECORDS].isEmpty())
       {
         inx=i;
+	pBlock->markDirty();
         break;
       }
   }
@@ -322,6 +326,7 @@ void OctStore::split(long long block,xyz camelStraw)
   int i,fullth;
   currentBlock=getBlock(block);
   tempPoints=currentBlock->points;
+  currentBlock->markDirty();
   while (true)
   {
     fullth=0;
