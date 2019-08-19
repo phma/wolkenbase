@@ -317,5 +317,24 @@ OctBlock *OctStore::getBlock(xyz key)
 
 void OctStore::split(long long block,xyz camelStraw)
 {
-  octRoot.split(camelStraw);
+  vector<LasPoint> tempPoints;
+  OctBlock *currentBlock;
+  int i,fullth;
+  currentBlock=getBlock(block);
+  tempPoints=currentBlock->points;
+  while (true)
+  {
+    fullth=0;
+    for (i=0;i<RECORDS;i++)
+    {
+      if (currentBlock->points[i].location.isfinite())
+	++fullth;
+      currentBlock->points[i].location=nanxyz;
+    }
+    if (fullth<RECORDS)
+      break;
+    octRoot.split(camelStraw);
+    for (i=0;i<RECORDS;i++)
+      (*this)[tempPoints[i].location]=tempPoints[i];
+  }
 }
