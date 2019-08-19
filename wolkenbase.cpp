@@ -38,10 +38,12 @@ int main(int argc,char **argv)
 {
   LasPoint lPoint;
   int i;
+  size_t j;
   vector<LasHeader> files;
   vector<xyz> limits;
   xyz center;
   ofstream testFile("testfile");
+  OctStore octStore;
   files.resize(1);
   files[0].open("las file export.las");
   for (i=0;i<files.size();i++)
@@ -57,5 +59,11 @@ int main(int argc,char **argv)
   lPoint.location=xyz(M_PI,exp(1),sqrt(2));
   for (i=0;i<RECORDS;i++)
     lPoint.write(testFile);
+  octStore.open("store.oct");
+  for (j=0;j<RECORDS;j++)
+  {
+    lPoint=files[0].readPoint(j);
+    octStore[lPoint.location]=lPoint;
+  }
   return 0;
 }
