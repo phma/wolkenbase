@@ -22,6 +22,7 @@
 #include <cassert>
 #include <cmath>
 #include "octree.h"
+#define DEBUG_STORE 1
 using namespace std;
 
 Octree octRoot;
@@ -40,6 +41,21 @@ long long Octree::findBlock(xyz pnt)
     return sub[i]>>1;
   else
     return ((Octree *)sub[i])->findBlock(pnt);
+}
+
+void Octree::setBlock(xyz pnt,long long blk)
+{
+  int xbit,ybit,zbit,i;
+  xbit=pnt.getx()>=center.getx();
+  ybit=pnt.gety()>=center.gety();
+  zbit=pnt.getz()>=center.getz();
+  i=zbit*4+ybit*2+xbit;
+  if (sub[i]==0)
+    sub[i]=blk*2+1;
+  else if (sub[i]&1)
+    cerr<<"Tried to set block "<<blk<<", point already in block "<<(sub[i]>>1)<<endl;
+  else
+    ((Octree *)sub[i])->setBlock(pnt,blk);
 }
 
 void Octree::sizeFit(vector<xyz> pnts)
@@ -260,6 +276,7 @@ OctBlock *OctStore::getBlock(xyz key)
   else
   {
     blknum=nBlocks++;
+    octRoot.setBlock(key,blknum);
     return getBlock(blknum);
   }
 }

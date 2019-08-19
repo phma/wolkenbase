@@ -38,6 +38,7 @@ class Octree
 {
 public:
   long long findBlock(xyz pnt);
+  void setBlock(xyz pnt,long long blk);
   void sizeFit(std::vector<xyz> pnts);
   xyz getCenter()
   {
