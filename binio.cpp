@@ -221,6 +221,7 @@ void writeledouble(std::ostream &file,double f)
 double readbedouble(std::istream &file)
 {
   char buf[8];
+  memset(buf,0,8);
   file.read(buf,8);
 #ifndef BIGENDIAN
   endianflip(buf,8);
@@ -231,6 +232,7 @@ double readbedouble(std::istream &file)
 double readledouble(std::istream &file)
 {
   char buf[8];
+  memset(buf,0,8);
   file.read(buf,8);
 #ifdef BIGENDIAN
   endianflip(buf,8);
