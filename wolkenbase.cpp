@@ -45,7 +45,7 @@ int main(int argc,char **argv)
   ofstream testFile("testfile");
   OctStore octStore;
   files.resize(1);
-  files[0].open("las file export.las");
+  files[0].open("Pierre.las");
   for (i=0;i<files.size();i++)
   {
     limits.push_back(files[i].minCorner());
@@ -65,5 +65,6 @@ int main(int argc,char **argv)
     lPoint=files[0].readPoint(j);
     octStore[lPoint.location]=lPoint;
   }
+  cout<<files[0].numberPoints()<<" points\n";
   return 0;
 }
