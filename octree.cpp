@@ -22,7 +22,7 @@
 #include <cassert>
 #include <cmath>
 #include "octree.h"
-#define DEBUG_STORE 1
+#define DEBUG_STORE 0
 using namespace std;
 
 Octree octRoot;
@@ -219,6 +219,20 @@ void OctStore::flush()
   {
     blocks[i].flush();
   }
+}
+
+void OctStore::resize(int n)
+// The number of blocks should be more than eight times the number of threads.
+{
+  int i;
+  flush();
+  for (i=blocks.size();i<n;i++)
+  {
+    blocks[i].store=this;
+    blocks[i].blockNumber=-1;
+  }
+  for (i=blocks.size()-1;i>=n;i--)
+    blocks.erase(i);
 }
 
 void OctStore::open(string fileName)

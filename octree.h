@@ -83,6 +83,7 @@ public:
   OctStore();
   ~OctStore();
   void flush();
+  void resize(int n);
   void open(std::string fileName);
   void close();
   LasPoint &operator[](xyz key);
