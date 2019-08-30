@@ -21,6 +21,8 @@
  */
 #include <cmath>
 #include "testpattern.h"
+using namespace std;
+
 /* Terrain with street intersection:
  * 100 m diameter, with two 15 m wide streets intersecting at right angles.
  * Power poles with wires between them. Eventually, forbs and trees.
@@ -38,4 +40,30 @@ double street(double x)
   else
     elev=0;
   return elev;
+}
+
+vector<xyz> diskSpatter(xyz center,xyz normal,double radius,double density)
+/* Places dots evenly in a disk. If the area times the density is less than one,
+ * may return an empty vector. Used for terrain and leaves.
+ */
+{
+  vector<xyz> ret;
+  return ret;
+}
+
+vector<xyz> cylinderSpatter(xyz begin,xyz end,double radius,double density)
+/* Places dots evenly on a cylinder. Used for tree stems and power poles.
+ */
+{
+  vector<xyz> ret;
+  return ret;
+}
+
+vector<xyz> catenarySpatter(xyz vertex,double scale,int bearing,double radius,double density)
+/* Places dots evenly on a catenary, except that they're slightly more dense
+ * on the inside of the bend. Used for power lines.
+ */
+{
+  vector<xyz> ret;
+  return ret;
 }
