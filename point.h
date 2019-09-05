@@ -29,6 +29,8 @@
 class xyz;
 class latlong;
 
+#include "quaternion.h"
+
 class xy
 {
 public:
@@ -97,6 +99,7 @@ public:
   friend class xy;
   friend class point;
   friend class triangle;
+  friend class Quaternion;
   friend double dist(xyz a,xyz b);
   friend double dot(xyz a,xyz b);
   friend xyz cross(xyz a,xyz b);
@@ -113,6 +116,9 @@ public:
   friend xyz operator+(const xyz &l,const xyz &r);
   friend xyz operator-(const xyz &l,const xyz &r);
   friend xyz operator-(const xyz &r);
+  friend Quaternion versor(xyz vec);
+  friend Quaternion versor(xyz vec,int angle);
+  friend Quaternion versor(xyz vec,double angle);
 protected:
   double x,y,z;
 };
