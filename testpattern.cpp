@@ -21,7 +21,11 @@
  */
 #include <cmath>
 #include "testpattern.h"
+#include "angle.h"
 using namespace std;
+
+unsigned int areaPhase;
+int anglePhase;
 
 /* Terrain with street intersection:
  * 100 m diameter, with two 15 m wide streets intersecting at right angles.
@@ -48,6 +52,25 @@ vector<xyz> diskSpatter(xyz center,xyz normal,double radius,double density)
  */
 {
   vector<xyz> ret;
+  xyz dot;
+  double dotRadius;
+  double nDots=2*M_PI*sqr(radius)*density;
+  long long nDotsFixed=llrintl(4294967296e0*nDots);
+  while (nDotsFixed>=4294967296 || nDotsFixed>=areaPhase)
+  {
+    if (nDotsFixed>=areaPhase)
+    {
+      nDotsFixed-=areaPhase;
+      areaPhase=0;
+    }
+    else if (nDotsFixed>=4294967296)
+      nDotsFixed-=4294967296;
+    dotRadius=sqrt(nDotsFixed/4294967296e0/2/M_PI/density);
+    dot=xyz(cossin(anglePhase)*dotRadius,0)+center; //TODO rotate by normal
+    anglePhase+=PHITURN;
+    ret.push_back(dot);
+  }
+  areaPhase-=nDotsFixed;
   return ret;
 }
 
