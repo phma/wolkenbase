@@ -32,6 +32,7 @@
 #include <unistd.h>
 #include <vector>
 #include <string>
+#include "testpattern.h"
 
 #define tassert(x) testfail|=(!(x))
 //#define tassert(x) if (!(x)) {testfail=true; sleep(10);}
@@ -41,6 +42,11 @@ using namespace std;
 
 bool testfail=false;
 vector<string> args;
+
+void testflat()
+{
+  flatScene();
+}
 
 bool shoulddo(string testname)
 {
@@ -69,6 +75,8 @@ int main(int argc, char *argv[])
   int i;
   for (i=1;i<argc;i++)
     args.push_back(argv[i]);
+  if (shoulddo("flat"))
+    testflat();
   cout<<"\nTest "<<(testfail?"failed":"passed")<<endl;
   return testfail;
 }

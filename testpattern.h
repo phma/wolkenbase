@@ -21,3 +21,5 @@
  */
 #include <vector>
 #include "las.h"
+
+void flatScene();

@@ -23,10 +23,13 @@
 #include <cassert>
 #include "testpattern.h"
 #include "angle.h"
+#include "octree.h"
+
 using namespace std;
 
 unsigned int areaPhase;
 int anglePhase;
+OctStore octStore;
 
 /* Terrain with street intersection:
  * 100 m diameter, with two 15 m wide streets intersecting at right angles.
@@ -129,4 +132,26 @@ vector<xyz> catenarySpatter(xyz vertex,double scale,int bearing,double radius,do
 {
   vector<xyz> ret;
   return ret;
+}
+
+void flatScene()
+/* A 50 m radius circle covered with 100 points per square meter,
+ * all at elevation 0. Used to test the functions that find all
+ * points in a sphere, a paraboloid, or the like. Should have
+ * 785398±1 points.
+ */
+{
+  vector<xyz> limits,dots;
+  int i;
+  LasPoint lPoint;
+  limits.push_back(xyz(-50,-50,-1));
+  limits.push_back(xyz(50,50,1));
+  octRoot.sizeFit(limits);
+  dots=diskSpatter(xyz(0,0,0),xyz(0,0,1),50,100);
+  cout<<dots.size()<<"points\n";
+  for (i=0;i<dots.size();i++)
+  {
+    lPoint=laserize(dots[i]);
+    octStore[dots[i]]=lPoint;
+  }
 }
