@@ -63,6 +63,28 @@ Quaternion rotateTo(xyz normal)
     return Quaternion(1);
 }
 
+LasPoint laserize(xyz pnt)
+{
+  LasPoint ret;
+  ret.location=pnt;
+  ret.intensity=1024;
+  ret.returnNum=ret.nReturns=1;
+  ret.scanDirection=ret.edgeLine=false;
+  ret.classification=ret.classificationFlags=0;
+  ret.scannerChannel=0;
+  ret.userData=0;
+  ret.waveIndex=0;
+  ret.pointSource=0;
+  ret.scanAngle=0;
+  ret.gpsTime=0;
+  ret.nir=ret.red=ret.green=ret.blue=33000; // maybe change depending on type of point
+  ret.waveformOffset=ret.waveformSize=0;
+  ret.waveformTime=0;
+  ret.xDir=ret.yDir=0;
+  ret.zDir=-1;
+  return ret;
+}
+
 vector<xyz> diskSpatter(xyz center,xyz normal,double radius,double density)
 /* Places dots evenly in a disk. If the area times the density is less than one,
  * may return an empty vector. Used for terrain and leaves.
