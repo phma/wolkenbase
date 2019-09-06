@@ -99,9 +99,9 @@ vector<xyz> diskSpatter(xyz center,xyz normal,double radius,double density)
   Quaternion ro=rotateTo(normal);
   double nDots=2*M_PI*sqr(radius)*density;
   long long nDotsFixed=llrintl(4294967296e0*nDots);
-  while (nDotsFixed>=4294967296 || nDotsFixed>=areaPhase)
+  while (nDotsFixed>=4294967296 || (nDotsFixed>=areaPhase && areaPhase>0))
   {
-    if (nDotsFixed>=areaPhase)
+    if (nDotsFixed>=areaPhase && areaPhase>0)
     {
       nDotsFixed-=areaPhase;
       areaPhase=0;
@@ -112,6 +112,11 @@ vector<xyz> diskSpatter(xyz center,xyz normal,double radius,double density)
     dot=ro.rotate(xyz(cossin(anglePhase)*dotRadius,0))+center;
     anglePhase+=PHITURN;
     ret.push_back(dot);
+    if ((ret.size()&16383)==0)
+    {
+      cout<<ret.size()<<'\r';
+      cout.flush();
+    }
   }
   areaPhase-=nDotsFixed;
   return ret;
