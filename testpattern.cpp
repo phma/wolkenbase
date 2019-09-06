@@ -20,6 +20,7 @@
  * along with Wolkenbase. If not, see <http://www.gnu.org/licenses/>.
  */
 #include <cmath>
+#include <cassert>
 #include "testpattern.h"
 #include "angle.h"
 using namespace std;
@@ -46,6 +47,22 @@ double street(double x)
   return elev;
 }
 
+Quaternion rotateTo(xyz normal)
+/* Returns a quaternion which rotates a vertical line to normal.
+ * If normal points straight down, it returns the identity.
+ */
+{
+  double len=normal.length();
+  xyz midway;
+  assert(len);
+  normal/=len;
+  midway=normal+xyz(0,0,1);
+  if (midway.length())
+    return versor(midway,DEG180);
+  else
+    return Quaternion(1);
+}
+
 vector<xyz> diskSpatter(xyz center,xyz normal,double radius,double density)
 /* Places dots evenly in a disk. If the area times the density is less than one,
  * may return an empty vector. Used for terrain and leaves.
@@ -54,6 +71,7 @@ vector<xyz> diskSpatter(xyz center,xyz normal,double radius,double density)
   vector<xyz> ret;
   xyz dot;
   double dotRadius;
+  Quaternion ro=rotateTo(normal);
   double nDots=2*M_PI*sqr(radius)*density;
   long long nDotsFixed=llrintl(4294967296e0*nDots);
   while (nDotsFixed>=4294967296 || nDotsFixed>=areaPhase)
@@ -66,7 +84,7 @@ vector<xyz> diskSpatter(xyz center,xyz normal,double radius,double density)
     else if (nDotsFixed>=4294967296)
       nDotsFixed-=4294967296;
     dotRadius=sqrt(nDotsFixed/4294967296e0/2/M_PI/density);
-    dot=xyz(cossin(anglePhase)*dotRadius,0)+center; //TODO rotate by normal
+    dot=ro.rotate(xyz(cossin(anglePhase)*dotRadius,0))+center;
     anglePhase+=PHITURN;
     ret.push_back(dot);
   }
