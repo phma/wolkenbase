@@ -29,7 +29,7 @@
 class OctBlock;
 
 class LasPoint
-{ // 87 bytes in temporary file, 753 points per block
+{ // 91 bytes in temporary file, 720 points per block
 public:
   xyz location;
   unsigned short intensity;
