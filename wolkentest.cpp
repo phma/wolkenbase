@@ -32,6 +32,7 @@
 #include <unistd.h>
 #include <vector>
 #include <string>
+#include "shape.h"
 #include "testpattern.h"
 
 #define tassert(x) testfail|=(!(x))
@@ -46,6 +47,18 @@ vector<string> args;
 void testflat()
 {
   flatScene();
+}
+
+void testparaboloid()
+{
+  Paraboloid p1(xyz(0,0,13),13);
+  xyz v(0,0,13),a(5,0,12),b(5,2,12),c(13,13,0),d(-14,-12,0),e(9,16,0);
+  tassert(p1.in(v));
+  tassert(p1.in(a));
+  tassert(!p1.in(b));
+  tassert(p1.in(c));
+  tassert(!p1.in(d));
+  tassert(p1.in(e));
 }
 
 bool shoulddo(string testname)
@@ -75,6 +88,8 @@ int main(int argc, char *argv[])
   int i;
   for (i=1;i<argc;i++)
     args.push_back(argv[i]);
+  if (shoulddo("paraboloid"))
+    testparaboloid();
   if (shoulddo("flat"))
     testflat();
   cout<<"\nTest "<<(testfail?"failed":"passed")<<endl;
