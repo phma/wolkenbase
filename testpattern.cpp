@@ -97,7 +97,7 @@ vector<xyz> diskSpatter(xyz center,xyz normal,double radius,double density)
   xyz dot;
   double dotRadius;
   Quaternion ro=rotateTo(normal);
-  double nDots=2*M_PI*sqr(radius)*density;
+  double nDots=M_PI*sqr(radius)*density;
   long long nDotsFixed=llrintl(4294967296e0*nDots);
   while (nDotsFixed>=4294967296 || (nDotsFixed>=areaPhase && areaPhase>0))
   {
@@ -108,7 +108,7 @@ vector<xyz> diskSpatter(xyz center,xyz normal,double radius,double density)
     }
     else if (nDotsFixed>=4294967296)
       nDotsFixed-=4294967296;
-    dotRadius=sqrt(nDotsFixed/4294967296e0/2/M_PI/density);
+    dotRadius=sqrt(nDotsFixed/4294967296e0/M_PI/density);
     dot=ro.rotate(xyz(cossin(anglePhase)*dotRadius,0))+center;
     anglePhase+=PHITURN;
     ret.push_back(dot);
