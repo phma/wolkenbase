@@ -22,4 +22,4 @@
 #include <vector>
 #include "las.h"
 
-void flatScene();
+void flatScene(double rad=50,double den=100);

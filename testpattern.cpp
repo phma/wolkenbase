@@ -139,11 +139,11 @@ vector<xyz> catenarySpatter(xyz vertex,double scale,int bearing,double radius,do
   return ret;
 }
 
-void flatScene()
-/* A 50 m radius circle covered with 100 points per square meter,
+void flatScene(double rad,double den)
+/* A rad m radius circle covered with den points per square meter,
  * all at elevation 0. Used to test the functions that find all
  * points in a sphere, a paraboloid, or the like. Should have
- * 785398±1 points.
+ * 785398±1 points if rad is 50 and den is 100.
  */
 {
   vector<xyz> limits,dots;
@@ -152,8 +152,8 @@ void flatScene()
   limits.push_back(xyz(-50,-50,-1));
   limits.push_back(xyz(50,50,1));
   octRoot.sizeFit(limits);
-  dots=diskSpatter(xyz(0,0,0),xyz(0,0,1),50,100);
-  cout<<dots.size()<<"points\n";
+  dots=diskSpatter(xyz(0,0,0),xyz(0,0,1),rad,den);
+  cout<<dots.size()<<" points\n";
   for (i=0;i<dots.size();i++)
   {
     lPoint=laserize(dots[i]);
