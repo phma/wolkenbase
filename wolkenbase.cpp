@@ -43,7 +43,6 @@ int main(int argc,char **argv)
   vector<xyz> limits;
   xyz center;
   ofstream testFile("testfile");
-  OctStore octStore;
   files.resize(1);
   files[0].open("Pierre.las");
   for (i=0;i<files.size();i++)

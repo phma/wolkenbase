@@ -26,6 +26,7 @@
 using namespace std;
 
 Octree octRoot;
+OctStore octStore;
 
 long long Octree::findBlock(xyz pnt)
 // Returns the disk block number that contains pnt, or -1 if none.

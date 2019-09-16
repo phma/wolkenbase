@@ -32,6 +32,7 @@
 #include <unistd.h>
 #include <vector>
 #include <string>
+#include "octree.h"
 #include "shape.h"
 #include "testpattern.h"
 
@@ -88,6 +89,7 @@ int main(int argc, char *argv[])
   int i;
   for (i=1;i<argc;i++)
     args.push_back(argv[i]);
+  octStore.open("store.oct");
   if (shoulddo("paraboloid"))
     testparaboloid();
   if (shoulddo("flat"))

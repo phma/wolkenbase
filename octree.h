@@ -20,6 +20,8 @@
  * along with Wolkenbase. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef OCTREE_H
+#define OCTREE_H
 #include <map>
 #include "las.h"
 #define LASPOINT_SIZE 91
@@ -56,6 +58,8 @@ private:
 };
 
 extern Octree octRoot;
+extern OctStore octStore;
+
 
 class OctBlock
 {
@@ -100,3 +104,4 @@ private:
   void split(long long block,xyz camelStraw);
   friend class OctBlock;
 };
+#endif

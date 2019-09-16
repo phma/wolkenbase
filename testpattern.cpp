@@ -29,7 +29,6 @@ using namespace std;
 
 unsigned int areaPhase;
 int anglePhase;
-OctStore octStore;
 
 /* Terrain with street intersection:
  * 100 m diameter, with two 15 m wide streets intersecting at right angles.
