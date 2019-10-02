@@ -16,7 +16,7 @@
 
 using namespace std;
 
-//Page size for storing arrays subscripted by hvec
+//Page size for storing arrays subscripted by Eisenstein
 /* A page looks like this:
  *       * * * * * *
  *      * * * * * * *
@@ -30,19 +30,19 @@ using namespace std;
  *      * * * * * * *
  *       * * * * * *
  */
-const hvec PAGEMOD(PAGERAD+1,2*PAGERAD+1);
-const hvec LETTERMOD(-2,-4);
+const Eisenstein PAGEMOD(PAGERAD+1,2*PAGERAD+1);
+const Eisenstein LETTERMOD(-2,-4);
 const complex<double> ZLETTERMOD(0,-2*M_SQRT_3);
-const complex<double> omega(-0.5,M_SQRT_3_4); // this is hvec(0,1)
-int debughvec;
+const complex<double> omega(-0.5,M_SQRT_3_4); // this is Eisenstein(0,1)
+int debugEisenstein;
 
-int hvec::numx,hvec::numy,hvec::denx=0,hvec::deny=0,hvec::quox,hvec::quoy,hvec::remx,hvec::remy;
+int Eisenstein::numx,Eisenstein::numy,Eisenstein::denx=0,Eisenstein::deny=0,Eisenstein::quox,Eisenstein::quoy,Eisenstein::remx,Eisenstein::remy;
 
 unsigned long _norm(int x,int y)
 {return sqr(x)+sqr(y)-x*y;
  }
 
-hvec::hvec(complex<double> z)
+Eisenstein::Eisenstein(complex<double> z)
 {
   double norm0,norm1;
   y=lrint(z.imag()/M_SQRT_3_4);
@@ -86,7 +86,7 @@ hvec::hvec(complex<double> z)
     norm0=norm1;*/
 }
 
-void hvec::divmod(hvec b)
+void Eisenstein::divmod(Eisenstein b)
 /* Division and remainder, done together to save time
  * 1     denx       deny
  * 1+ω   denx-deny  denx
@@ -103,7 +103,7 @@ void hvec::divmod(hvec b)
      denx=b.x;
      deny=b.y;
      nrm=b.norm();
-     if (debughvec)
+     if (debugEisenstein)
         printf("%d+%dω/%d+%dω\n",numx,numy,denx,deny);
      // Do a rough division.
      quox=round((numx*denx+numy*deny-numx*deny)/(double)nrm);
@@ -116,7 +116,7 @@ void hvec::divmod(hvec b)
      do {cont=false; // FIXME this loop may need to be optimized
          nrm=_norm(remx,remy);
          nrm1=_norm(remx+denx-deny,remy+denx);
-         if (debughvec)
+         if (debugEisenstein)
             printf("quo=%d+%dω rem=%d+%dω nrm=%d nrm1=%d\n",quox,quoy,remx,remy,nrm,nrm1);
          if (nrm1<nrm)
             {remx=remx+denx-deny;
@@ -127,7 +127,7 @@ void hvec::divmod(hvec b)
 	     }
          nrm=_norm(remx,remy);
          nrm1=_norm(remx+deny,remy+deny-denx);
-         if (debughvec)
+         if (debugEisenstein)
             printf("quo=%d+%dω rem=%d+%dω nrm=%d nrm1=%d\n",quox,quoy,remx,remy,nrm,nrm1);
          if (nrm1<nrm)
             {remx=remx+deny;
@@ -137,7 +137,7 @@ void hvec::divmod(hvec b)
 	     }
          nrm=_norm(remx,remy);
          nrm1=_norm(remx-denx,remy-deny);
-         if (debughvec)
+         if (debugEisenstein)
             printf("quo=%d+%dω rem=%d+%dω nrm=%d nrm1=%d\n",quox,quoy,remx,remy,nrm,nrm1);
          if (nrm1<nrm)
             {remx=remx-denx;
@@ -147,7 +147,7 @@ void hvec::divmod(hvec b)
 	     }
          nrm=_norm(remx,remy);
          nrm1=_norm(remx+deny-denx,remy-denx);
-         if (debughvec)
+         if (debugEisenstein)
             printf("quo=%d+%dω rem=%d+%dω nrm=%d nrm1=%d\n",quox,quoy,remx,remy,nrm,nrm1);
          if (nrm1<nrm)
             {remx=remx+deny-denx;
@@ -158,7 +158,7 @@ void hvec::divmod(hvec b)
 	     }
          nrm=_norm(remx,remy);
          nrm1=_norm(remx-deny,remy+denx-deny);
-         if (debughvec)
+         if (debugEisenstein)
             printf("quo=%d+%dω rem=%d+%dω nrm=%d nrm1=%d\n",quox,quoy,remx,remy,nrm,nrm1);
          if (nrm1<nrm)
             {remx=remx-deny;
@@ -168,7 +168,7 @@ void hvec::divmod(hvec b)
 	     }
          nrm=_norm(remx,remy);
          nrm1=_norm(remx+denx,remy+deny);
-         if (debughvec)
+         if (debugEisenstein)
             printf("quo=%d+%dω rem=%d+%dω nrm=%d nrm1=%d\n",quox,quoy,remx,remy,nrm,nrm1);
          if (nrm1<nrm)
             {remx=remx+denx;
@@ -176,23 +176,23 @@ void hvec::divmod(hvec b)
              quox--;
 	     cont-=5;
 	     }
-	 if (debughvec)
+	 if (debugEisenstein)
             printf("loop\n");
 	 } while (0);
      nrm=_norm(remx,remy);
      nrm1=_norm(remx+denx,remy+deny);
-     if (debughvec)
+     if (debugEisenstein)
         printf("quo=%d+%dω rem=%d+%dω nrm=%d nrm1=%d\n",quox,quoy,remx,remy,nrm,nrm1);
      if (nrm1<=nrm)
         {remx=remx+denx;
          remy=remy+deny;
          quox--;
          }
-     if (debughvec)
+     if (debugEisenstein)
         printf("quo=%d+%dω rem=%d+%dω \n",quox,quoy,remx,remy);
      nrm=_norm(remx,remy);
      nrm1=_norm(remx-deny+denx,remy+denx);
-     if (debughvec)
+     if (debugEisenstein)
         printf("quo=%d+%dω rem=%d+%dω nrm=%d nrm1=%d\n",quox,quoy,remx,remy,nrm,nrm1);
      if (nrm1<=nrm)
         {remx=remx-deny+denx;
@@ -202,7 +202,7 @@ void hvec::divmod(hvec b)
 	 }
      nrm=_norm(remx,remy);
      nrm1=_norm(remx+deny,remy-denx+deny);
-     if (debughvec)
+     if (debugEisenstein)
         printf("quo=%d+%dω rem=%d+%dω nrm=%d nrm1=%d\n",quox,quoy,remx,remy,nrm,nrm1);
      if (nrm1<=nrm)
         {remx=remx+deny;
@@ -212,24 +212,24 @@ void hvec::divmod(hvec b)
      }
  }
 
-hvec hvec::operator+(hvec b)
-{return hvec(this->x+b.x,this->y+b.y);
+Eisenstein Eisenstein::operator+(Eisenstein b)
+{return Eisenstein(this->x+b.x,this->y+b.y);
  }
 
-hvec& hvec::operator+=(hvec b)
+Eisenstein& Eisenstein::operator+=(Eisenstein b)
 {this->x+=b.x,this->y+=b.y;
  return *this;
  }
 
-hvec hvec::operator-()
-{return hvec(-this->x,-this->y);
+Eisenstein Eisenstein::operator-()
+{return Eisenstein(-this->x,-this->y);
  }
 
-hvec hvec::operator-(hvec b)
-{return hvec(this->x-b.x,this->y-b.y);
+Eisenstein Eisenstein::operator-(Eisenstein b)
+{return Eisenstein(this->x-b.x,this->y-b.y);
  }
 
-bool operator<(const hvec a,const hvec b)
+bool operator<(const Eisenstein a,const Eisenstein b)
 // These numbers are complex, so there is no consistent < operator on them.
 // This operator is used only to give some order to the map.
 {if (a.y!=b.y)
@@ -238,11 +238,11 @@ bool operator<(const hvec a,const hvec b)
     return a.x<b.x;
  }
 
-hvec hvec::operator*(hvec b)
-{return hvec(x*b.x-y*b.y,x*b.y+y*b.x-y*b.y);
+Eisenstein Eisenstein::operator*(Eisenstein b)
+{return Eisenstein(x*b.x-y*b.y,x*b.y+y*b.x-y*b.y);
  }
 
-hvec& hvec::operator*=(hvec b)
+Eisenstein& Eisenstein::operator*=(Eisenstein b)
 {int tmp;
  tmp=x*b.x-y*b.y;
  y=x*b.y+y*b.x-y*b.y;
@@ -250,35 +250,35 @@ hvec& hvec::operator*=(hvec b)
  return *this;
  }
 
-hvec hvec::operator/(hvec b)
+Eisenstein Eisenstein::operator/(Eisenstein b)
 {if (b==0)
     throw(domain_error("Divide by zero Eisenstein integer"));
  divmod(b);
- return hvec(quox,quoy);
+ return Eisenstein(quox,quoy);
  }
 
-hvec hvec::operator%(hvec b)
+Eisenstein Eisenstein::operator%(Eisenstein b)
 {if (b==0)
     return (*this); // Dividing by zero is an error, but modding by zero is not.
  else
     {divmod(b);
-     return hvec(remx,remy);
+     return Eisenstein(remx,remy);
      }
  }
 
-bool hvec::operator==(hvec b)
+bool Eisenstein::operator==(Eisenstein b)
 {return this->x==b.x && this->y==b.y;
  }
 
-bool hvec::operator!=(hvec b)
+bool Eisenstein::operator!=(Eisenstein b)
 {return this->x!=b.x || this->y!=b.y;
  }
 
-unsigned long hvec::norm()
+unsigned long Eisenstein::norm()
 {return sqr(this->x)+sqr(this->y)-this->x*this->y;
  }
 
-hvec nthhvec(int n,int size,int nelts)
+Eisenstein nthEisenstein(int n,int size,int nelts)
 {
   int x,y,row;
   assert (n>=0 && n<nelts);
@@ -299,11 +299,11 @@ hvec nthhvec(int n,int size,int nelts)
     n+=++row;
     x=n+y-size;
   }
-  hvec a(x,y);
+  Eisenstein a(x,y);
   return a;
 }
 
-int hvec::pageinx(int size,int nelts)
+int Eisenstein::pageinx(int size,int nelts)
 // Index to a byte within a page of specified size. Used in the inverse
 // letter table as well as the paging of harray.
 {
@@ -313,7 +313,7 @@ int hvec::pageinx(int size,int nelts)
     return x-y+nelts-(size-y)*(3*size+3-y)/2-1;
 }
 
-int hvec::pageinx()
+int Eisenstein::pageinx()
 // Index to a byte within a page. Meaningful only if the number
 // is a remainder of division by PAGEMOD.
 {
@@ -322,15 +322,15 @@ int hvec::pageinx()
 
 // Iteration: start, inc, cont. Iterates over a hexagon.
 
-hvec start(int n)
+Eisenstein start(int n)
 {if (n<0)
-    throw(out_of_range("hvec start: n<0"));
- return hvec(-n,-n);
+    throw(out_of_range("Eisenstein start: n<0"));
+ return Eisenstein(-n,-n);
  }
 
-void hvec::inc(int n)
+void Eisenstein::inc(int n)
 {if (n<0)
-    throw(out_of_range("hvec::inc: n<0"));
+    throw(out_of_range("Eisenstein::inc: n<0"));
  x++;
  if (y<0)
     if (x-y>n)
@@ -345,11 +345,11 @@ void hvec::inc(int n)
         }
  }
 
-bool hvec::cont(int n)
+bool Eisenstein::cont(int n)
 {return y<=n;
  }
 
-int hvec::letterinx()
+int Eisenstein::letterinx()
 {switch (y)
    {case 1:
     return 11-x;
@@ -367,7 +367,7 @@ int hvec::letterinx()
 void testpageinx()
 {
   int x,y;
-  hvec h,g;
+  Eisenstein h,g;
   for (y=PAGERAD;y>=-PAGERAD;y--)
   {
     if (y&1)
@@ -376,7 +376,7 @@ void testpageinx()
       printf("    ");
     for (;x<=PAGERAD && x-y<=PAGERAD;x++)
     {
-      h=hvec(x,y);
+      h=Eisenstein(x,y);
       printf("%4d",h.pageinx());
     }
     printf("\n");
@@ -389,8 +389,8 @@ void testpageinx()
       printf("      ");
     for (;x<=PAGERAD && x-y<=PAGERAD;x++)
     {
-      h=hvec(x,y);
-      g=nthhvec(h.pageinx(),PAGERAD,PAGESIZE);
+      h=Eisenstein(x,y);
+      g=nthEisenstein(h.pageinx(),PAGERAD,PAGESIZE);
       printf("%2d,%-2d ",g.getx(),g.gety());
       assert(g==h);
     }
@@ -451,7 +451,7 @@ void testcomplex()
 {
   complex<double> z=8191,r(0.8,0.6),z2,diff;
   int i,histo[13],reg;
-  hvec h;
+  Eisenstein h;
   memset(histo,0,sizeof(histo));
   psopen("testcomplex.ps");
   psprolog();
@@ -511,7 +511,7 @@ void testcomplex()
   }
   for (i=0;i<13;i++)
     printf("%2d %5d\n",i,histo[i]);
-  h=hvec(0,1);
+  h=Eisenstein(0,1);
   z=h;
   cout<<z<<endl;
   endpage();
@@ -615,7 +615,7 @@ void testsixvec()
 {
   complex<double> z=8191,r(0.8,0.6),z2,diff;
   int i,reg;
-  hvec h;
+  Eisenstein h;
   sixvec s,a(complex<double>(0,0)),b(complex<double>(0,M_SQRT_3_4/2)),c(complex<double>(0,-M_SQRT_3_4/2));
   psopen("testsixvec.ps");
   psprolog();

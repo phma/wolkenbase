@@ -4,7 +4,7 @@
 /*                                                    */
 /******************************************************/
 /* Hexagonal vector (Eisenstein or Euler integers) and array of bytes subscripted by hexagonal vector
- * The largest hvec used in this program has a norm of about
+ * The largest Eisenstein used in this program has a norm of about
  * TBD
  */
 #ifndef EISENSTEIN_H
@@ -26,35 +26,35 @@
 #define sqr(a) ((a)*(a))
 extern const std::complex<double> omega,ZLETTERMOD;
 
-class hvec
+class Eisenstein
 {
 private:
   int x,y; // x is the real part, y is at 120°
   static int numx,numy,denx,deny,quox,quoy,remx,remy;
-  void divmod(hvec b);
+  void divmod(Eisenstein b);
 public:
-  hvec()
+  Eisenstein()
   {x=y=0;}
-  hvec(int xa)
+  Eisenstein(int xa)
   {x=xa;
    y=0;
    }
-  hvec(int xa,int ya)
+  Eisenstein(int xa,int ya)
   {x=xa;
    y=ya;
    }
-  hvec(std::complex<double> z);
-  hvec operator+(hvec b);
-  hvec operator-();
-  hvec operator-(hvec b);
-  hvec operator*(hvec b);
-  hvec& operator*=(hvec b);
-  hvec& operator+=(hvec b);
-  hvec operator/(hvec b);
-  hvec operator%(hvec b);
-  bool operator==(hvec b);
-  bool operator!=(hvec b);
-  friend bool operator<(const hvec a,const hvec b); // only for the map
+  Eisenstein(std::complex<double> z);
+  Eisenstein operator+(Eisenstein b);
+  Eisenstein operator-();
+  Eisenstein operator-(Eisenstein b);
+  Eisenstein operator*(Eisenstein b);
+  Eisenstein& operator*=(Eisenstein b);
+  Eisenstein& operator+=(Eisenstein b);
+  Eisenstein operator/(Eisenstein b);
+  Eisenstein operator%(Eisenstein b);
+  bool operator==(Eisenstein b);
+  bool operator!=(Eisenstein b);
+  friend bool operator<(const Eisenstein a,const Eisenstein b); // only for the map
   unsigned long norm();
   int pageinx(int size,int nelts);
   int pageinx();
@@ -73,10 +73,10 @@ public:
   bool cont(int n);
 };
 
-hvec start(int n);
-hvec nthhvec(int n,int size,int nelts);
-extern const hvec LETTERMOD,PAGEMOD;
-extern int debughvec;
+Eisenstein start(int n);
+Eisenstein nthEisenstein(int n,int size,int nelts);
+extern const Eisenstein LETTERMOD,PAGEMOD;
+extern int debugEisenstein;
 
 class sixvec
 {
@@ -95,14 +95,14 @@ public:
 };
 
 template <typename T> class harray
-{std::map<hvec,T *> index;
+{std::map<Eisenstein,T *> index;
  public:
- T& operator[](hvec i);
+ T& operator[](Eisenstein i);
  void clear();
  };
 
-template <typename T> T& harray<T>::operator[](hvec i)
-{hvec q,r;
+template <typename T> T& harray<T>::operator[](Eisenstein i)
+{Eisenstein q,r;
  q=i/PAGEMOD;
  r=i%PAGEMOD;
  if (!index[q])
@@ -111,7 +111,7 @@ template <typename T> T& harray<T>::operator[](hvec i)
  }
 
 template <typename T> void harray<T>::clear()
-{typename std::map<hvec,T *>::iterator i;
+{typename std::map<Eisenstein,T *>::iterator i;
  for (i=index.start();i!=index.end();i++)
      {free(i->second);
       i->second=NULL;
