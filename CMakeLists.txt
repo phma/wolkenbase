@@ -15,12 +15,12 @@ if (${FORCE_COLORED_OUTPUT})
   endif ()
 endif ()
 
-add_executable(wolkenbase angle.cpp binio.cpp cloud.cpp
-               las.cpp ldecimal.cpp octree.cpp point.cpp quaternion.cpp
+add_executable(wolkenbase angle.cpp binio.cpp boundrect.cpp cloud.cpp eisenstein.cpp
+               las.cpp ldecimal.cpp octree.cpp point.cpp ps.cpp quaternion.cpp
                random.cpp shape.cpp testpattern.cpp wolkenbase.cpp)
 
-add_executable(wolkentest angle.cpp binio.cpp cloud.cpp
-               las.cpp ldecimal.cpp octree.cpp point.cpp quaternion.cpp
+add_executable(wolkentest angle.cpp binio.cpp boundrect.cpp cloud.cpp eisenstein.cpp
+               las.cpp ldecimal.cpp octree.cpp point.cpp ps.cpp quaternion.cpp
                random.cpp shape.cpp testpattern.cpp wolkentest.cpp)
 
 set(CMAKE_CXX_FLAGS "-std=c++11")

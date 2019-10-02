@@ -452,10 +452,11 @@ void testcomplex()
   complex<double> z=8191,r(0.8,0.6),z2,diff;
   int i,histo[13],reg;
   Eisenstein h;
+  PostScript ps;
   memset(histo,0,sizeof(histo));
-  psopen("testcomplex.ps");
-  psprolog();
-  startpage();
+  ps.open("testcomplex.ps");
+  ps.prolog();
+  ps.startpage();
   for (i=0;i<32768;i++)
   {
     z*=r;
@@ -468,55 +469,55 @@ void testcomplex()
     switch (reg)
     {
       case 0:
-	setcolor(0,0,0);
+	ps.setcolor(0,0,0);
 	break;
       case 1:
-	setcolor(0,0,1);
+	ps.setcolor(0,0,1);
 	break;
       case 2:
-	setcolor(0,.5,.5);
+	ps.setcolor(0,.5,.5);
 	break;
       case 3:
-	setcolor(0,1,0);
+	ps.setcolor(0,1,0);
 	break;
       case 4:
-	setcolor(.5,.5,0);
+	ps.setcolor(.5,.5,0);
 	break;
       case 5:
-	setcolor(1,0,0);
+	ps.setcolor(1,0,0);
 	break;
       case 6:
-	setcolor(.5,0,.5);
+	ps.setcolor(.5,0,.5);
 	break;
       case 7:
-	setcolor(1,1,0);
+	ps.setcolor(1,1,0);
 	break;
       case 8:
-	setcolor(1,.5,.5);
+	ps.setcolor(1,.5,.5);
 	break;
       case 9:
-	setcolor(1,0,1);
+	ps.setcolor(1,0,1);
 	break;
       case 10:
-	setcolor(.5,.5,1);
+	ps.setcolor(.5,.5,1);
 	break;
       case 11:
-	setcolor(0,1,1);
+	ps.setcolor(0,1,1);
 	break;
       case 12:
-	setcolor(.5,1,.5);
+	ps.setcolor(.5,1,.5);
 	break;
     }
-    plotpoint(diff.real()*100,diff.imag()*100);
+    ps.dot(xy(diff.real()*100,diff.imag()*100));
   }
   for (i=0;i<13;i++)
     printf("%2d %5d\n",i,histo[i]);
   h=Eisenstein(0,1);
   z=h;
   cout<<z<<endl;
-  endpage();
-  pstrailer();
-  psclose();
+  ps.endpage();
+  ps.trailer();
+  ps.close();
 }
 
 /* Six-dimensional vectors. A two-dimensional torus lies in a four-dimensional plane
@@ -617,9 +618,10 @@ void testsixvec()
   int i,reg;
   Eisenstein h;
   sixvec s,a(complex<double>(0,0)),b(complex<double>(0,M_SQRT_3_4/2)),c(complex<double>(0,-M_SQRT_3_4/2));
-  psopen("testsixvec.ps");
-  psprolog();
-  startpage();
+  PostScript ps;
+  ps.open("testsixvec.ps");
+  ps.prolog();
+  ps.startpage();
   for (i=0;i<32768;i++)
   {
     z*=r;
@@ -627,11 +629,11 @@ void testsixvec()
     z2=h;
     diff=z-z2;
     s=sixvec(z);
-    setcolor((s-a).norm()/2/M_SQRT_3,(s-b).norm()/2/M_SQRT_3,(s-c).norm()/2/M_SQRT_3);
+    ps.setcolor((s-a).norm()/2/M_SQRT_3,(s-b).norm()/2/M_SQRT_3,(s-c).norm()/2/M_SQRT_3);
     //cout<<diff<<endl;
-    plotpoint(diff.real()*100,diff.imag()*100);
+    //plotpoint(diff.real()*100,diff.imag()*100);
   }
-  endpage();
-  pstrailer();
-  psclose();
+  ps.endpage();
+  ps.trailer();
+  ps.close();
 }
