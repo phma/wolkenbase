@@ -78,22 +78,6 @@ Eisenstein nthEisenstein(int n,int size,int nelts);
 extern const Eisenstein LETTERMOD,PAGEMOD;
 extern int debugEisenstein;
 
-class sixvec
-{
-public:
-  double v[6];
-  sixvec();
-  sixvec(std::complex<double> z);
-  sixvec operator+(const sixvec b);
-  sixvec operator-(const sixvec b);
-  sixvec operator*(const double b);
-  sixvec operator/(const double b);
-  sixvec operator+=(const sixvec b);
-  sixvec operator/=(const double b);
-  bool operator!=(const sixvec b);
-  double norm();
-};
-
 template <typename T> class harray
 {std::map<Eisenstein,T *> index;
  public:
