@@ -47,7 +47,7 @@ vector<string> args;
 
 void testflat()
 {
-  flatScene();
+  flatScene(10,100);
 }
 
 void testparaboloid()
