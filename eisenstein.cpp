@@ -39,8 +39,9 @@ int debugEisenstein;
 int Eisenstein::numx,Eisenstein::numy,Eisenstein::denx=0,Eisenstein::deny=0,Eisenstein::quox,Eisenstein::quoy,Eisenstein::remx,Eisenstein::remy;
 
 unsigned long _norm(int x,int y)
-{return sqr(x)+sqr(y)-x*y;
- }
+{
+  return sqr(x)+sqr(y)-x*y;
+}
 
 Eisenstein::Eisenstein(complex<double> z)
 {
@@ -95,160 +96,180 @@ void Eisenstein::divmod(Eisenstein b)
  * -1-ω  deny-denx  -denx
  * -ω    deny       deny-denx
  */
-{int cont;
- if (this->x!=numx || this->y!=numy || b.x!=denx || b.y!=deny)
-    {int nrm,nrm1;
-     numx=this->x;
-     numy=this->y;
-     denx=b.x;
-     deny=b.y;
-     nrm=b.norm();
-     if (debugEisenstein)
-        printf("%d+%dω/%d+%dω\n",numx,numy,denx,deny);
-     // Do a rough division.
-     quox=round((numx*denx+numy*deny-numx*deny)/(double)nrm);
-     quoy=round((numy*denx-numx*deny)/(double)nrm);
-     remx=numx-denx*quox+deny*quoy;
-     remy=numy-denx*quoy-deny*quox+deny*quoy;
-     // Adjust division so that remainder has least norm.
-     // Ties are broken by < or <= for a symmetrical, but eccentric,
-     // shape when dividing by LETTERMOD.
-     do {cont=false; // FIXME this loop may need to be optimized
-         nrm=_norm(remx,remy);
-         nrm1=_norm(remx+denx-deny,remy+denx);
-         if (debugEisenstein)
-            printf("quo=%d+%dω rem=%d+%dω nrm=%d nrm1=%d\n",quox,quoy,remx,remy,nrm,nrm1);
-         if (nrm1<nrm)
-            {remx=remx+denx-deny;
-             remy=remy+denx;
-             quox--;
-	     quoy--;
-	     cont-=13;
-	     }
-         nrm=_norm(remx,remy);
-         nrm1=_norm(remx+deny,remy+deny-denx);
-         if (debugEisenstein)
-            printf("quo=%d+%dω rem=%d+%dω nrm=%d nrm1=%d\n",quox,quoy,remx,remy,nrm,nrm1);
-         if (nrm1<nrm)
-            {remx=remx+deny;
-             remy=remy+deny-denx;
-             quoy++;
-	     cont+=8;
-	     }
-         nrm=_norm(remx,remy);
-         nrm1=_norm(remx-denx,remy-deny);
-         if (debugEisenstein)
-            printf("quo=%d+%dω rem=%d+%dω nrm=%d nrm1=%d\n",quox,quoy,remx,remy,nrm,nrm1);
-         if (nrm1<nrm)
-            {remx=remx-denx;
-             remy=remy-deny;
-             quox++;
-	     cont+=5;
-	     }
-         nrm=_norm(remx,remy);
-         nrm1=_norm(remx+deny-denx,remy-denx);
-         if (debugEisenstein)
-            printf("quo=%d+%dω rem=%d+%dω nrm=%d nrm1=%d\n",quox,quoy,remx,remy,nrm,nrm1);
-         if (nrm1<nrm)
-            {remx=remx+deny-denx;
-             remy=remy-denx;
-             quox++;
-	     quoy++;
-	     cont+=13;
-	     }
-         nrm=_norm(remx,remy);
-         nrm1=_norm(remx-deny,remy+denx-deny);
-         if (debugEisenstein)
-            printf("quo=%d+%dω rem=%d+%dω nrm=%d nrm1=%d\n",quox,quoy,remx,remy,nrm,nrm1);
-         if (nrm1<nrm)
-            {remx=remx-deny;
-             remy=remy+denx-deny;
-             quoy--;
-	     cont-=8;
-	     }
-         nrm=_norm(remx,remy);
-         nrm1=_norm(remx+denx,remy+deny);
-         if (debugEisenstein)
-            printf("quo=%d+%dω rem=%d+%dω nrm=%d nrm1=%d\n",quox,quoy,remx,remy,nrm,nrm1);
-         if (nrm1<nrm)
-            {remx=remx+denx;
-             remy=remy+deny;
-             quox--;
-	     cont-=5;
-	     }
-	 if (debugEisenstein)
-            printf("loop\n");
-	 } while (0);
-     nrm=_norm(remx,remy);
-     nrm1=_norm(remx+denx,remy+deny);
-     if (debugEisenstein)
-        printf("quo=%d+%dω rem=%d+%dω nrm=%d nrm1=%d\n",quox,quoy,remx,remy,nrm,nrm1);
-     if (nrm1<=nrm)
-        {remx=remx+denx;
-         remy=remy+deny;
-         quox--;
-         }
-     if (debugEisenstein)
-        printf("quo=%d+%dω rem=%d+%dω \n",quox,quoy,remx,remy);
-     nrm=_norm(remx,remy);
-     nrm1=_norm(remx-deny+denx,remy+denx);
-     if (debugEisenstein)
-        printf("quo=%d+%dω rem=%d+%dω nrm=%d nrm1=%d\n",quox,quoy,remx,remy,nrm,nrm1);
-     if (nrm1<=nrm)
-        {remx=remx-deny+denx;
-         remy=remy+denx;
-         quox--;
-	 quoy--;
-	 }
-     nrm=_norm(remx,remy);
-     nrm1=_norm(remx+deny,remy-denx+deny);
-     if (debugEisenstein)
-        printf("quo=%d+%dω rem=%d+%dω nrm=%d nrm1=%d\n",quox,quoy,remx,remy,nrm,nrm1);
-     if (nrm1<=nrm)
-        {remx=remx+deny;
-         remy=remy-denx+deny;
-         quoy++;
-	 }
-     }
- }
+{
+  int cont;
+  if (this->x!=numx || this->y!=numy || b.x!=denx || b.y!=deny)
+  {
+    int nrm,nrm1;
+    numx=this->x;
+    numy=this->y;
+    denx=b.x;
+    deny=b.y;
+    nrm=b.norm();
+    if (debugEisenstein)
+      printf("%d+%dω/%d+%dω\n",numx,numy,denx,deny);
+    // Do a rough division.
+    quox=round((numx*denx+numy*deny-numx*deny)/(double)nrm);
+    quoy=round((numy*denx-numx*deny)/(double)nrm);
+    remx=numx-denx*quox+deny*quoy;
+    remy=numy-denx*quoy-deny*quox+deny*quoy;
+    // Adjust division so that remainder has least norm.
+    // Ties are broken by < or <= for a symmetrical, but eccentric,
+    // shape when dividing by LETTERMOD.
+    do
+    {
+      cont=false; // FIXME this loop may need to be optimized
+      nrm=_norm(remx,remy);
+      nrm1=_norm(remx+denx-deny,remy+denx);
+      if (debugEisenstein)
+	printf("quo=%d+%dω rem=%d+%dω nrm=%d nrm1=%d\n",quox,quoy,remx,remy,nrm,nrm1);
+      if (nrm1<nrm)
+      {
+	remx=remx+denx-deny;
+	remy=remy+denx;
+	quox--;
+	quoy--;
+	cont-=13;
+      }
+      nrm=_norm(remx,remy);
+      nrm1=_norm(remx+deny,remy+deny-denx);
+      if (debugEisenstein)
+	printf("quo=%d+%dω rem=%d+%dω nrm=%d nrm1=%d\n",quox,quoy,remx,remy,nrm,nrm1);
+      if (nrm1<nrm)
+      {
+	remx=remx+deny;
+	remy=remy+deny-denx;
+	quoy++;
+	cont+=8;
+      }
+      nrm=_norm(remx,remy);
+      nrm1=_norm(remx-denx,remy-deny);
+      if (debugEisenstein)
+	printf("quo=%d+%dω rem=%d+%dω nrm=%d nrm1=%d\n",quox,quoy,remx,remy,nrm,nrm1);
+      if (nrm1<nrm)
+      {
+	remx=remx-denx;
+	remy=remy-deny;
+	quox++;
+	cont+=5;
+      }
+      nrm=_norm(remx,remy);
+      nrm1=_norm(remx+deny-denx,remy-denx);
+      if (debugEisenstein)
+	printf("quo=%d+%dω rem=%d+%dω nrm=%d nrm1=%d\n",quox,quoy,remx,remy,nrm,nrm1);
+      if (nrm1<nrm)
+      {
+	remx=remx+deny-denx;
+	remy=remy-denx;
+	quox++;
+	quoy++;
+	cont+=13;
+      }
+      nrm=_norm(remx,remy);
+      nrm1=_norm(remx-deny,remy+denx-deny);
+      if (debugEisenstein)
+	printf("quo=%d+%dω rem=%d+%dω nrm=%d nrm1=%d\n",quox,quoy,remx,remy,nrm,nrm1);
+      if (nrm1<nrm)
+      {
+	remx=remx-deny;
+	remy=remy+denx-deny;
+	quoy--;
+	cont-=8;
+      }
+      nrm=_norm(remx,remy);
+      nrm1=_norm(remx+denx,remy+deny);
+      if (debugEisenstein)
+	printf("quo=%d+%dω rem=%d+%dω nrm=%d nrm1=%d\n",quox,quoy,remx,remy,nrm,nrm1);
+      if (nrm1<nrm)
+      {
+	remx=remx+denx;
+	remy=remy+deny;
+	quox--;
+	cont-=5;
+      }
+      if (debugEisenstein)
+	printf("loop\n");
+      } while (0);
+    nrm=_norm(remx,remy);
+    nrm1=_norm(remx+denx,remy+deny);
+    if (debugEisenstein)
+      printf("quo=%d+%dω rem=%d+%dω nrm=%d nrm1=%d\n",quox,quoy,remx,remy,nrm,nrm1);
+    if (nrm1<=nrm)
+    {
+      remx=remx+denx;
+      remy=remy+deny;
+      quox--;
+    }
+    if (debugEisenstein)
+      printf("quo=%d+%dω rem=%d+%dω \n",quox,quoy,remx,remy);
+    nrm=_norm(remx,remy);
+    nrm1=_norm(remx-deny+denx,remy+denx);
+    if (debugEisenstein)
+      printf("quo=%d+%dω rem=%d+%dω nrm=%d nrm1=%d\n",quox,quoy,remx,remy,nrm,nrm1);
+    if (nrm1<=nrm)
+    {
+      remx=remx-deny+denx;
+      remy=remy+denx;
+      quox--;
+      quoy--;
+    }
+    nrm=_norm(remx,remy);
+    nrm1=_norm(remx+deny,remy-denx+deny);
+    if (debugEisenstein)
+      printf("quo=%d+%dω rem=%d+%dω nrm=%d nrm1=%d\n",quox,quoy,remx,remy,nrm,nrm1);
+    if (nrm1<=nrm)
+    {
+      remx=remx+deny;
+      remy=remy-denx+deny;
+      quoy++;
+    }
+  }
+}
 
 Eisenstein Eisenstein::operator+(Eisenstein b)
-{return Eisenstein(this->x+b.x,this->y+b.y);
- }
+{
+  return Eisenstein(this->x+b.x,this->y+b.y);
+}
 
 Eisenstein& Eisenstein::operator+=(Eisenstein b)
-{this->x+=b.x,this->y+=b.y;
- return *this;
- }
+{
+  this->x+=b.x,this->y+=b.y;
+  return *this;
+}
 
 Eisenstein Eisenstein::operator-()
-{return Eisenstein(-this->x,-this->y);
- }
+{
+  return Eisenstein(-this->x,-this->y);
+}
 
 Eisenstein Eisenstein::operator-(Eisenstein b)
-{return Eisenstein(this->x-b.x,this->y-b.y);
- }
+{
+  return Eisenstein(this->x-b.x,this->y-b.y);
+}
 
 bool operator<(const Eisenstein a,const Eisenstein b)
 // These numbers are complex, so there is no consistent < operator on them.
 // This operator is used only to give some order to the map.
-{if (a.y!=b.y)
+{
+  if (a.y!=b.y)
     return a.y<b.y;
- else
+  else
     return a.x<b.x;
- }
+}
 
 Eisenstein Eisenstein::operator*(Eisenstein b)
-{return Eisenstein(x*b.x-y*b.y,x*b.y+y*b.x-y*b.y);
- }
+{
+  return Eisenstein(x*b.x-y*b.y,x*b.y+y*b.x-y*b.y);
+}
 
 Eisenstein& Eisenstein::operator*=(Eisenstein b)
-{int tmp;
- tmp=x*b.x-y*b.y;
- y=x*b.y+y*b.x-y*b.y;
- x=tmp;
- return *this;
- }
+{
+  int tmp;
+  tmp=x*b.x-y*b.y;
+  y=x*b.y+y*b.x-y*b.y;
+  x=tmp;
+  return *this;
+}
 
 Eisenstein Eisenstein::operator/(Eisenstein b)
 {if (b==0)
@@ -258,25 +279,30 @@ Eisenstein Eisenstein::operator/(Eisenstein b)
  }
 
 Eisenstein Eisenstein::operator%(Eisenstein b)
-{if (b==0)
+{
+  if (b==0)
     return (*this); // Dividing by zero is an error, but modding by zero is not.
- else
-    {divmod(b);
-     return Eisenstein(remx,remy);
-     }
- }
+  else
+  {
+    divmod(b);
+    return Eisenstein(remx,remy);
+  }
+}
 
 bool Eisenstein::operator==(Eisenstein b)
-{return this->x==b.x && this->y==b.y;
- }
+{
+  return this->x==b.x && this->y==b.y;
+}
 
 bool Eisenstein::operator!=(Eisenstein b)
-{return this->x!=b.x || this->y!=b.y;
- }
+{
+  return this->x!=b.x || this->y!=b.y;
+}
 
 unsigned long Eisenstein::norm()
-{return sqr(this->x)+sqr(this->y)-this->x*this->y;
- }
+{
+  return sqr(this->x)+sqr(this->y)-this->x*this->y;
+}
 
 Eisenstein nthEisenstein(int n,int size,int nelts)
 {
@@ -323,46 +349,53 @@ int Eisenstein::pageinx()
 // Iteration: start, inc, cont. Iterates over a hexagon.
 
 Eisenstein start(int n)
-{if (n<0)
+{
+  if (n<0)
     throw(out_of_range("Eisenstein start: n<0"));
- return Eisenstein(-n,-n);
- }
+  return Eisenstein(-n,-n);
+}
 
 void Eisenstein::inc(int n)
-{if (n<0)
+{
+  if (n<0)
     throw(out_of_range("Eisenstein::inc: n<0"));
- x++;
- if (y<0)
+  x++;
+  if (y<0)
     if (x-y>n)
-       {y++;
-        x=-n;
-        }
+    {
+      y++;
+      x=-n;
+    }
     else;
- else
+  else
     if (x>n)
-       {y++;
-        x=y-n;
-        }
- }
+    {
+      y++;
+      x=y-n;
+    }
+}
 
 bool Eisenstein::cont(int n)
-{return y<=n;
- }
+{
+  return y<=n;
+}
 
 int Eisenstein::letterinx()
-{switch (y)
-   {case 1:
-    return 11-x;
+{
+  switch (y)
+  {
+    case 1:
+      return 11-x;
     case 0:
-    return 8-x;
+      return 8-x;
     case -1:
-    return 4-x;
+      return 4-x;
     case -2:
-    return -x;
+      return -x;
     default:
-    return 32768;
-    }
- }
+      return 32768;
+  }
+}
 
 void testpageinx()
 {

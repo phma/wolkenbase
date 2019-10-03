@@ -34,15 +34,19 @@ private:
   void divmod(Eisenstein b);
 public:
   Eisenstein()
-  {x=y=0;}
+  {
+    x=y=0;
+  }
   Eisenstein(int xa)
-  {x=xa;
-   y=0;
-   }
+  {
+    x=xa;
+    y=0;
+  }
   Eisenstein(int xa,int ya)
-  {x=xa;
-   y=ya;
-   }
+  {
+    x=xa;
+    y=ya;
+  }
   Eisenstein(std::complex<double> z);
   Eisenstein operator+(Eisenstein b);
   Eisenstein operator-();
@@ -60,11 +64,13 @@ public:
   int pageinx();
   int letterinx();
   int getx()
-  {return x;
-   }
+  {
+    return x;
+  }
   int gety()
-  {return y;
-   }
+  {
+    return y;
+  }
   operator std::complex<double>() const
   {
     return std::complex<double>(x-y/2.,y*M_SQRT_3_4);
@@ -79,32 +85,35 @@ extern const Eisenstein LETTERMOD,PAGEMOD;
 extern int debugEisenstein;
 
 template <typename T> class harray
-{std::map<Eisenstein,T *> index;
- public:
- T& operator[](Eisenstein i);
- void clear();
- };
+{
+  std::map<Eisenstein,T *> index;
+public:
+  T& operator[](Eisenstein i);
+  void clear();
+};
 
 template <typename T> T& harray<T>::operator[](Eisenstein i)
-{Eisenstein q,r;
- q=i/PAGEMOD;
- r=i%PAGEMOD;
- if (!index[q])
+{
+  Eisenstein q,r;
+  q=i/PAGEMOD;
+  r=i%PAGEMOD;
+  if (!index[q])
     index[q]=(T*)calloc(PAGESIZE,sizeof(T));
- return index[q][r.pageinx()];
- }
+  return index[q][r.pageinx()];
+}
 
 template <typename T> void harray<T>::clear()
-{typename std::map<Eisenstein,T *>::iterator i;
- for (i=index.start();i!=index.end();i++)
-     {free(i->second);
-      i->second=NULL;
-      }
- }
+{
+  typename std::map<Eisenstein,T *>::iterator i;
+  for (i=index.start();i!=index.end();i++)
+  {
+    free(i->second);
+    i->second=NULL;
+  }
+}
 
 int region(std::complex<double> z);
 void testcomplex();
-void testsixvec();
 void testpageinx();
 
 /* Files for storing hexagonal arrays:
