@@ -490,7 +490,7 @@ void testcomplex()
   ps.open("testcomplex.ps");
   ps.prolog();
   ps.startpage();
-  for (i=0;i<32768;i++)
+  for (i=0;i<26640;i++)
   {
     z*=r;
     h=z;
