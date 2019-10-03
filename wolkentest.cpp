@@ -35,6 +35,7 @@
 #include "octree.h"
 #include "shape.h"
 #include "testpattern.h"
+#include "eisenstein.h"
 
 #define tassert(x) testfail|=(!(x))
 //#define tassert(x) if (!(x)) {testfail=true; sleep(10);}
@@ -90,6 +91,10 @@ int main(int argc, char *argv[])
   for (i=1;i<argc;i++)
     args.push_back(argv[i]);
   octStore.open("store.oct");
+  if (shoulddo("complex"))
+    testcomplex();
+  if (shoulddo("pageinx"))
+    testpageinx();
   if (shoulddo("paraboloid"))
     testparaboloid();
   if (shoulddo("flat"))
