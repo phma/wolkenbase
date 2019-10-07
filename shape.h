@@ -33,7 +33,14 @@ private:
   double side;
 };
 
-class Paraboloid
+class Shape
+{
+public:
+  virtual bool in(xyz pnt)=0;
+  virtual bool intersectCube(Cube cube)=0;
+};
+
+class Paraboloid: public Shape
 /* Points down if radiusCurvature is positive.
  * radiusCurvature is the radius of curvature at the vertex,
  * which is twice the focal length and half the latus rectum.
@@ -42,7 +49,8 @@ class Paraboloid
 public:
   Paraboloid();
   Paraboloid(xyz v,double r);
-  bool in(xyz pnt);
+  virtual bool in(xyz pnt);
+  virtual bool intersectCube(Cube cube);
 private:
   xyz vertex;
   double radiusCurvature;

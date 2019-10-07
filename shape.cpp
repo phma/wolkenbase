@@ -62,3 +62,8 @@ bool Paraboloid::in(xyz pnt)
   else
     return 2*zdist/radiusCurvature>=sqr(xydist/radiusCurvature);
 }
+
+bool Paraboloid::intersectCube(Cube cube)
+{
+  return false; //stub
+}
