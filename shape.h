@@ -28,6 +28,14 @@ public:
   Cube();
   Cube(xyz c,double s);
   bool in(xyz pnt);
+  xyz getCenter()
+  {
+    return center;
+  }
+  double getSide()
+  {
+    return side;
+  }
 private:
   xyz center;
   double side;
@@ -37,7 +45,8 @@ class Shape
 {
 public:
   virtual bool in(xyz pnt)=0;
-  virtual bool intersectCube(Cube cube)=0;
+  virtual xyz closestPoint(Cube cube)=0;
+  virtual bool intersect(Cube cube);
 };
 
 class Paraboloid: public Shape
@@ -50,7 +59,7 @@ public:
   Paraboloid();
   Paraboloid(xyz v,double r);
   virtual bool in(xyz pnt);
-  virtual bool intersectCube(Cube cube);
+  virtual xyz closestPoint(Cube cube);
 private:
   xyz vertex;
   double radiusCurvature;

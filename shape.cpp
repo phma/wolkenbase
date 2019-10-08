@@ -42,6 +42,11 @@ bool Cube::in(xyz pnt)
       && fabs(pnt.getz()-center.getz())<=side/2;
 }
 
+bool Shape::intersect(Cube cube)
+{
+  return in(closestPoint(cube));
+}
+
 Paraboloid::Paraboloid()
 {
   radiusCurvature=0;
@@ -63,7 +68,26 @@ bool Paraboloid::in(xyz pnt)
     return 2*zdist/radiusCurvature>=sqr(xydist/radiusCurvature);
 }
 
-bool Paraboloid::intersectCube(Cube cube)
+xyz Paraboloid::closestPoint(Cube cube)
 {
-  return false; //stub
+  xyz ret=cube.getCenter();
+  double x=ret.getx(),y=ret.gety(),z=ret.getz();
+  if (fabs(vertex.getx()-x)<cube.getSide()/2)
+    x=vertex.getx();
+  else if (vertex.getx()>x)
+    x+=cube.getSide()/2;
+  else
+    x-=cube.getSide()/2;
+  if (fabs(vertex.gety()-y)<cube.getSide()/2)
+    y=vertex.gety();
+  else if (vertex.gety()>y)
+    y+=cube.getSide()/2;
+  else
+    y-=cube.getSide()/2;
+  if (radiusCurvature>0)
+    z-=cube.getSide()/2;
+  if (radiusCurvature<0)
+    z+=cube.getSide()/2;
+  ret=xyz(x,y,z);
+  return ret;
 }
