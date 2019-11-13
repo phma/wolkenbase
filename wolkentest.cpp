@@ -55,12 +55,15 @@ void testparaboloid()
 {
   Paraboloid p1(xyz(0,0,13),13);
   xyz v(0,0,13),a(5,0,12),b(5,2,12),c(13,13,0),d(-14,-12,0),e(9,16,0);
+  Cube l(v,1),m(b,0.1);
   tassert(p1.in(v));
   tassert(p1.in(a));
   tassert(!p1.in(b));
   tassert(p1.in(c));
   tassert(!p1.in(d));
   tassert(p1.in(e));
+  tassert(p1.intersect(l));
+  tassert(!p1.intersect(m));
 }
 
 bool shoulddo(string testname)
