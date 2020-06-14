@@ -15,6 +15,8 @@ if (${FORCE_COLORED_OUTPUT})
   endif ()
 endif ()
 
+find_package(Boost COMPONENTS program_options)
+
 add_executable(wolkenbase angle.cpp binio.cpp boundrect.cpp cloud.cpp eisenstein.cpp
                las.cpp ldecimal.cpp octree.cpp point.cpp ps.cpp quaternion.cpp
                random.cpp shape.cpp testpattern.cpp wolkenbase.cpp)
@@ -23,6 +25,9 @@ add_executable(wolkentest angle.cpp binio.cpp boundrect.cpp cloud.cpp eisenstein
                las.cpp ldecimal.cpp octree.cpp point.cpp ps.cpp quaternion.cpp
                random.cpp shape.cpp testpattern.cpp wolkentest.cpp)
 
+if (${Boost_FOUND})
+target_link_libraries(wolkenbase ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES})
+endif (${Boost_FOUND})
 set(CMAKE_CXX_FLAGS "-std=c++11")
 install(TARGETS wolkenbase DESTINATION bin)
 
