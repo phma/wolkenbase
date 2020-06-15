@@ -35,7 +35,7 @@ int base7dig(Eisenstein d)
 Eisenstein baseFlowDig(int d)
 {
   int x,y;
-  y=(d+4)%3-1;
+  y=(d+4)/3-1;
   x=d-2*y;
   return Eisenstein(x,y);
 }
