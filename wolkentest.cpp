@@ -36,6 +36,7 @@
 #include "shape.h"
 #include "testpattern.h"
 #include "eisenstein.h"
+#include "random.h"
 #include "ps.h"
 #include "flowsnake.h"
 
@@ -71,7 +72,7 @@ void testparaboloid()
 void testflowsnake()
 {
   PostScript ps;
-  int i;
+  int i,n;
   Eisenstein e;
   complex<double> z;
   ps.open("flowsnake.ps");
@@ -80,6 +81,11 @@ void testflowsnake()
   ps.startpage();
   ps.setscale(-171,-171,171,171);
   ps.startline();
+  for (i=0;i<256;i++)
+  {
+    n=rng.usrandom()-32768;
+    tassert(baseSeven(baseFlow(n))==n);
+  }
   for (i=-58824;i<58825;i++)
   {
     e=baseFlow(i);
