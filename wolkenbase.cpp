@@ -3,7 +3,7 @@
 /* wolkenbase.cpp - main program                      */
 /*                                                    */
 /******************************************************/
-/* Copyright 2019 Pierre Abbat.
+/* Copyright 2019,2020 Pierre Abbat.
  * This file is part of Wolkenbase.
  *
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -29,29 +29,53 @@
  *    of radius 0.5 meter.
  */
 #include <cmath>
+#include <boost/program_options.hpp>
 #include "las.h"
 #include "ldecimal.h"
 #include "octree.h"
 using namespace std;
+namespace po=boost::program_options;
 
 int main(int argc,char **argv)
 {
   LasPoint lPoint;
   int i;
   size_t j;
+  vector<string> inputFiles;
   vector<LasHeader> files;
   vector<xyz> limits;
   xyz center;
   ofstream testFile("testfile");
-  files.resize(1);
-  files[0].open("Pierre.las");
+  bool validArgs,validCmd=true;
+  po::options_description generic("Options");
+  po::options_description hidden("Hidden options");
+  po::options_description cmdline_options;
+  po::positional_options_description p;
+  po::variables_map vm;
+  hidden.add_options()
+    ("input",po::value<vector<string> >(&inputFiles),"Input file");
+  p.add("input",-1);
+  cmdline_options.add(generic).add(hidden);
+  try
+  {
+    po::store(po::command_line_parser(argc,argv).options(cmdline_options).positional(p).run(),vm);
+    po::notify(vm);
+  }
+  catch (exception &e)
+  {
+    cerr<<e.what()<<endl;
+    validCmd=false;
+  }
+  files.resize(inputFiles.size());
+  for (i=0;i<inputFiles.size();i++)
+    files[i].open(inputFiles[i]);
   for (i=0;i<files.size();i++)
   {
     limits.push_back(files[i].minCorner());
     limits.push_back(files[i].maxCorner());
+    cout<<files[i].numberPoints()<<" points\n";
   }
   octRoot.sizeFit(limits);
-  cout<<files[0].numberPoints()<<" points\n";
   center=octRoot.getCenter();
   cout<<'('<<ldecimal(center.getx())<<','<<ldecimal(center.gety())<<','<<ldecimal(center.getz())<<")±";
   cout<<octRoot.getSide()<<endl;
@@ -59,11 +83,14 @@ int main(int argc,char **argv)
   for (i=0;i<RECORDS;i++)
     lPoint.write(testFile);
   octStore.open("store.oct");
-  for (j=0;j<files[0].numberPoints();j++)
+  for (i=0;i<files.size();i++)
   {
-    lPoint=files[0].readPoint(j);
-    octStore[lPoint.location]=lPoint;
+    for (j=0;j<files[i].numberPoints();j++)
+    {
+      lPoint=files[i].readPoint(j);
+      octStore[lPoint.location]=lPoint;
+    }
+    cout<<files[i].numberPoints()<<" points\n";
   }
-  cout<<files[0].numberPoints()<<" points\n";
   return 0;
 }
