@@ -3,7 +3,7 @@
 /* wolkentest.cpp - test program                      */
 /*                                                    */
 /******************************************************/
-/* Copyright 2019 Pierre Abbat.
+/* Copyright 2019,2020 Pierre Abbat.
  * This file is part of Wolkenbase.
  *
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -36,6 +36,8 @@
 #include "shape.h"
 #include "testpattern.h"
 #include "eisenstein.h"
+#include "ps.h"
+#include "flowsnake.h"
 
 #define tassert(x) testfail|=(!(x))
 //#define tassert(x) if (!(x)) {testfail=true; sleep(10);}
@@ -64,6 +66,28 @@ void testparaboloid()
   tassert(p1.in(e));
   tassert(p1.intersect(l));
   tassert(!p1.intersect(m));
+}
+
+void testflowsnake()
+{
+  PostScript ps;
+  int i;
+  Eisenstein e;
+  complex<double> z;
+  ps.open("flowsnake.ps");
+  ps.setpaper(papersizes["A4 landscape"],0);
+  ps.prolog();
+  ps.startpage();
+  ps.setscale(-171,-171,171,171);
+  ps.startline();
+  for (i=-58824;i<58825;i++)
+  {
+    e=baseFlow(i);
+    z=e;
+    ps.lineto(xy(z.real(),z.imag()));
+  }
+  ps.endline();
+  ps.endpage();
 }
 
 bool shoulddo(string testname)
@@ -102,6 +126,8 @@ int main(int argc, char *argv[])
     testparaboloid();
   if (shoulddo("flat"))
     testflat();
+  if (shoulddo("flowsnake"))
+    testflowsnake();
   cout<<"\nTest "<<(testfail?"failed":"passed")<<endl;
   return testfail;
 }
