@@ -1,3 +1,8 @@
+/******************************************************/
+/*                                                    */
+/* quaternion.cpp - quaternions                       */
+/*                                                    */
+/******************************************************/
 /* Copyright 2019 Pierre Abbat.
  * This file is part of Wolkenbase.
  * 
