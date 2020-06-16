@@ -69,6 +69,22 @@ void testparaboloid()
   tassert(!p1.intersect(m));
 }
 
+void testcylinder()
+{
+  Cylinder c1(xy(0,0),13);
+  xyz cen(0,0,13),a(5,12,0),b(5,13,4),c(-9,-9,-3),d(-11,-7,2);
+  Cube l(cen,1),m(a,0.1),n(d,1/16.),o(d,1/32.);
+  tassert(c1.in(cen));
+  tassert(c1.in(a));
+  tassert(!c1.in(b));
+  tassert(c1.in(c));
+  tassert(!c1.in(d));
+  tassert(c1.intersect(l));
+  tassert(c1.intersect(m));
+  tassert(c1.intersect(n));
+  tassert(!c1.intersect(o));
+}
+
 const int linearSize[]={1,2,3,9,24,65,171};
 const int quadraticSize[]={0,3,24,171,1200,8403,58824};
 const int loLim[]={0,-4,-18,-214,-900,-10504,-44118};
@@ -147,6 +163,8 @@ int main(int argc, char *argv[])
     testpageinx();
   if (shoulddo("paraboloid"))
     testparaboloid();
+  if (shoulddo("cylinder"))
+    testcylinder();
   if (shoulddo("flat"))
     testflat();
   if (shoulddo("flowsnake"))
