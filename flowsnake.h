@@ -69,3 +69,4 @@
 
 int baseSeven(Eisenstein e);
 Eisenstein baseFlow(int n);
+Eisenstein toFlowsnake(int n);

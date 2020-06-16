@@ -75,20 +75,31 @@ void testflowsnake()
   int i,n;
   Eisenstein e;
   complex<double> z;
+  for (i=0;i<256;i++)
+  {
+    n=rng.usrandom()-32768;
+    tassert(baseSeven(baseFlow(n))==n);
+  }
   ps.open("flowsnake.ps");
   ps.setpaper(papersizes["A4 landscape"],0);
   ps.prolog();
   ps.startpage();
   ps.setscale(-171,-171,171,171);
   ps.startline();
-  for (i=0;i<256;i++)
-  {
-    n=rng.usrandom()-32768;
-    tassert(baseSeven(baseFlow(n))==n);
-  }
   for (i=-58824;i<58825;i++)
   {
     e=baseFlow(i);
+    z=e;
+    ps.lineto(xy(z.real(),z.imag()));
+  }
+  ps.endline();
+  ps.endpage();
+  ps.startpage();
+  ps.setscale(-171,-171,171,171);
+  ps.startline();
+  for (i=-58824;i<58825;i++)
+  {
+    e=toFlowsnake(i);
     z=e;
     ps.lineto(xy(z.real(),z.imag()));
   }

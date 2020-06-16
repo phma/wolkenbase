@@ -67,6 +67,26 @@ int baseSeven(Eisenstein e)
   return ret;
 }
 
+int iToFlowsnake(int n)
+{
+  int i,dirori;
+  int dig[11];
+  n+=1318217828; //1235829214;
+  for (i=0;i<11;i++)
+  {
+    dig[i]=n%7;
+    n/=7;
+  }
+  for (i=10,dirori=n=0;i>=0;i--)
+  {
+    dig[i]=forwardFlowsnakeTable[dirori][dig[i]];
+    dirori=dig[i]>>4;
+    dig[i]&=7;
+    n=7*n+dig[i];
+  }
+  return n-988663371;
+}
+
 Eisenstein baseFlow(int n)
 /* Converts n, in centered base 7, to an Eisenstein integer in centered base 2-ω.
  */
@@ -86,4 +106,9 @@ Eisenstein baseFlow(int n)
     powF*=flowBase;
   }
   return ret;
+}
+
+Eisenstein toFlowsnake(int n)
+{
+  return baseFlow(iToFlowsnake(n));
 }
