@@ -71,12 +71,14 @@ void testparaboloid()
 
 const int linearSize[]={1,2,3,9,24,65,171};
 const int quadraticSize[]={0,3,24,171,1200,8403,58824};
+const int loLim[]={0,-4,-18,-214,-900,-10504,-44118};
+const int hiLim[]={0,2,30,128,1500,6302,73530};
 
 void testflowsnake()
 {
   PostScript ps;
   int i,n;
-  int sz=1;
+  int sz=6;
   Eisenstein e;
   complex<double> z;
   for (i=0;i<256;i++)
@@ -101,7 +103,7 @@ void testflowsnake()
   ps.startpage();
   ps.setscale(-linearSize[sz],-linearSize[sz],linearSize[sz],linearSize[sz]);
   ps.startline();
-  for (i=-quadraticSize[sz];i<=quadraticSize[sz];i++)
+  for (i=loLim[sz];i<=hiLim[sz];i++)
   {
     e=toFlowsnake(i);
     z=e;
