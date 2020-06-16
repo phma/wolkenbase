@@ -3,7 +3,7 @@
 /* octree.h - octrees                                 */
 /*                                                    */
 /******************************************************/
-/* Copyright 2019 Pierre Abbat.
+/* Copyright 2019,2020 Pierre Abbat.
  * This file is part of Wolkenbase.
  * 
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -23,6 +23,7 @@
 #ifndef OCTREE_H
 #define OCTREE_H
 #include <map>
+#include "shape.h"
 #include "las.h"
 #define LASPOINT_SIZE 91
 #define RECORDS 720
@@ -50,6 +51,10 @@ public:
   double getSide()
   {
     return side;
+  }
+  Cube cube()
+  {
+    return Cube(center,side);
   }
 private:
   xyz center;

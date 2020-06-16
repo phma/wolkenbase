@@ -3,7 +3,7 @@
 /* shape.h - shapes                                   */
 /*                                                    */
 /******************************************************/
-/* Copyright 2019 Pierre Abbat.
+/* Copyright 2019,2020 Pierre Abbat.
  * This file is part of Wolkenbase.
  * 
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -20,6 +20,8 @@
  * along with Wolkenbase. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef SHAPE_H
+#define SHAPE_H
 #include "point.h"
 
 class Cube
@@ -82,3 +84,4 @@ private:
   xy center;
   double radius;
 };
+#endif
