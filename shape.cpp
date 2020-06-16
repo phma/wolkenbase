@@ -91,3 +91,40 @@ xyz Paraboloid::closestPoint(Cube cube)
   ret=xyz(x,y,z);
   return ret;
 }
+
+Cylinder::Cylinder()
+{
+  radius=0;
+}
+
+Cylinder::Cylinder(xy c,double r)
+{
+  center=c;
+  radius=r;
+}
+
+bool Cylinder::in(xyz pnt)
+{
+  double xydist=dist(center,xy(pnt));
+  return xydist<=radius;
+}
+
+xyz Cylinder::closestPoint(Cube cube)
+{
+  xyz ret=cube.getCenter();
+  double x=ret.getx(),y=ret.gety(),z=ret.getz();
+  if (fabs(center.getx()-x)<cube.getSide()/2)
+    x=center.getx();
+  else if (center.getx()>x)
+    x+=cube.getSide()/2;
+  else
+    x-=cube.getSide()/2;
+  if (fabs(center.gety()-y)<cube.getSide()/2)
+    y=center.gety();
+  else if (center.gety()>y)
+    y+=cube.getSide()/2;
+  else
+    y-=cube.getSide()/2;
+  ret=xyz(x,y,z);
+  return ret;
+}

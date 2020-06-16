@@ -64,3 +64,21 @@ private:
   xyz vertex;
   double radiusCurvature;
 };
+
+class Cylinder: public Shape
+/* Used for traversing the point cloud in flowsnake order.
+ * A hexagon in the lattice has a diapothem, which is also the distance to
+ * the adjacent hexagons. Construct a cylinder whose radius is 41/71 times
+ * the diapothem. This provides a tiny overlap at the corners so that
+ * no points are missed.
+ */
+{
+public:
+  Cylinder();
+  Cylinder(xy c,double r);
+  virtual bool in(xyz pnt);
+  virtual xyz closestPoint(Cube cube);
+private:
+  xy center;
+  double radius;
+};
