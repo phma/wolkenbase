@@ -69,10 +69,14 @@ void testparaboloid()
   tassert(!p1.intersect(m));
 }
 
+const int linearSize[]={1,2,3,9,24,65,171};
+const int quadraticSize[]={0,3,24,171,1200,8403,58824};
+
 void testflowsnake()
 {
   PostScript ps;
   int i,n;
+  int sz=1;
   Eisenstein e;
   complex<double> z;
   for (i=0;i<256;i++)
@@ -84,9 +88,9 @@ void testflowsnake()
   ps.setpaper(papersizes["A4 landscape"],0);
   ps.prolog();
   ps.startpage();
-  ps.setscale(-171,-171,171,171);
+  ps.setscale(-linearSize[sz],-linearSize[sz],linearSize[sz],linearSize[sz]);
   ps.startline();
-  for (i=-58824;i<58825;i++)
+  for (i=-quadraticSize[sz];i<=quadraticSize[sz];i++)
   {
     e=baseFlow(i);
     z=e;
@@ -95,9 +99,9 @@ void testflowsnake()
   ps.endline();
   ps.endpage();
   ps.startpage();
-  ps.setscale(-171,-171,171,171);
+  ps.setscale(-linearSize[sz],-linearSize[sz],linearSize[sz],linearSize[sz]);
   ps.startline();
-  for (i=-58824;i<58825;i++)
+  for (i=-quadraticSize[sz];i<=quadraticSize[sz];i++)
   {
     e=toFlowsnake(i);
     z=e;
