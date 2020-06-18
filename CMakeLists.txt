@@ -1,10 +1,12 @@
 project(wolkenbase)
-cmake_minimum_required(VERSION 3.1.0)
+cmake_minimum_required(VERSION 3.8.0)
 
 include(TestBigEndian)
 include(CheckTypeSize)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_CXX_STANDARD 17) # appeared in CMake 3.8
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option (FORCE_COLORED_OUTPUT "Always produce ANSI-colored output (GNU/Clang only)." FALSE)
 if (${FORCE_COLORED_OUTPUT})
@@ -16,18 +18,21 @@ if (${FORCE_COLORED_OUTPUT})
 endif ()
 
 find_package(Boost COMPONENTS program_options)
+find_package(Threads)
 
 add_executable(wolkenbase angle.cpp binio.cpp boundrect.cpp cloud.cpp eisenstein.cpp
                flowsnake.cpp las.cpp ldecimal.cpp octree.cpp point.cpp ps.cpp quaternion.cpp
-               random.cpp shape.cpp testpattern.cpp wolkenbase.cpp)
+               random.cpp shape.cpp testpattern.cpp threads.cpp wolkenbase.cpp)
 
 add_executable(wolkentest angle.cpp binio.cpp boundrect.cpp cloud.cpp eisenstein.cpp
                flowsnake.cpp las.cpp ldecimal.cpp octree.cpp point.cpp ps.cpp quaternion.cpp
-               random.cpp shape.cpp testpattern.cpp wolkentest.cpp)
+               random.cpp shape.cpp testpattern.cpp threads.cpp wolkentest.cpp)
 
 if (${Boost_FOUND})
-target_link_libraries(wolkenbase ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES})
+target_link_libraries(wolkenbase ${Boost_LIBRARIES})
 endif (${Boost_FOUND})
+target_link_libraries(wolkentest ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(wolkenbase ${CMAKE_THREAD_LIBS_INIT})
 set(CMAKE_CXX_FLAGS "-std=c++11")
 install(TARGETS wolkenbase DESTINATION bin)
 
