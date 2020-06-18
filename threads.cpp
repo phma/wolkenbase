@@ -91,7 +91,7 @@ void startThreads(int n)
   opTime=0;
   for (i=0;i<n;i++)
   {
-    threads.push_back(thread(TinThread(),i));
+    threads.push_back(thread(WolkenThread(),i));
     this_thread::sleep_for(chrono::milliseconds(10));
   }
 }
@@ -264,7 +264,7 @@ void waitForQueueEmpty()
   } while (n);
 }
 
-void TinThread::operator()(int thread)
+void WolkenThread::operator()(int thread)
 {
   int e=0,t=0,d=0;
   int triResult,edgeResult;

@@ -31,6 +31,7 @@
 #include <cmath>
 #include <boost/program_options.hpp>
 #include "las.h"
+#include "threads.h"
 #include "ldecimal.h"
 #include "octree.h"
 using namespace std;
@@ -40,6 +41,7 @@ int main(int argc,char **argv)
 {
   LasPoint lPoint;
   int i;
+  int nthreads=thread::hardware_concurrency();
   size_t j;
   vector<string> inputFiles;
   vector<LasHeader> files;
@@ -52,6 +54,8 @@ int main(int argc,char **argv)
   po::options_description cmdline_options;
   po::positional_options_description p;
   po::variables_map vm;
+  if (nthreads<2)
+    nthreads=2;
   hidden.add_options()
     ("input",po::value<vector<string> >(&inputFiles),"Input file");
   p.add("input",-1);
@@ -83,6 +87,10 @@ int main(int argc,char **argv)
   for (i=0;i<RECORDS;i++)
     lPoint.write(testFile);
   octStore.open("store.oct");
+  if (nthreads<1)
+    nthreads=1;
+  startThreads(nthreads);
+  waitForThreads(TH_RUN);
   for (i=0;i<files.size();i++)
   {
     for (j=0;j<files[i].numberPoints();j++)
@@ -92,5 +100,7 @@ int main(int argc,char **argv)
     }
     cout<<files[i].numberPoints()<<" points\n";
   }
+  waitForThreads(TH_STOP);
+  joinThreads();
   return 0;
 }

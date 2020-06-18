@@ -111,7 +111,7 @@ int getThreadStatus();
 void waitForThreads(int newStatus);
 void waitForQueueEmpty();
 
-class TinThread
+class WolkenThread
 {
 public:
   void operator()(int thread);
