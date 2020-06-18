@@ -29,11 +29,7 @@
 using namespace std;
 namespace cr=std::chrono;
 
-map<int,mutex> triMutex; // Lock this while locking or unlocking triangles.
-shared_mutex holderMutex; // for triangleHolders
-mutex adjLog;
 mutex actMutex;
-mutex bucketMutex;
 mutex startMutex;
 mutex opTimeMutex;
 
@@ -63,15 +59,6 @@ const char statusNames[][8]=
 {
   "None","Run","Pause","Wait","Stop"
 };
-
-void markBucketClean(int bucket)
-{
-  bucketMutex.lock();
-  bucket&=(cleanBuckets.size()-1); // size is always a power of 2
-  if (cleanBuckets[bucket]<2)
-    cleanBuckets[bucket]++;
-  bucketMutex.unlock();
-}
 
 double busyFraction()
 {
