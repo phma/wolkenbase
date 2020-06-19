@@ -3,7 +3,7 @@
 /* las.cpp - laser point cloud files                  */
 /*                                                    */
 /******************************************************/
-/* Copyright 2019 Pierre Abbat.
+/* Copyright 2019,2020 Pierre Abbat.
  * This file is part of Wolkenbase.
  * 
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -30,11 +30,13 @@ using namespace std;
 
 LasPoint::LasPoint()
 {
+  location=nanxyz;
   block=nullptr;
 }
 
 LasPoint::LasPoint(OctBlock *parent)
 {
+  location=nanxyz;
   block=parent;
 }
 
