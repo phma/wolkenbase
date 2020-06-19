@@ -90,6 +90,7 @@ int main(int argc,char **argv)
   octStore.open("store.oct");
   if (nthreads<1)
     nthreads=1;
+  octStore.resize(8*nthreads+1);
   startThreads(nthreads);
   waitForThreads(TH_RUN);
   for (i=0;i<files.size();i++)
