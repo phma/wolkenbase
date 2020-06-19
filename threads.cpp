@@ -32,6 +32,7 @@ namespace cr=std::chrono;
 mutex actMutex;
 mutex startMutex;
 mutex opTimeMutex;
+mutex bufferMutex;
 
 int threadCommand;
 vector<thread> threads;
@@ -42,6 +43,7 @@ vector<vector<int> > heldTriangles; // one list of triangles per thread
 double stageTolerance;
 double minArea;
 queue<ThreadAction> actQueue,resQueue;
+queue<LasPoint> pointBuffer; // to be turned later into a random-access buffer
 int currentAction;
 int mtxSquareSize;
 
@@ -141,6 +143,26 @@ void enqueueResult(ThreadAction a)
 bool resultQueueEmpty()
 {
   return resQueue.size()==0;
+}
+
+void embufferPoint(LasPoint point)
+{
+  bufferMutex.lock();
+  pointBuffer.push(point);
+  bufferMutex.unlock();
+}
+
+LasPoint debufferPoint()
+{
+  LasPoint ret;
+  bufferMutex.lock();
+  if (pointBuffer.size())
+  {
+    ret=pointBuffer.front();
+    pointBuffer.pop();
+  }
+  bufferMutex.unlock();
+  return ret;
 }
 
 void sleepRead()
