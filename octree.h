@@ -25,6 +25,7 @@
 #include <map>
 #include "shape.h"
 #include "las.h"
+#include "threads.h"
 #define LASPOINT_SIZE 91
 #define RECORDS 720
 #define BLOCKSIZE 65536
@@ -100,6 +101,7 @@ public:
   bool isConsistent();
 private:
   std::fstream file;
+  std::mutex fileMutex;
   int nowUsed;
   int leastRecentlyUsed();
   long long nBlocks;

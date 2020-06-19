@@ -3,7 +3,7 @@
 /* octree.cpp - octrees                               */
 /*                                                    */
 /******************************************************/
-/* Copyright 2019 Pierre Abbat.
+/* Copyright 2019,2020 Pierre Abbat.
  * This file is part of Wolkenbase.
  * 
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -152,12 +152,14 @@ void OctBlock::write()
 #if DEBUG_STORE
   cout<<"Writing block "<<blockNumber<<endl;
 #endif
+  store->fileMutex.lock();
   store->file.seekp(BLOCKSIZE*blockNumber);
   //cout<<store->file.rdstate()<<' '<<ios::failbit<<endl;
   store->file.clear();
   for (i=0;i<RECORDS;i++)
     points[i].write(store->file);
   dirty=false;
+  store->fileMutex.unlock();
 }
 
 void OctBlock::markDirty()
@@ -171,6 +173,7 @@ void OctBlock::read(long long block)
 #if DEBUG_STORE
   cout<<"Reading block "<<block<<endl;
 #endif
+  store->fileMutex.lock();
   store->file.seekg(BLOCKSIZE*(blockNumber=block));
   for (i=0;i<RECORDS;i++)
     points[i].read(store->file);
@@ -182,6 +185,7 @@ void OctBlock::read(long long block)
   if (points[0].location==points[1].location)
     for (i=0;i<RECORDS;i++)
       points[i].location=nanxyz;
+  store->fileMutex.unlock();
 }
 
 void OctBlock::update()
