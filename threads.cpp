@@ -269,10 +269,7 @@ void WolkenThread::operator()(int thread)
     if (threadCommand==TH_RUN)
     {
       threadStatus[thread]=TH_RUN;
-      if (triResult==1 || edgeResult==1)
-	sleep(thread);
-      else
-	unsleep(thread);
+      sleep(thread);
     }
     if (threadCommand==TH_PAUSE)
     { // The job is ongoing, but has to pause to write out the files.
