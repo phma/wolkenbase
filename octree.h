@@ -102,6 +102,7 @@ public:
 private:
   std::fstream file;
   std::mutex fileMutex;
+  std::mutex splitMutex;
   int nowUsed;
   int leastRecentlyUsed();
   long long nBlocks;

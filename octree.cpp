@@ -22,7 +22,7 @@
 #include <cassert>
 #include <cmath>
 #include "octree.h"
-#define DEBUG_STORE 0
+#define DEBUG_STORE 1
 using namespace std;
 
 Octree octRoot;
@@ -149,10 +149,10 @@ OctBlock::OctBlock()
 void OctBlock::write()
 {
   int i;
+  store->fileMutex.lock();
 #if DEBUG_STORE
   cout<<"Writing block "<<blockNumber<<endl;
 #endif
-  store->fileMutex.lock();
   store->file.seekp(BLOCKSIZE*blockNumber);
   //cout<<store->file.rdstate()<<' '<<ios::failbit<<endl;
   store->file.clear();
@@ -170,10 +170,10 @@ void OctBlock::markDirty()
 void OctBlock::read(long long block)
 {
   int i;
+  store->fileMutex.lock();
 #if DEBUG_STORE
   cout<<"Reading block "<<block<<endl;
 #endif
-  store->fileMutex.lock();
   store->file.seekg(BLOCKSIZE*(blockNumber=block));
   for (i=0;i<RECORDS;i++)
     points[i].read(store->file);
@@ -345,6 +345,7 @@ void OctStore::split(long long block,xyz camelStraw)
   int i,fullth;
   currentBlock=getBlock(block);
   tempPoints=currentBlock->points;
+  splitMutex.lock();
   currentBlock->markDirty();
   while (true)
   {
@@ -361,4 +362,5 @@ void OctStore::split(long long block,xyz camelStraw)
     for (i=0;i<RECORDS;i++)
       (*this)[tempPoints[i].location]=tempPoints[i];
   }
+  splitMutex.unlock();
 }
