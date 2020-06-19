@@ -26,6 +26,7 @@
 #include "angle.h"
 #include "random.h"
 #include "las.h"
+#include "octree.h"
 using namespace std;
 namespace cr=std::chrono;
 
@@ -278,6 +279,7 @@ void WolkenThread::operator()(int thread)
   int e=0,t=0,d=0;
   int triResult,edgeResult;
   ThreadAction act;
+  LasPoint point;
   startMutex.lock();
   if (threadStatus.size()!=thread)
   {
@@ -291,7 +293,14 @@ void WolkenThread::operator()(int thread)
     if (threadCommand==TH_RUN)
     {
       threadStatus[thread]=TH_RUN;
-      sleep(thread);
+      point=debufferPoint();
+      if (point.isEmpty())
+	sleep(thread);
+      else
+      {
+	octStore[point.location]=point;
+	unsleep(thread);
+      }
     }
     if (threadCommand==TH_PAUSE)
     { // The job is ongoing, but has to pause to write out the files.

@@ -97,7 +97,6 @@ int main(int argc,char **argv)
     {
       lPoint=files[i].readPoint(j);
       embufferPoint(lPoint);
-      //octStore[lPoint.location]=lPoint;
     }
     cout<<files[i].numberPoints()<<" points\n";
   }
