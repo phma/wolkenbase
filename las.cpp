@@ -32,6 +32,11 @@ LasPoint::LasPoint()
 {
   location=nanxyz;
   block=nullptr;
+  intensity=returnNum=nReturns=classification=classificationFlags=0;
+  scannerChannel=userData=waveIndex=pointSource=nir=red=green=blue=0;
+  scanDirection=edgeLine=false;
+  scanAngle=waveformSize=waveformOffset=0;
+  gpsTime=waveformTime=xDir=yDir=zDir=0;
 }
 
 LasPoint::LasPoint(OctBlock *parent)
