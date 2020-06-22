@@ -143,7 +143,7 @@ OctBlock::OctBlock()
   lastUsed=0;
   dirty=false;
   for (i=0;i<RECORDS;i++)
-    points.emplace_back(this);
+    points.emplace_back();
 }
 
 void OctBlock::write()
