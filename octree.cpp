@@ -282,6 +282,53 @@ LasPoint &OctStore::operator[](xyz key)
   return pBlock->points[inx];
 }
 
+LasPoint OctStore::get(xyz key)
+{
+  int i,inx=-1;
+  LasPoint ret;
+  OctBlock *pBlock=getBlock(key);
+  assert(pBlock);
+  for (i=0;i<2*RECORDS;i++)
+    if (pBlock->points[i%RECORDS].location==key || (i>=RECORDS && pBlock->points[i%RECORDS].isEmpty()))
+    {
+      inx=i%RECORDS;
+      break;
+    }
+  if (inx>=0)
+  {
+    ret=pBlock->points[inx];
+  }
+  return ret;
+}
+
+void OctStore::put(LasPoint pnt)
+{
+  int i,inx=-1;
+  xyz key=pnt.location;
+  OctBlock *pBlock=getBlock(key);
+  assert(pBlock);
+  for (i=0;i<2*RECORDS;i++)
+    if (pBlock->points[i%RECORDS].location==key || (i>=RECORDS && pBlock->points[i%RECORDS].isEmpty()))
+    {
+      inx=i%RECORDS;
+      break;
+    }
+  pBlock->markDirty();
+  if (inx<0)
+  {
+    split(pBlock->blockNumber,key);
+    pBlock=getBlock(key);
+    for (i=0;i<RECORDS;i++)
+      if (pBlock->points[i%RECORDS].isEmpty())
+      {
+        inx=i;
+	pBlock->markDirty();
+        break;
+      }
+  }
+  pBlock->points[inx]=pnt;
+}
+
 int OctStore::leastRecentlyUsed()
 {
   int i,age,maxAge=-1,ret;

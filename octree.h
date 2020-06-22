@@ -97,6 +97,8 @@ public:
   void open(std::string fileName);
   void close();
   LasPoint &operator[](xyz key);
+  LasPoint get(xyz key);
+  void put(LasPoint pnt);
   void dump();
   bool isConsistent();
 private:
