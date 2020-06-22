@@ -173,6 +173,8 @@ void OctBlock::read(long long block)
   store->fileMutex.lock();
 #if DEBUG_STORE
   cout<<"Reading block "<<block<<" into "<<this<<' '<<this_thread::get_id()<<endl;
+  if (block==11)
+    cout<<endl;
 #endif
   store->file.seekg(BLOCKSIZE*(blockNumber=block));
   for (i=0;i<RECORDS;i++)
@@ -258,7 +260,7 @@ LasPoint OctStore::get(xyz key)
 {
   int i,inx=-1;
   LasPoint ret;
-  OctBlock *pBlock=getBlock(key);
+  OctBlock *pBlock=getBlock(key,false);
   assert(pBlock);
   for (i=0;i<2*RECORDS;i++)
     if (pBlock->points[i%RECORDS].location==key || (i>=RECORDS && pBlock->points[i%RECORDS].isEmpty()))
@@ -270,6 +272,7 @@ LasPoint OctStore::get(xyz key)
   {
     ret=pBlock->points[inx];
   }
+  blockMutexes[pBlock->blockNumber].unlock_shared();
   return ret;
 }
 
@@ -277,7 +280,7 @@ void OctStore::put(LasPoint pnt)
 {
   int i,inx=-1;
   xyz key=pnt.location;
-  OctBlock *pBlock=getBlock(key);
+  OctBlock *pBlock=getBlock(key,true);
   assert(pBlock);
   for (i=0;i<2*RECORDS;i++)
     if (pBlock->points[i%RECORDS].location==key || (i>=RECORDS && pBlock->points[i%RECORDS].isEmpty()))
@@ -288,8 +291,9 @@ void OctStore::put(LasPoint pnt)
   pBlock->markDirty();
   if (inx<0)
   {
+    blockMutexes[pBlock->blockNumber].unlock();
     split(pBlock->blockNumber,key);
-    pBlock=getBlock(key);
+    pBlock=getBlock(key,true);
     for (i=0;i<RECORDS;i++)
       if (pBlock->points[i%RECORDS].isEmpty())
       {
@@ -299,6 +303,7 @@ void OctStore::put(LasPoint pnt)
       }
   }
   pBlock->points[inx]=pnt;
+  blockMutexes[pBlock->blockNumber].unlock();
 }
 
 int OctStore::leastRecentlyUsed()
@@ -344,17 +349,29 @@ OctBlock *OctStore::getBlock(long long block,bool mustExist)
   }
 }
 
-OctBlock *OctStore::getBlock(xyz key)
+OctBlock *OctStore::getBlock(xyz key,bool writing)
 {
+  OctBlock *ret;
   long long blknum=octRoot.findBlock(key);
   if (blknum>=0)
-    return getBlock(blknum);
+  {
+    if (writing)
+      blockMutexes[blknum].lock();
+    else
+      blockMutexes[blknum].lock_shared();
+    ret=getBlock(blknum);
+  }
   else
   {
     blknum=nBlocks++;
     octRoot.setBlock(key,blknum);
-    return getBlock(blknum);
+    if (writing)
+      blockMutexes[blknum].lock();
+    else
+      blockMutexes[blknum].lock_shared();
+    ret=getBlock(blknum);
   }
+  return ret;
 }
 
 void OctStore::split(long long block,xyz camelStraw)

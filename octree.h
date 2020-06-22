@@ -108,8 +108,9 @@ private:
   int leastRecentlyUsed();
   long long nBlocks;
   OctBlock *getBlock(long long block,bool mustExist=false);
-  OctBlock *getBlock(xyz key);
+  OctBlock *getBlock(xyz key,bool writing);
   std::map<int,OctBlock> blocks;
+  std::map<int,std::shared_mutex> blockMutexes;
   void split(long long block,xyz camelStraw);
   friend class OctBlock;
 };
