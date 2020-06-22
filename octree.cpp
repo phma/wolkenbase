@@ -254,34 +254,6 @@ void OctStore::close()
   file.close();
 }
 
-LasPoint &OctStore::operator[](xyz key)
-{
-  int i,inx=-1;
-  OctBlock *pBlock=getBlock(key);
-  assert(pBlock);
-  for (i=0;i<2*RECORDS;i++)
-    if (pBlock->points[i%RECORDS].location==key || (i>=RECORDS && pBlock->points[i%RECORDS].isEmpty()))
-    {
-      inx=i%RECORDS;
-      break;
-    }
-  if (i>=RECORDS)
-    pBlock->markDirty();
-  if (inx<0)
-  {
-    split(pBlock->blockNumber,key);
-    pBlock=getBlock(key);
-    for (i=0;i<RECORDS;i++)
-      if (pBlock->points[i%RECORDS].isEmpty())
-      {
-        inx=i;
-	pBlock->markDirty();
-        break;
-      }
-  }
-  return pBlock->points[inx];
-}
-
 LasPoint OctStore::get(xyz key)
 {
   int i,inx=-1;
@@ -410,7 +382,7 @@ void OctStore::split(long long block,xyz camelStraw)
       break;
     octRoot.split(camelStraw);
     for (i=0;i<RECORDS;i++)
-      (*this)[tempPoints[i].location]=tempPoints[i];
+      put(tempPoints[i]);
   }
 #if DEBUG_STORE
   cout<<"Block "<<block<<" is split\n";

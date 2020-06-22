@@ -156,6 +156,6 @@ void flatScene(double rad,double den)
   for (i=0;i<dots.size();i++)
   {
     lPoint=laserize(dots[i]);
-    octStore[dots[i]]=lPoint;
+    octStore.put(lPoint);
   }
 }

@@ -298,7 +298,7 @@ void WolkenThread::operator()(int thread)
 	sleep(thread);
       else
       {
-	octStore[point.location]=point;
+	octStore.put(point);
 	unsleep(thread);
       }
     }
