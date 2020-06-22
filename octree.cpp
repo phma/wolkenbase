@@ -172,7 +172,7 @@ void OctBlock::read(long long block)
   int i;
   store->fileMutex.lock();
 #if DEBUG_STORE
-  cout<<"Reading block "<<block<<endl;
+  cout<<"Reading block "<<block<<" into "<<this<<endl;
 #endif
   store->file.seekg(BLOCKSIZE*(blockNumber=block));
   for (i=0;i<RECORDS;i++)
@@ -346,6 +346,9 @@ void OctStore::split(long long block,xyz camelStraw)
   currentBlock=getBlock(block);
   tempPoints=currentBlock->points;
   splitMutex.lock();
+#if DEBUG_STORE
+  cout<<"Splitting block "<<block<<endl;
+#endif
   currentBlock->markDirty();
   while (true)
   {
@@ -362,5 +365,8 @@ void OctStore::split(long long block,xyz camelStraw)
     for (i=0;i<RECORDS;i++)
       (*this)[tempPoints[i].location]=tempPoints[i];
   }
+#if DEBUG_STORE
+  cout<<"Block "<<block<<" is split\n";
+#endif
   splitMutex.unlock();
 }
