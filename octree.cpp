@@ -352,6 +352,7 @@ OctBlock *OctStore::getBlock(long long block,bool mustExist)
 OctBlock *OctStore::getBlock(xyz key,bool writing)
 {
   OctBlock *ret;
+  setBlockMutex.lock_shared();
   long long blknum=octRoot.findBlock(key);
   if (blknum>=0)
   {
@@ -360,16 +361,24 @@ OctBlock *OctStore::getBlock(xyz key,bool writing)
     else
       blockMutexes[blknum].lock_shared();
     ret=getBlock(blknum);
+    setBlockMutex.unlock_shared();
   }
   else
   {
-    blknum=nBlocks++;
-    octRoot.setBlock(key,blknum);
+    setBlockMutex.unlock_shared();
+    setBlockMutex.lock();
+    blknum=octRoot.findBlock(key);
+    if (blknum<0)
+    {
+      blknum=nBlocks++;
+      octRoot.setBlock(key,blknum);
+    }
     if (writing)
       blockMutexes[blknum].lock();
     else
       blockMutexes[blknum].lock_shared();
     ret=getBlock(blknum);
+    setBlockMutex.unlock();
   }
   return ret;
 }
