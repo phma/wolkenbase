@@ -35,6 +35,7 @@ mutex actMutex;
 mutex startMutex;
 mutex opTimeMutex;
 mutex bufferMutex;
+shared_mutex threadStatusMutex;
 
 atomic<int> threadCommand;
 vector<thread> threads;
@@ -67,9 +68,11 @@ const char statusNames[][8]=
 double busyFraction()
 {
   int i,numBusy=0;
+  threadStatusMutex.lock_shared();
   for (i=0;i<threadStatus.size();i++)
     if ((threadStatus[i]&256)==0)
       numBusy++;
+  threadStatusMutex.unlock_shared();
   return (double)numBusy/i;
 }
 
@@ -178,9 +181,13 @@ void sleep(int thread)
   sleepTime[thread]+=1+sleepTime[thread]/1e3;
   if (sleepTime[thread]>opTime*sleepTime.size()+1000)
     sleepTime[thread]=opTime*sleepTime.size()+1000;
+  threadStatusMutex.lock();
   threadStatus[thread]|=256;
+  threadStatusMutex.unlock();
   this_thread::sleep_for(chrono::milliseconds(lrint(sleepTime[thread])));
+  threadStatusMutex.lock();
   threadStatus[thread]&=255;
+  threadStatusMutex.unlock();
 }
 
 void unsleep(int thread)
@@ -233,12 +240,14 @@ int getThreadStatus()
  */
 {
   int i,oneStatus,minStatus=-1,maxStatus=0;
+  threadStatusMutex.lock_shared();
   for (i=0;i<threadStatus.size();i++)
   {
     oneStatus=threadStatus[i];
     maxStatus|=oneStatus;
     minStatus&=oneStatus;
   }
+  threadStatusMutex.unlock_shared();
   return (threadCommand<<20)|((minStatus^maxStatus)<<10)|(minStatus&0x3ff);
 }
 
@@ -254,9 +263,11 @@ void waitForThreads(int newStatus)
   threadCommand=newStatus;
   do
   {
+    threadStatusMutex.lock_shared();
     for (i=n=0;i<threadStatus.size();i++)
       if ((threadStatus[i]&255)!=threadCommand)
 	n++;
+    threadStatusMutex.unlock_shared();
     this_thread::sleep_for(chrono::milliseconds(n));
   } while (n);
 }
@@ -268,9 +279,11 @@ void waitForQueueEmpty()
   do
   {
     n=actQueue.size();
+    threadStatusMutex.lock_shared();
     for (i=0;i<threadStatus.size();i++)
       if (threadStatus[i]<256)
 	n++;
+    threadStatusMutex.unlock_shared();
     this_thread::sleep_for(chrono::milliseconds(n));
   } while (n);
 }
@@ -293,7 +306,9 @@ void WolkenThread::operator()(int thread)
   {
     if (threadCommand==TH_RUN)
     {
+      threadStatusMutex.lock();
       threadStatus[thread]=TH_RUN;
+      threadStatusMutex.unlock();
       point=debufferPoint();
       if (point.isEmpty())
 	sleep(thread);
@@ -305,7 +320,9 @@ void WolkenThread::operator()(int thread)
     }
     if (threadCommand==TH_PAUSE)
     { // The job is ongoing, but has to pause to write out the files.
+      threadStatusMutex.lock();
       threadStatus[thread]=TH_PAUSE;
+      threadStatusMutex.unlock();
       act=dequeueAction();
       switch (act.opcode)
       {
@@ -327,7 +344,9 @@ void WolkenThread::operator()(int thread)
     }
     if (threadCommand==TH_WAIT)
     { // There is no job. The threads are waiting for a job.
+      threadStatusMutex.lock();
       threadStatus[thread]=TH_WAIT;
+      threadStatusMutex.unlock();
       if (thread)
 	act.opcode=0;
       else
@@ -339,5 +358,7 @@ void WolkenThread::operator()(int thread)
       }
     }
   }
+  threadStatusMutex.lock();
   threadStatus[thread]=TH_STOP;
+  threadStatusMutex.unlock();
 }
