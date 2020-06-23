@@ -22,6 +22,7 @@
 #include <queue>
 #include <map>
 #include <set>
+#include <atomic>
 #include "threads.h"
 #include "angle.h"
 #include "random.h"
@@ -35,7 +36,7 @@ mutex startMutex;
 mutex opTimeMutex;
 mutex bufferMutex;
 
-int threadCommand;
+atomic<int> threadCommand;
 vector<thread> threads;
 vector<int> threadStatus; // Bit 8 indicates whether the thread is sleeping.
 vector<double> sleepTime;
