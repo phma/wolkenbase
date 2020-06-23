@@ -104,6 +104,7 @@ private:
   std::fstream file;
   std::mutex fileMutex;
   std::shared_mutex setBlockMutex;
+  std::shared_mutex nowUsedMutex;
   std::recursive_mutex splitMutex;
   int nowUsed;
   int leastRecentlyUsed();

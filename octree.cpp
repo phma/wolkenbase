@@ -192,7 +192,9 @@ void OctBlock::read(long long block)
 
 void OctBlock::update()
 {
+  store->nowUsedMutex.lock();
   lastUsed=++(store->nowUsed);
+  store->nowUsedMutex.unlock();
 }
 
 void OctBlock::flush()
@@ -309,6 +311,7 @@ void OctStore::put(LasPoint pnt)
 int OctStore::leastRecentlyUsed()
 {
   int i,age,maxAge=-1,ret;
+  nowUsedMutex.lock_shared();
   for (i=0;i<blocks.size();i++)
   {
     age=nowUsed-blocks[i].lastUsed;
@@ -318,6 +321,7 @@ int OctStore::leastRecentlyUsed()
       ret=i;
     }
   }
+  nowUsedMutex.unlock_shared();
   return ret;
 }
 
