@@ -49,7 +49,6 @@ int main(int argc,char **argv)
   xyz center;
   ofstream testFile("testfile");
   bool validArgs,validCmd=true;
-  nthreads=2;
   po::options_description generic("Options");
   po::options_description hidden("Hidden options");
   po::options_description cmdline_options;
