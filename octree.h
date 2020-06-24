@@ -76,6 +76,8 @@ public:
   void read(long long block);
   void update();
   void flush();
+  LasPoint get(xyz key);
+  bool put(LasPoint pnt);
   //void dump();
   //bool isConsistent();
 private:
@@ -83,6 +85,7 @@ private:
   bool dirty;
   int lastUsed;
   std::vector<LasPoint> points;
+  std::shared_mutex blockMutex;
   OctStore *store;
   friend class OctStore;
 };

@@ -203,6 +203,46 @@ void OctBlock::flush()
     write();
 }
 
+LasPoint OctBlock::get(xyz key)
+{
+  int i,inx=-1;
+  LasPoint ret;
+  blockMutex.lock_shared();
+  for (i=0;i<2*RECORDS;i++)
+    if (points[i%RECORDS].location==key || (i>=RECORDS && points[i%RECORDS].isEmpty()))
+    {
+      inx=i%RECORDS;
+      break;
+    }
+  if (inx>=0)
+  {
+    ret=points[inx];
+  }
+  blockMutex.unlock_shared();
+  return ret;
+}
+
+bool OctBlock::put(LasPoint pnt)
+// Returns true if put, false if no room.
+{
+  int i,inx=-1;
+  xyz key=pnt.location;
+  blockMutex.lock();
+  for (i=0;i<2*RECORDS;i++)
+    if (points[i%RECORDS].location==key || (i>=RECORDS && points[i%RECORDS].isEmpty()))
+    {
+      inx=i%RECORDS;
+      break;
+    }
+  if (inx>=0)
+  {
+    markDirty();
+    points[inx]=pnt;
+  }
+  blockMutex.unlock();
+  return inx>=0;
+}
+  
 OctStore::OctStore()
 {
   int i;
