@@ -306,18 +306,9 @@ LasPoint OctStore::get(xyz key)
 {
   int i,inx=-1;
   LasPoint ret;
-  OctBlock *pBlock=getBlock(key,false);
+  OctBlock *pBlock=getBlock(key,false); // locks the mutex
   assert(pBlock);
-  for (i=0;i<2*RECORDS;i++)
-    if (pBlock->points[i%RECORDS].location==key || (i>=RECORDS && pBlock->points[i%RECORDS].isEmpty()))
-    {
-      inx=i%RECORDS;
-      break;
-    }
-  if (inx>=0)
-  {
-    ret=pBlock->points[inx];
-  }
+  ret=pBlock->get(key);
   blockMutexes[pBlock->blockNumber].unlock_shared();
   return ret;
 }
@@ -326,29 +317,15 @@ void OctStore::put(LasPoint pnt)
 {
   int i,inx=-1;
   xyz key=pnt.location;
-  OctBlock *pBlock=getBlock(key,true);
+  OctBlock *pBlock=getBlock(key,true); // locks the mutex
   assert(pBlock);
-  for (i=0;i<2*RECORDS;i++)
-    if (pBlock->points[i%RECORDS].location==key || (i>=RECORDS && pBlock->points[i%RECORDS].isEmpty()))
-    {
-      inx=i%RECORDS;
-      break;
-    }
-  pBlock->markDirty();
-  if (inx<0)
+  if (!pBlock->put(pnt))
   {
     blockMutexes[pBlock->blockNumber].unlock();
     split(pBlock->blockNumber,key);
     pBlock=getBlock(key,true);
-    for (i=0;i<RECORDS;i++)
-      if (pBlock->points[i%RECORDS].isEmpty())
-      {
-        inx=i;
-	pBlock->markDirty();
-        break;
-      }
+    pBlock->put(pnt);
   }
-  pBlock->points[inx]=pnt;
   blockMutexes[pBlock->blockNumber].unlock();
 }
 
