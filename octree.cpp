@@ -22,7 +22,7 @@
 #include <cassert>
 #include <cmath>
 #include "octree.h"
-#define DEBUG_STORE 1
+#define DEBUG_STORE 0
 using namespace std;
 
 Octree octRoot;
