@@ -23,6 +23,7 @@
 #include <cmath>
 #include "octree.h"
 #define DEBUG_STORE 0
+#define DEBUG_LOCK 1
 using namespace std;
 
 Octree octRoot;
@@ -308,6 +309,9 @@ LasPoint OctStore::get(xyz key)
   assert(pBlock);
   ret=pBlock->get(key);
   modMutex[pBlock->blockNumber%modMutexSize].unlock_shared();
+#if DEBUG_LOCK
+  cout<<"reggle "<<pBlock<<" get\n";
+#endif
   return ret;
 }
 
@@ -320,11 +324,17 @@ void OctStore::put(LasPoint pnt)
   if (!pBlock->put(pnt))
   {
     modMutex[pBlock->blockNumber%modMutexSize].unlock();
+#if DEBUG_LOCK
+    cout<<"weggle "<<pBlock<<" put1\n";
+#endif
     split(pBlock->blockNumber,key);
     pBlock=getBlock(key,true);
     pBlock->put(pnt);
   }
   modMutex[pBlock->blockNumber%modMutexSize].unlock();
+#if DEBUG_LOCK
+  cout<<"weggle "<<pBlock<<" put2\n";
+#endif
 }
 
 int OctStore::leastRecentlyUsed()
@@ -383,9 +393,19 @@ OctBlock *OctStore::getBlock(xyz key,bool writing)
   if (blknum>=0)
   {
     if (writing)
+    {
       modMutex[blknum%modMutexSize].lock();
+#if DEBUG_LOCK
+    cout<<"woggle "<<blknum<<" getBlock1\n";
+#endif
+    }
     else
+    {
       modMutex[blknum%modMutexSize].lock_shared();
+#if DEBUG_LOCK
+    cout<<"roggle "<<blknum<<" getBlock1\n";
+#endif
+    }
     ret=getBlock(blknum);
   }
   else
@@ -398,9 +418,19 @@ OctBlock *OctStore::getBlock(xyz key,bool writing)
       octRoot.setBlock(key,blknum);
     }
     if (writing)
+    {
       modMutex[blknum%modMutexSize].lock();
+#if DEBUG_LOCK
+      cout<<"woggle "<<blknum<<" getBlock2\n";
+#endif
+    }
     else
+    {
       modMutex[blknum%modMutexSize].lock_shared();
+#if DEBUG_LOCK
+      cout<<"roggle "<<blknum<<" getBlock2\n";
+#endif
+    }
     ret=getBlock(blknum);
     setBlockMutex.unlock();
   }
