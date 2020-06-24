@@ -351,8 +351,10 @@ OctBlock *OctStore::getBlock(long long block,bool mustExist)
   streampos fileSize;
   int lru,i;
   bool found=false;
+  fileMutex.lock();
   file.seekg(0,file.end);
   fileSize=file.tellg();
+  fileMutex.unlock();
   lru=leastRecentlyUsed();
   if (BLOCKSIZE*block>=fileSize && mustExist)
     return nullptr;
