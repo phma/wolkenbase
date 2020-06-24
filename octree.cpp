@@ -307,7 +307,7 @@ LasPoint OctStore::get(xyz key)
   OctBlock *pBlock=getBlock(key,false); // locks the mutex
   assert(pBlock);
   ret=pBlock->get(key);
-  blockMutexes[pBlock->blockNumber].unlock_shared();
+  modMutex[pBlock->blockNumber%modMutexSize].unlock_shared();
   return ret;
 }
 
@@ -319,12 +319,12 @@ void OctStore::put(LasPoint pnt)
   assert(pBlock);
   if (!pBlock->put(pnt))
   {
-    blockMutexes[pBlock->blockNumber].unlock();
+    modMutex[pBlock->blockNumber%modMutexSize].unlock();
     split(pBlock->blockNumber,key);
     pBlock=getBlock(key,true);
     pBlock->put(pnt);
   }
-  blockMutexes[pBlock->blockNumber].unlock();
+  modMutex[pBlock->blockNumber%modMutexSize].unlock();
 }
 
 int OctStore::leastRecentlyUsed()
@@ -383,9 +383,9 @@ OctBlock *OctStore::getBlock(xyz key,bool writing)
   if (blknum>=0)
   {
     if (writing)
-      blockMutexes[blknum].lock();
+      modMutex[blknum%modMutexSize].lock();
     else
-      blockMutexes[blknum].lock_shared();
+      modMutex[blknum%modMutexSize].lock_shared();
     ret=getBlock(blknum);
   }
   else
@@ -398,9 +398,9 @@ OctBlock *OctStore::getBlock(xyz key,bool writing)
       octRoot.setBlock(key,blknum);
     }
     if (writing)
-      blockMutexes[blknum].lock();
+      modMutex[blknum%modMutexSize].lock();
     else
-      blockMutexes[blknum].lock_shared();
+      modMutex[blknum%modMutexSize].lock_shared();
     ret=getBlock(blknum);
     setBlockMutex.unlock();
   }
