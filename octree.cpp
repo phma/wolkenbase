@@ -149,6 +149,7 @@ OctBlock::OctBlock()
 void OctBlock::write()
 {
   int i;
+  blockMutex.lock_shared();
   store->fileMutex.lock();
 #if DEBUG_STORE
   cout<<"Writing block "<<blockNumber<<endl;
@@ -160,6 +161,7 @@ void OctBlock::write()
     points[i].write(store->file);
   dirty=false;
   store->fileMutex.unlock();
+  blockMutex.unlock_shared();
 }
 
 void OctBlock::markDirty()
@@ -170,6 +172,7 @@ void OctBlock::markDirty()
 void OctBlock::read(long long block)
 {
   int i;
+  blockMutex.lock();
   store->fileMutex.lock();
 #if DEBUG_STORE
   cout<<"Reading block "<<block<<" into "<<this<<' '<<this_thread::get_id()<<endl;
@@ -188,6 +191,7 @@ void OctBlock::read(long long block)
     for (i=0;i<RECORDS;i++)
       points[i].location=nanxyz;
   store->fileMutex.unlock();
+  blockMutex.unlock();
 }
 
 void OctBlock::update()
