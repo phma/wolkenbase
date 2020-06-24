@@ -310,7 +310,7 @@ LasPoint OctStore::get(xyz key)
   ret=pBlock->get(key);
   modMutex[pBlock->blockNumber%modMutexSize].unlock_shared();
 #if DEBUG_LOCK
-  cout<<"reggle "<<pBlock<<" get\n";
+  cout<<"reggle "<<pBlock->blockNumber<<" get\n";
 #endif
   return ret;
 }
@@ -325,7 +325,7 @@ void OctStore::put(LasPoint pnt)
   {
     modMutex[pBlock->blockNumber%modMutexSize].unlock();
 #if DEBUG_LOCK
-    cout<<"weggle "<<pBlock<<" put1\n";
+    cout<<"weggle "<<pBlock->blockNumber<<" put1\n";
 #endif
     split(pBlock->blockNumber,key);
     pBlock=getBlock(key,true);
@@ -333,7 +333,7 @@ void OctStore::put(LasPoint pnt)
   }
   modMutex[pBlock->blockNumber%modMutexSize].unlock();
 #if DEBUG_LOCK
-  cout<<"weggle "<<pBlock<<" put2\n";
+  cout<<"weggle "<<pBlock->blockNumber<<" put2\n";
 #endif
 }
 
