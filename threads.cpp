@@ -26,6 +26,7 @@
 #include "threads.h"
 #include "angle.h"
 #include "random.h"
+#include "relprime.h"
 #include "las.h"
 #include "octree.h"
 using namespace std;
@@ -36,6 +37,7 @@ mutex startMutex;
 mutex opTimeMutex;
 mutex bufferMutex;
 shared_mutex threadStatusMutex;
+map<int,shared_mutex> modMutex;
 
 atomic<int> threadCommand;
 vector<thread> threads;
@@ -48,7 +50,7 @@ double minArea;
 queue<ThreadAction> actQueue,resQueue;
 queue<LasPoint> pointBuffer; // to be turned later into a random-access buffer
 int currentAction;
-int mtxSquareSize;
+int modMutexSize;
 
 cr::steady_clock clk;
 vector<int> cleanBuckets;
@@ -83,6 +85,9 @@ void startThreads(int n)
   heldTriangles.resize(n);
   sleepTime.resize(n);
   opTime=0;
+  modMutexSize=relprime(55*n);
+  for (i=0;i<modMutexSize;i++)
+    modMutex[i];
   for (i=0;i<n;i++)
   {
     threads.push_back(thread(WolkenThread(),i));

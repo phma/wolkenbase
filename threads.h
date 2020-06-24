@@ -81,7 +81,8 @@ extern double opTime;
 extern int opcount,trianglesToPaint;
 extern int currentAction;
 extern std::chrono::steady_clock clk;
-extern int mtxSquareSize;
+extern int modMutexSize;
+extern std::map<int,std::shared_mutex> modMutex;
 
 double busyFraction();
 void startThreads(int n);
