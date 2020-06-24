@@ -22,11 +22,11 @@ find_package(Threads)
 
 add_executable(wolkenbase angle.cpp binio.cpp boundrect.cpp cloud.cpp eisenstein.cpp
                flowsnake.cpp las.cpp ldecimal.cpp octree.cpp point.cpp ps.cpp quaternion.cpp
-               random.cpp shape.cpp testpattern.cpp threads.cpp wolkenbase.cpp)
+               random.cpp relprime.cpp shape.cpp testpattern.cpp threads.cpp wolkenbase.cpp)
 
 add_executable(wolkentest angle.cpp binio.cpp boundrect.cpp cloud.cpp eisenstein.cpp
                flowsnake.cpp las.cpp ldecimal.cpp octree.cpp point.cpp ps.cpp quaternion.cpp
-               random.cpp shape.cpp testpattern.cpp threads.cpp wolkentest.cpp)
+               random.cpp relprime.cpp shape.cpp testpattern.cpp threads.cpp wolkentest.cpp)
 
 if (${Boost_FOUND})
 target_link_libraries(wolkenbase ${Boost_LIBRARIES})
