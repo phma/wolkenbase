@@ -379,6 +379,7 @@ OctBlock *OctStore::getBlock(xyz key,bool writing)
   OctBlock *ret;
   setBlockMutex.lock_shared();
   long long blknum=octRoot.findBlock(key);
+  setBlockMutex.unlock_shared();
   if (blknum>=0)
   {
     if (writing)
@@ -386,11 +387,9 @@ OctBlock *OctStore::getBlock(xyz key,bool writing)
     else
       blockMutexes[blknum].lock_shared();
     ret=getBlock(blknum);
-    setBlockMutex.unlock_shared();
   }
   else
   {
-    setBlockMutex.unlock_shared();
     setBlockMutex.lock();
     blknum=octRoot.findBlock(key);
     if (blknum<0)
