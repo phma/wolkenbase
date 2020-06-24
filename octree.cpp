@@ -176,8 +176,6 @@ void OctBlock::read(long long block)
   store->fileMutex.lock();
 #if DEBUG_STORE
   cout<<"Reading block "<<block<<" into "<<this<<' '<<this_thread::get_id()<<endl;
-  if (block==11)
-    cout<<endl;
 #endif
   store->file.seekg(BLOCKSIZE*(blockNumber=block));
   for (i=0;i<RECORDS;i++)
