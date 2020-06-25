@@ -20,7 +20,6 @@
  * along with Wolkenbase. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define _USE_MATH_DEFINES
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -29,7 +28,6 @@
 #include <csignal>
 #include <cfloat>
 #include <cstring>
-#include <unistd.h>
 #include <vector>
 #include <string>
 #include "octree.h"
