@@ -30,6 +30,7 @@ add_executable(wolkentest angle.cpp binio.cpp boundrect.cpp cloud.cpp eisenstein
 
 if (${Boost_FOUND})
 target_link_libraries(wolkenbase ${Boost_LIBRARIES})
+include_directories(${Boost_INCLUDE_DIR})
 endif (${Boost_FOUND})
 target_link_libraries(wolkentest ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(wolkenbase ${CMAKE_THREAD_LIBS_INIT})
