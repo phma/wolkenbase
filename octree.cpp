@@ -29,6 +29,15 @@ using namespace std;
 Octree octRoot;
 OctStore octStore;
 
+#if defined(_WIN32) || defined(__CYGWIN__)
+// Linux and BSD have this function in the library; Windows doesn't.
+double significand(double x)
+{
+  int dummy;
+  return frexp(x,&dummy)*2;
+}
+#endif
+
 long long Octree::findBlock(xyz pnt)
 // Returns the disk block number that contains pnt, or -1 if none.
 {
