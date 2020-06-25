@@ -23,7 +23,7 @@
 #include <cmath>
 #include "octree.h"
 #define DEBUG_STORE 0
-#define DEBUG_LOCK 1
+#define DEBUG_LOCK 0
 using namespace std;
 
 Octree octRoot;
@@ -443,14 +443,18 @@ void OctStore::split(long long block,xyz camelStraw)
   OctBlock *currentBlock;
   int i,fullth;
   currentBlock=getBlock(block);
-  tempPoints=currentBlock->points;
   splitMutex.lock();
 #if DEBUG_STORE
   cout<<"Splitting block "<<block<<endl;
 #endif
+  tempPoints=currentBlock->points;
   currentBlock->markDirty();
   while (true)
   {
+    modMutex[block%modMutexSize].lock();
+#if DEBUG_LOCK
+    cout<<"woggle "<<block<<" split\n";
+#endif
     fullth=0;
     for (i=0;i<RECORDS;i++)
     {
@@ -458,6 +462,10 @@ void OctStore::split(long long block,xyz camelStraw)
 	++fullth;
       currentBlock->points[i].location=nanxyz;
     }
+    modMutex[block%modMutexSize].unlock();
+#if DEBUG_LOCK
+    cout<<"weggle "<<block<<" split\n";
+#endif
     if (fullth<RECORDS)
       break;
     octRoot.split(camelStraw);
