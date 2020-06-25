@@ -89,6 +89,7 @@ int main(int argc,char **argv)
   octStore.open("store.oct");
   if (nthreads<1)
     nthreads=1;
+  nthreads=2;
   octStore.resize(8*nthreads+1);
   startThreads(nthreads);
   waitForThreads(TH_RUN);

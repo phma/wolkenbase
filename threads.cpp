@@ -51,6 +51,7 @@ queue<ThreadAction> actQueue,resQueue;
 queue<LasPoint> pointBuffer; // to be turned later into a random-access buffer
 int currentAction;
 int modMutexSize;
+map<thread::id,int> threadNums;
 
 cr::steady_clock clk;
 vector<int> cleanBuckets;
@@ -85,6 +86,7 @@ void startThreads(int n)
   heldTriangles.resize(n);
   sleepTime.resize(n);
   opTime=0;
+  threadNums[this_thread::get_id()]=-1;
   modMutexSize=relprime(55*n);
   for (i=0;i<modMutexSize;i++)
     modMutex[i];
@@ -293,6 +295,11 @@ void waitForQueueEmpty()
   } while (n);
 }
 
+int thisThread()
+{
+  return threadNums[this_thread::get_id()];
+}
+
 void WolkenThread::operator()(int thread)
 {
   int e=0,t=0,d=0;
@@ -306,6 +313,7 @@ void WolkenThread::operator()(int thread)
     thread=threadStatus.size();
   }
   threadStatus.push_back(0);
+  threadNums[this_thread::get_id()]=thread;
   startMutex.unlock();
   while (threadCommand!=TH_STOP)
   {
