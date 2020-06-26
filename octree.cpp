@@ -23,7 +23,7 @@
 #include <cmath>
 #include "octree.h"
 #define DEBUG_STORE 0
-#define DEBUG_LOCK 1
+#define DEBUG_LOCK 0
 using namespace std;
 
 Octree octRoot;
@@ -317,7 +317,7 @@ LasPoint OctStore::get(xyz key)
   OctBlock *pBlock=getBlock(key,false); // locks the mutex
   assert(pBlock);
   ret=pBlock->get(key);
-  modMutex[pBlock->blockNumber%modMutexSize].unlock_shared();
+  unlockBlockR(pBlock->blockNumber);
 #if DEBUG_LOCK
   if (thisThread()==0) cout<<"reggle "<<pBlock->blockNumber<<" get\n";
 #endif
@@ -332,7 +332,7 @@ void OctStore::put(LasPoint pnt)
   assert(pBlock);
   if (!pBlock->put(pnt))
   {
-    modMutex[pBlock->blockNumber%modMutexSize].unlock();
+    unlockBlockW(pBlock->blockNumber);
 #if DEBUG_LOCK
     if (thisThread()==0) cout<<"weggle "<<pBlock->blockNumber<<" put1\n";
 #endif
@@ -340,7 +340,7 @@ void OctStore::put(LasPoint pnt)
     pBlock=getBlock(key,true);
     pBlock->put(pnt);
   }
-  modMutex[pBlock->blockNumber%modMutexSize].unlock();
+  unlockBlockW(pBlock->blockNumber);
 #if DEBUG_LOCK
   if (thisThread()==0) cout<<"weggle "<<pBlock->blockNumber<<" put2\n";
 #endif
@@ -403,14 +403,14 @@ OctBlock *OctStore::getBlock(xyz key,bool writing)
   {
     if (writing)
     {
-      modMutex[blknum%modMutexSize].lock();
+      lockBlockW(blknum);
 #if DEBUG_LOCK
     if (thisThread()==0) cout<<"woggle "<<blknum<<" getBlock1\n";
 #endif
     }
     else
     {
-      modMutex[blknum%modMutexSize].lock_shared();
+      lockBlockR(blknum);
 #if DEBUG_LOCK
     if (thisThread()==0) cout<<"roggle "<<blknum<<" getBlock1\n";
 #endif
@@ -428,14 +428,14 @@ OctBlock *OctStore::getBlock(xyz key,bool writing)
     }
     if (writing)
     {
-      modMutex[blknum%modMutexSize].lock();
+      lockBlockW(blknum);
 #if DEBUG_LOCK
       if (thisThread()==0) cout<<"woggle "<<blknum<<" getBlock2\n";
 #endif
     }
     else
     {
-      modMutex[blknum%modMutexSize].lock_shared();
+      lockBlockR(blknum);
 #if DEBUG_LOCK
       if (thisThread()==0) cout<<"roggle "<<blknum<<" getBlock2\n";
 #endif
@@ -460,7 +460,7 @@ void OctStore::split(long long block,xyz camelStraw)
   currentBlock->markDirty();
   while (true)
   {
-    modMutex[block%modMutexSize].lock();
+    lockBlockW(block);
 #if DEBUG_LOCK
     if (thisThread()==0) cout<<"woggle "<<block<<" split\n";
 #endif
@@ -471,7 +471,7 @@ void OctStore::split(long long block,xyz camelStraw)
 	++fullth;
       currentBlock->points[i].location=nanxyz;
     }
-    modMutex[block%modMutexSize].unlock();
+    unlockBlockW(block);
 #if DEBUG_LOCK
     if (thisThread()==0) cout<<"weggle "<<block<<" split\n";
 #endif

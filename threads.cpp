@@ -38,6 +38,7 @@ mutex opTimeMutex;
 mutex bufferMutex;
 shared_mutex threadStatusMutex;
 map<int,shared_mutex> modMutex;
+mutex metaMutex;
 
 atomic<int> threadCommand;
 vector<thread> threads;
@@ -52,6 +53,7 @@ queue<LasPoint> pointBuffer; // to be turned later into a random-access buffer
 int currentAction;
 int modMutexSize;
 map<thread::id,int> threadNums;
+map<int,int> modReaders;
 
 cr::steady_clock clk;
 vector<int> cleanBuckets;
@@ -89,7 +91,10 @@ void startThreads(int n)
   threadNums[this_thread::get_id()]=-1;
   modMutexSize=relprime(55*n);
   for (i=0;i<modMutexSize;i++)
+  {
+    modReaders[i]=0;
     modMutex[i];
+  }
   for (i=0;i<n;i++)
   {
     threads.push_back(thread(WolkenThread(),i));
@@ -102,6 +107,33 @@ void joinThreads()
   int i;
   for (i=0;i<threads.size();i++)
     threads[i].join();
+}
+
+void lockBlockR(int block)
+{
+  metaMutex.lock();
+  modReaders[block%modMutexSize]++;
+  metaMutex.unlock();
+  modMutex[block%modMutexSize].lock_shared();
+}
+
+void lockBlockW(int block)
+{
+  modMutex[block%modMutexSize].lock();
+}
+
+void unlockBlockR(int block)
+{
+  metaMutex.lock();
+  if (--modReaders[block%modMutexSize]<0)
+    cout<<"Read-unlocked "<<block<<" too many times\n";
+  metaMutex.unlock();
+  modMutex[block%modMutexSize].unlock_shared();
+}
+
+void unlockBlockW(int block)
+{
+  modMutex[block%modMutexSize].unlock();
 }
 
 ThreadAction dequeueAction()
