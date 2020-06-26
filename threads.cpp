@@ -49,7 +49,8 @@ vector<vector<int> > heldTriangles; // one list of triangles per thread
 double stageTolerance;
 double minArea;
 queue<ThreadAction> actQueue,resQueue;
-queue<LasPoint> pointBuffer; // to be turned later into a random-access buffer
+vector<LasPoint> pointBuffer;
+int bufferPos=0;
 int currentAction;
 int modMutexSize;
 map<thread::id,int> threadNums;
@@ -191,8 +192,12 @@ bool resultQueueEmpty()
 
 void embufferPoint(LasPoint point)
 {
+  int sz;
   bufferMutex.lock();
-  pointBuffer.push(point);
+  pointBuffer.push_back(point);
+  sz=pointBuffer.size();
+  bufferPos=(bufferPos+relprime(sz))%sz;
+  swap(pointBuffer.back(),pointBuffer[bufferPos]);
   bufferMutex.unlock();
 }
 
@@ -202,8 +207,8 @@ LasPoint debufferPoint()
   bufferMutex.lock();
   if (pointBuffer.size())
   {
-    ret=pointBuffer.front();
-    pointBuffer.pop();
+    ret=pointBuffer.back();
+    pointBuffer.pop_back();
   }
   bufferMutex.unlock();
   return ret;
