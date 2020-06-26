@@ -29,6 +29,7 @@
 #include "relprime.h"
 #include "las.h"
 #include "octree.h"
+#define MOD_RW_MUTEX 1
 using namespace std;
 namespace cr=std::chrono;
 
@@ -37,7 +38,11 @@ mutex startMutex;
 mutex opTimeMutex;
 mutex bufferMutex;
 shared_mutex threadStatusMutex;
+#if MOD_RW_MUTEX
 map<int,shared_mutex> modMutex;
+#else
+map<int,mutex> modMutex;
+#endif
 mutex metaMutex;
 
 atomic<int> threadCommand;
@@ -115,7 +120,11 @@ void lockBlockR(int block)
   metaMutex.lock();
   modReaders[block%modMutexSize]++;
   metaMutex.unlock();
+#if MOD_RW_MUTEX
   modMutex[block%modMutexSize].lock_shared();
+#else
+  modMutex[block%modMutexSize].lock();
+#endif
 }
 
 void lockBlockW(int block)
@@ -129,7 +138,11 @@ void unlockBlockR(int block)
   if (--modReaders[block%modMutexSize]<0)
     cout<<"Read-unlocked "<<block<<" too many times\n";
   metaMutex.unlock();
+#if MOD_RW_MUTEX
   modMutex[block%modMutexSize].unlock_shared();
+#else
+  modMutex[block%modMutexSize].unlock();
+#endif
 }
 
 void unlockBlockW(int block)
