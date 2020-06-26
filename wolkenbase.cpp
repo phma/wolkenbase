@@ -103,6 +103,7 @@ int main(int argc,char **argv)
     cout<<files[i].numberPoints()<<" points\n";
   }
   waitForThreads(TH_STOP);
+  octStore.flush();
   joinThreads();
   return 0;
 }
