@@ -385,8 +385,17 @@ OctBlock *OctStore::getBlock(long long block,bool mustExist)
       }
     if (!found)
     {
+      int oldblock=blocks[lru].blockNumber;
+#if DEBUG_LOCK
+      if (thisThread()==0) cout<<"roggle "<<oldblock<<" getBlock0\n";
+#endif
+      lockBlockR(oldblock);
       blocks[lru].flush();
       blocks[lru].read(block);
+      unlockBlockR(oldblock);
+#if DEBUG_LOCK
+      if (thisThread()==0) cout<<"reggle "<<oldblock<<" getBlock0\n";
+#endif
     }
     blocks[lru].update();
     return &blocks[lru];

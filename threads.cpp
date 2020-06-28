@@ -29,7 +29,7 @@
 #include "relprime.h"
 #include "las.h"
 #include "octree.h"
-#define MOD_RW_MUTEX 1
+#define MOD_RW_MUTEX 0
 using namespace std;
 namespace cr=std::chrono;
 
