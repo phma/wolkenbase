@@ -81,7 +81,6 @@ extern double opTime;
 extern int opcount,trianglesToPaint;
 extern int currentAction;
 extern std::chrono::steady_clock clk;
-extern int modMutexSize;
 
 double busyFraction();
 void startThreads(int n);

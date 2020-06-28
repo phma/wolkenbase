@@ -119,42 +119,46 @@ void joinThreads()
 void lockBlockR(int block)
 {
   metaMutex.lock();
-  modReaders[block%modMutexSize]++;
+  if (modReaders.count(block)==0)
+    modReaders[block]=0;
+  modReaders[block]++;
   metaMutex.unlock();
 #if MOD_RW_MUTEX
-  modMutex[block%modMutexSize].lock_shared();
+  modMutex[block].lock_shared();
 #else
-  modMutex[block%modMutexSize].lock();
+  modMutex[block].lock();
 #endif
 }
 
 void lockBlockW(int block)
 {
-  modMutex[block%modMutexSize].lock();
-  if (modWriters[block%modMutexSize]>=0)
+  modMutex[block].lock();
+  if (modWriters.count(block)==0)
+    modWriters[block]=-1;
+  if (modWriters[block]>=0)
     cout<<"Deadlock\n";
-  modWriters[block%modMutexSize]=thisThread();
+  modWriters[block]=thisThread();
 }
 
 void unlockBlockR(int block)
 {
   metaMutex.lock();
-  if (--modReaders[block%modMutexSize]<0)
+  if (--modReaders[block]<0)
     cout<<"Read-unlocked "<<block<<" too many times\n";
   metaMutex.unlock();
 #if MOD_RW_MUTEX
-  modMutex[block%modMutexSize].unlock_shared();
+  modMutex[block].unlock_shared();
 #else
-  modMutex[block%modMutexSize].unlock();
+  modMutex[block].unlock();
 #endif
 }
 
 void unlockBlockW(int block)
 {
-  if (modWriters[block%modMutexSize]!=thisThread())
+  if (modWriters[block]!=thisThread())
     cout<<"False unlock\n";
-  modWriters[block%modMutexSize]=-1;
-  modMutex[block%modMutexSize].unlock();
+  modWriters[block]=-1;
+  modMutex[block].unlock();
 }
 
 ThreadAction dequeueAction()
