@@ -59,7 +59,7 @@ int bufferPos=0;
 int currentAction;
 int modMutexSize;
 map<thread::id,int> threadNums;
-map<int,int> modReaders;
+map<int,int> modReaders,modWriters;
 
 cr::steady_clock clk;
 vector<int> cleanBuckets;
@@ -99,6 +99,7 @@ void startThreads(int n)
   for (i=0;i<modMutexSize;i++)
   {
     modReaders[i]=0;
+    modWriters[i]=-1;
     modMutex[i];
   }
   for (i=0;i<n;i++)
@@ -130,6 +131,9 @@ void lockBlockR(int block)
 void lockBlockW(int block)
 {
   modMutex[block%modMutexSize].lock();
+  if (modWriters[block%modMutexSize]>=0)
+    cout<<"Deadlock\n";
+  modWriters[block%modMutexSize]=thisThread();
 }
 
 void unlockBlockR(int block)
@@ -147,6 +151,9 @@ void unlockBlockR(int block)
 
 void unlockBlockW(int block)
 {
+  if (modWriters[block%modMutexSize]!=thisThread())
+    cout<<"False unlock\n";
+  modWriters[block%modMutexSize]=-1;
   modMutex[block%modMutexSize].unlock();
 }
 
