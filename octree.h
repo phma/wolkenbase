@@ -73,6 +73,7 @@ public:
   OctBlock();
   void write();
   void markDirty();
+  void own();
   void read(long long block);
   void update();
   void flush();
@@ -97,6 +98,7 @@ public:
   OctStore();
   ~OctStore();
   void flush();
+  void disown();
   void resize(int n);
   void open(std::string fileName);
   void close();

@@ -180,6 +180,16 @@ void OctBlock::markDirty()
   dirty=true;
 }
 
+void OctBlock::own()
+{
+  int t=thisThread();
+  store->ownMutex.lock();
+  if (owningThread>=0 && owningThread!=t)
+    throw(owningThread);
+  owningThread=t;
+  store->ownMutex.unlock();
+}
+
 void OctBlock::read(long long block)
 {
   int i;
@@ -281,6 +291,18 @@ void OctStore::flush()
   {
     blocks[i].flush();
   }
+}
+
+void OctStore::disown()
+{
+  int i,t=thisThread();
+  ownMutex.lock();
+  for (i=0;i<blocks.size();i++)
+  {
+    if (blocks[i].owningThread==t)
+      blocks[i].owningThread=-1;
+  }
+  ownMutex.unlock();
 }
 
 void OctStore::resize(int n)
