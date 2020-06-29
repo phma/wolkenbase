@@ -84,6 +84,7 @@ private:
   long long blockNumber;
   bool dirty;
   int lastUsed;
+  int owningThread; // >=0 if owned, -1 if unowned
   std::vector<LasPoint> points;
   std::shared_mutex blockMutex;
   OctStore *store;
@@ -105,10 +106,11 @@ public:
   bool isConsistent();
 private:
   std::fstream file;
-  std::mutex fileMutex;
-  std::shared_mutex setBlockMutex;
-  std::shared_mutex nowUsedMutex;
-  std::recursive_mutex splitMutex;
+  std::mutex fileMutex; // lock when read/writing file
+  std::shared_mutex setBlockMutex; // lock when adding new blocks to file
+  std::shared_mutex nowUsedMutex; // lock when updating nowUsed
+  std::recursive_mutex splitMutex; // lock when splitting
+  std::mutex ownMutex; // lock when owning or disowning blocks
   int nowUsed;
   int leastRecentlyUsed();
   long long nBlocks;

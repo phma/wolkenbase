@@ -152,6 +152,7 @@ OctBlock::OctBlock()
   int i;
   lastUsed=0;
   dirty=false;
+  owningThread=-1;
   for (i=0;i<RECORDS;i++)
     points.emplace_back();
 }
@@ -327,19 +328,23 @@ LasPoint OctStore::get(xyz key)
 void OctStore::put(LasPoint pnt)
 {
   int i,inx=-1;
+  int blkn0=-1,blkn1=-1,blkn2=-1;
   xyz key=pnt.location;
   OctBlock *pBlock=getBlock(key,true); // locks the mutex
   assert(pBlock);
+  blkn0=pBlock->blockNumber;
   if (!pBlock->put(pnt))
   {
     unlockBlockW(pBlock->blockNumber);
 #if DEBUG_LOCK
     if (thisThread()==0) cout<<"weggle "<<pBlock->blockNumber<<" put1\n";
 #endif
+    blkn1=pBlock->blockNumber;
     split(pBlock->blockNumber,key);
     pBlock=getBlock(key,true);
     pBlock->put(pnt);
   }
+  blkn2=pBlock->blockNumber;
   unlockBlockW(pBlock->blockNumber);
 #if DEBUG_LOCK
   if (thisThread()==0) cout<<"weggle "<<pBlock->blockNumber<<" put2\n";
