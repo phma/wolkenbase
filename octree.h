@@ -73,7 +73,7 @@ public:
   OctBlock();
   void write();
   void markDirty();
-  void own();
+  bool own();
   void read(long long block);
   void update();
   void flush();
@@ -116,6 +116,7 @@ private:
   int nowUsed;
   int leastRecentlyUsed();
   long long nBlocks;
+  int newBlock();
   OctBlock *getBlock(long long block,bool mustExist=false);
   OctBlock *getBlock(xyz key,bool writing);
   std::map<int,OctBlock> blocks;

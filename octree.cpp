@@ -180,14 +180,16 @@ void OctBlock::markDirty()
   dirty=true;
 }
 
-void OctBlock::own()
+bool OctBlock::own()
 {
+  bool ret;
   int t=thisThread();
   store->ownMutex.lock();
-  if (owningThread>=0 && owningThread!=t)
-    throw(owningThread);
-  owningThread=t;
+  ret=owningThread<0 || owningThread==t;
+  if (ret)
+    owningThread=t;
   store->ownMutex.unlock();
+  return ret;
 }
 
 void OctBlock::read(long long block)
@@ -390,6 +392,17 @@ int OctStore::leastRecentlyUsed()
   return ret;
 }
 
+int OctStore::newBlock()
+// The new block is owned.
+{
+  ownMutex.lock();
+  int i=blocks.size();
+  blocks[i].store=this;
+  blocks[i].owningThread=thisThread();
+  ownMutex.unlock();
+  return i;
+}
+
 OctBlock *OctStore::getBlock(long long block,bool mustExist)
 {
   streampos fileSize;
@@ -413,16 +426,21 @@ OctBlock *OctStore::getBlock(long long block,bool mustExist)
     if (!found)
     {
       int oldblock=blocks[lru].blockNumber;
+      if (blocks[lru].own())
+      {
 #if DEBUG_LOCK
-      if (thisThread()==0) cout<<"roggle "<<oldblock<<" getBlock0\n";
+	if (thisThread()==0) cout<<"roggle "<<oldblock<<" getBlock0\n";
 #endif
-      lockBlockR(oldblock);
-      blocks[lru].flush();
-      blocks[lru].read(block);
-      unlockBlockR(oldblock);
+	lockBlockR(oldblock);
+	blocks[lru].flush();
+	blocks[lru].read(block);
+	unlockBlockR(oldblock);
 #if DEBUG_LOCK
-      if (thisThread()==0) cout<<"reggle "<<oldblock<<" getBlock0\n";
+	if (thisThread()==0) cout<<"reggle "<<oldblock<<" getBlock0\n";
 #endif
+      }
+      else
+	lru=newBlock();
     }
     blocks[lru].update();
     return &blocks[lru];
