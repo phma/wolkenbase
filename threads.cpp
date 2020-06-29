@@ -22,6 +22,7 @@
 #include <queue>
 #include <map>
 #include <set>
+#include <cassert>
 #include <atomic>
 #include "threads.h"
 #include "angle.h"
@@ -118,6 +119,7 @@ void joinThreads()
 
 void lockBlockR(int block)
 {
+  assert(block>=0);
   metaMutex.lock();
   if (modReaders.count(block)==0)
     modReaders[block]=0;
@@ -132,6 +134,7 @@ void lockBlockR(int block)
 
 void lockBlockW(int block)
 {
+  assert(block>=0);
   modMutex[block].lock();
   if (modWriters.count(block)==0)
     modWriters[block]=-1;
@@ -142,6 +145,7 @@ void lockBlockW(int block)
 
 void unlockBlockR(int block)
 {
+  assert(block>=0);
   metaMutex.lock();
   if (--modReaders[block]<0)
     cout<<"Read-unlocked "<<block<<" too many times\n";
@@ -155,6 +159,7 @@ void unlockBlockR(int block)
 
 void unlockBlockW(int block)
 {
+  assert(block>=0);
   if (modWriters[block]!=thisThread())
     cout<<"False unlock\n";
   modWriters[block]=-1;
