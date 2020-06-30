@@ -67,10 +67,10 @@ extern Octree octRoot;
 extern OctStore octStore;
 
 
-class OctBlock
+class OctBuffer
 {
 public:
-  OctBlock();
+  OctBuffer();
   void write();
   void markDirty();
   bool own();
@@ -117,11 +117,11 @@ private:
   int leastRecentlyUsed();
   long long nBlocks;
   int newBlock();
-  OctBlock *getBlock(long long block,bool mustExist=false);
-  OctBlock *getBlock(xyz key,bool writing);
-  std::map<int,OctBlock> blocks;
+  OctBuffer *getBlock(long long block,bool mustExist=false);
+  OctBuffer *getBlock(xyz key,bool writing);
+  std::map<int,OctBuffer> blocks;
   std::map<int,std::shared_mutex> blockMutexes;
   void split(long long block,xyz camelStraw);
-  friend class OctBlock;
+  friend class OctBuffer;
 };
 #endif
