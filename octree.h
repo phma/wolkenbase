@@ -23,6 +23,7 @@
 #ifndef OCTREE_H
 #define OCTREE_H
 #include <map>
+#include <set>
 #include "shape.h"
 #include "las.h"
 #include "threads.h"
@@ -73,7 +74,8 @@ public:
   OctBuffer();
   void write();
   void markDirty();
-  bool own();
+  void own();
+  bool ownAlone();
   void read(long long block);
   void update();
   void flush();
@@ -85,7 +87,7 @@ private:
   long long blockNumber;
   bool dirty;
   int lastUsed;
-  int owningThread; // >=0 if owned, -1 if unowned
+  std::set<int> owningThread;
   std::vector<LasPoint> points;
   std::shared_mutex blockMutex;
   OctStore *store;

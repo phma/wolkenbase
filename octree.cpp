@@ -152,7 +152,6 @@ OctBuffer::OctBuffer()
   int i;
   lastUsed=0;
   dirty=false;
-  owningThread=-1;
   for (i=0;i<RECORDS;i++)
     points.emplace_back();
 }
@@ -180,14 +179,22 @@ void OctBuffer::markDirty()
   dirty=true;
 }
 
-bool OctBuffer::own()
+void OctBuffer::own()
+{
+  int t=thisThread();
+  store->ownMutex.lock();
+  owningThread.insert(t);
+  store->ownMutex.unlock();
+}
+
+bool OctBuffer::ownAlone()
 {
   bool ret;
   int t=thisThread();
   store->ownMutex.lock();
-  ret=owningThread<0 || owningThread==t;
+  ret=owningThread.size()==owningThread.count(t);
   if (ret)
-    owningThread=t;
+    owningThread.insert(t);
   store->ownMutex.unlock();
   return ret;
 }
@@ -300,10 +307,7 @@ void OctStore::disown()
   int i,t=thisThread();
   ownMutex.lock();
   for (i=0;i<blocks.size();i++)
-  {
-    if (blocks[i].owningThread==t)
-      blocks[i].owningThread=-1;
-  }
+  blocks[i].owningThread.erase(t);
   ownMutex.unlock();
 }
 
@@ -398,7 +402,7 @@ int OctStore::newBlock()
   ownMutex.lock();
   int i=blocks.size();
   blocks[i].store=this;
-  blocks[i].owningThread=thisThread();
+  blocks[i].owningThread.insert(thisThread());
   ownMutex.unlock();
   return i;
 }
@@ -426,7 +430,7 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
     if (!found)
     {
       int oldblock=blocks[lru].blockNumber;
-      if (blocks[lru].own())
+      if (blocks[lru].ownAlone())
       {
 	if (oldblock>=0)
 	{
