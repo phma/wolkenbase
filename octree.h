@@ -85,7 +85,8 @@ public:
   //bool isConsistent();
 private:
   long long blockNumber;
-  bool dirty;
+  bool dirty; // The contents of the buffer may differ from the contents of the block.
+  bool inTransit; // The correspondence between buffer and block is being changed.
   int lastUsed;
   std::set<int> owningThread;
   std::vector<LasPoint> points;
