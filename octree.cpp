@@ -346,10 +346,6 @@ LasPoint OctStore::get(xyz key)
   OctBuffer *pBlock=getBlock(key,false); // locks the mutex
   assert(pBlock);
   ret=pBlock->get(key);
-  unlockBlockR(pBlock->blockNumber);
-#if DEBUG_LOCK
-  if (thisThread()==0) cout<<"reggle "<<pBlock->blockNumber<<" get\n";
-#endif
   return ret;
 }
 
@@ -363,20 +359,12 @@ void OctStore::put(LasPoint pnt)
   blkn0=pBlock->blockNumber;
   if (!pBlock->put(pnt))
   {
-    unlockBlockW(pBlock->blockNumber);
-#if DEBUG_LOCK
-    if (thisThread()==0) cout<<"weggle "<<pBlock->blockNumber<<" put1\n";
-#endif
     blkn1=pBlock->blockNumber;
     split(pBlock->blockNumber,key);
     pBlock=getBlock(key,true);
     pBlock->put(pnt);
   }
   blkn2=pBlock->blockNumber;
-  unlockBlockW(pBlock->blockNumber);
-#if DEBUG_LOCK
-  if (thisThread()==0) cout<<"weggle "<<pBlock->blockNumber<<" put2\n";
-#endif
 }
 
 int OctStore::leastRecentlyUsed()
@@ -432,23 +420,9 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
       int oldblock=blocks[lru].blockNumber;
       if (blocks[lru].ownAlone())
       {
-	if (oldblock>=0)
-	{
-#if DEBUG_LOCK
-	  if (thisThread()==0) cout<<"roggle "<<oldblock<<" getBlock0\n";
-#endif
-	  lockBlockR(oldblock);
-	}
 	blocks[lru].flush();
 	blocks[lru].read(block);
-	if (oldblock>=0)
-	{
-	  unlockBlockR(oldblock);
-#if DEBUG_LOCK
-	  if (thisThread()==0) cout<<"reggle "<<oldblock<<" getBlock0\n";
-#endif
-	}
-      }
+     }
       else
 	lru=newBlock();
     }
@@ -465,20 +439,6 @@ OctBuffer *OctStore::getBlock(xyz key,bool writing)
   setBlockMutex.unlock_shared();
   if (blknum>=0)
   {
-    if (writing)
-    {
-      lockBlockW(blknum);
-#if DEBUG_LOCK
-    if (thisThread()==0) cout<<"woggle "<<blknum<<" getBlock1\n";
-#endif
-    }
-    else
-    {
-      lockBlockR(blknum);
-#if DEBUG_LOCK
-    if (thisThread()==0) cout<<"roggle "<<blknum<<" getBlock1\n";
-#endif
-    }
     ret=getBlock(blknum);
   }
   else
@@ -489,20 +449,6 @@ OctBuffer *OctStore::getBlock(xyz key,bool writing)
     {
       blknum=nBlocks++;
       octRoot.setBlock(key,blknum);
-    }
-    if (writing)
-    {
-      lockBlockW(blknum);
-#if DEBUG_LOCK
-      if (thisThread()==0) cout<<"woggle "<<blknum<<" getBlock2\n";
-#endif
-    }
-    else
-    {
-      lockBlockR(blknum);
-#if DEBUG_LOCK
-      if (thisThread()==0) cout<<"roggle "<<blknum<<" getBlock2\n";
-#endif
     }
     ret=getBlock(blknum);
     setBlockMutex.unlock();
@@ -524,10 +470,6 @@ void OctStore::split(long long block,xyz camelStraw)
   currentBlock->markDirty();
   while (true)
   {
-    lockBlockW(block);
-#if DEBUG_LOCK
-    if (thisThread()==0) cout<<"woggle "<<block<<" split\n";
-#endif
     fullth=0;
     for (i=0;i<RECORDS;i++)
     {
@@ -535,10 +477,6 @@ void OctStore::split(long long block,xyz camelStraw)
 	++fullth;
       currentBlock->points[i].location=nanxyz;
     }
-    unlockBlockW(block);
-#if DEBUG_LOCK
-    if (thisThread()==0) cout<<"weggle "<<block<<" split\n";
-#endif
     if (fullth<RECORDS)
       break;
     octRoot.split(camelStraw);

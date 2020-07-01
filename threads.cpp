@@ -30,7 +30,6 @@
 #include "relprime.h"
 #include "las.h"
 #include "octree.h"
-#define MOD_RW_MUTEX 0
 using namespace std;
 namespace cr=std::chrono;
 
@@ -39,11 +38,6 @@ mutex startMutex;
 mutex opTimeMutex;
 mutex bufferMutex;
 shared_mutex threadStatusMutex;
-#if MOD_RW_MUTEX
-map<int,shared_mutex> modMutex;
-#else
-map<int,mutex> modMutex;
-#endif
 mutex metaMutex;
 
 atomic<int> threadCommand;
@@ -58,9 +52,7 @@ queue<ThreadAction> actQueue,resQueue;
 vector<LasPoint> pointBuffer;
 int bufferPos=0;
 int currentAction;
-int modMutexSize;
 map<thread::id,int> threadNums;
-map<int,int> modReaders,modWriters;
 
 cr::steady_clock clk;
 vector<int> cleanBuckets;
@@ -96,13 +88,6 @@ void startThreads(int n)
   sleepTime.resize(n);
   opTime=0;
   threadNums[this_thread::get_id()]=-1;
-  modMutexSize=relprime(55*n);
-  for (i=0;i<modMutexSize;i++)
-  {
-    modReaders[i]=0;
-    modWriters[i]=-1;
-    modMutex[i];
-  }
   for (i=0;i<n;i++)
   {
     threads.push_back(thread(WolkenThread(),i));
@@ -115,55 +100,6 @@ void joinThreads()
   int i;
   for (i=0;i<threads.size();i++)
     threads[i].join();
-}
-
-void lockBlockR(int block)
-{
-  assert(block>=0);
-  metaMutex.lock();
-  if (modReaders.count(block)==0)
-    modReaders[block]=0;
-  modReaders[block]++;
-  metaMutex.unlock();
-#if MOD_RW_MUTEX
-  modMutex[block].lock_shared();
-#else
-  modMutex[block].lock();
-#endif
-}
-
-void lockBlockW(int block)
-{
-  assert(block>=0);
-  modMutex[block].lock();
-  if (modWriters.count(block)==0)
-    modWriters[block]=-1;
-  if (modWriters[block]>=0)
-    cout<<"Deadlock\n";
-  modWriters[block]=thisThread();
-}
-
-void unlockBlockR(int block)
-{
-  assert(block>=0);
-  metaMutex.lock();
-  if (--modReaders[block]<0)
-    cout<<"Read-unlocked "<<block<<" too many times\n";
-  metaMutex.unlock();
-#if MOD_RW_MUTEX
-  modMutex[block].unlock_shared();
-#else
-  modMutex[block].unlock();
-#endif
-}
-
-void unlockBlockW(int block)
-{
-  assert(block>=0);
-  if (modWriters[block]!=thisThread())
-    cout<<"False unlock\n";
-  modWriters[block]=-1;
-  modMutex[block].unlock();
 }
 
 ThreadAction dequeueAction()
