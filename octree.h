@@ -116,6 +116,7 @@ private:
   std::shared_mutex nowUsedMutex; // lock when updating nowUsed
   std::recursive_mutex splitMutex; // lock when splitting
   std::mutex ownMutex; // lock when owning or disowning blocks
+  std::mutex transitMutex; // lock when setting or clearing inTransit
   int nowUsed;
   int leastRecentlyUsed();
   long long nBlocks;
