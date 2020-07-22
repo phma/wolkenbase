@@ -311,6 +311,24 @@ void OctStore::disown()
   ownMutex.unlock();
 }
 
+bool OctStore::setTransit(int buffer,bool t)
+/* Returns true if successful. If t is true, and the buffer is already
+ * in transit, returns false.
+ */
+{
+  bool ret=true;
+  transitMutex.lock();
+  if (t)
+    if (blocks[buffer].inTransit)
+      ret=false;
+    else
+      blocks[buffer].inTransit=true;
+  else
+    blocks[buffer].inTransit=false;
+  transitMutex.unlock();
+  return ret;
+}
+
 void OctStore::resize(int n)
 // The number of blocks should be more than eight times the number of threads.
 {

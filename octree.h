@@ -102,6 +102,7 @@ public:
   ~OctStore();
   void flush();
   void disown();
+  bool setTransit(int buffer,bool t);
   void resize(int n);
   void open(std::string fileName);
   void close();
