@@ -361,7 +361,7 @@ LasPoint OctStore::get(xyz key)
 {
   int i,inx=-1;
   LasPoint ret;
-  OctBuffer *pBlock=getBlock(key,false); // locks the mutex
+  OctBuffer *pBlock=getBlock(key,false);
   assert(pBlock);
   ret=pBlock->get(key);
   return ret;
@@ -372,7 +372,7 @@ void OctStore::put(LasPoint pnt)
   int i,inx=-1;
   int blkn0=-1,blkn1=-1,blkn2=-1;
   xyz key=pnt.location;
-  OctBuffer *pBlock=getBlock(key,true); // locks the mutex
+  OctBuffer *pBlock=getBlock(key,true);
   assert(pBlock);
   blkn0=pBlock->blockNumber;
   if (!pBlock->put(pnt))
