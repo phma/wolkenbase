@@ -416,8 +416,8 @@ int OctStore::newBlock()
 OctBuffer *OctStore::getBlock(long long block,bool mustExist)
 {
   streampos fileSize;
-  int lru,i;
-  bool found=false;
+  int lru,bufnum=-1,i;
+  bool found=false,transitResult;
   fileMutex.lock();
   file.seekg(0,file.end); // With more than one file, seek the file the block is in.
   fileSize=file.tellg();
@@ -431,20 +431,26 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
       if (blocks[i].blockNumber==block)
       {
         found=true;
-        lru=i;
+        bufnum=i;
       }
     if (!found)
     {
       int oldblock=blocks[lru].blockNumber;
-      if (blocks[lru].ownAlone())
+      bufnum=lru;
+      transitResult=setTransit(bufnum,true);
+      if (transitResult && blocks[bufnum].ownAlone())
       {
-	blocks[lru].flush();
-	blocks[lru].read(block);
-     }
+	blocks[bufnum].flush();
+	blocks[bufnum].read(block);
+      }
       else
-	lru=newBlock();
+      {
+	bufnum=newBlock();
+	blocks[bufnum].blockNumber=block;
+      }
     }
-    blocks[lru].update();
+    blocks[bufnum].update();
+    setTransit(lru,false);
     return &blocks[lru];
   }
 }
