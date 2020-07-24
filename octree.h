@@ -111,7 +111,7 @@ public:
   void dump();
   bool isConsistent();
 private:
-  std::fstream file;
+  std::map<int,std::fstream> file;
   std::mutex fileMutex; // lock when read/writing file
   std::shared_mutex setBlockMutex; // lock when adding new blocks to file
   std::shared_mutex nowUsedMutex; // lock when updating nowUsed
@@ -119,6 +119,7 @@ private:
   std::mutex ownMutex; // lock when owning or disowning blocks
   std::mutex transitMutex; // lock when setting or clearing inTransit
   int nowUsed;
+  int nFiles;
   int leastRecentlyUsed();
   long long nBlocks;
   int newBlock();

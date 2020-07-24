@@ -158,17 +158,17 @@ OctBuffer::OctBuffer()
 
 void OctBuffer::write()
 {
-  int i;
+  int i,f=blockNumber%store->nFiles;
   blockMutex.lock_shared();
   store->fileMutex.lock();
 #if DEBUG_STORE
   cout<<"Writing block "<<blockNumber<<endl;
 #endif
-  store->file.seekp(BLOCKSIZE*blockNumber);
+  store->file[f].seekp(BLOCKSIZE*blockNumber);
   //cout<<store->file.rdstate()<<' '<<ios::failbit<<endl;
-  store->file.clear();
+  store->file[f].clear();
   for (i=0;i<RECORDS;i++)
-    points[i].write(store->file);
+    points[i].write(store->file[f]);
   dirty=false;
   store->fileMutex.unlock();
   blockMutex.unlock_shared();
@@ -201,16 +201,16 @@ bool OctBuffer::ownAlone()
 
 void OctBuffer::read(long long block)
 {
-  int i;
+  int i,f=block%store->nFiles;
   blockMutex.lock();
   store->fileMutex.lock();
 #if DEBUG_STORE
   cout<<"Reading block "<<block<<" into "<<this<<' '<<this_thread::get_id()<<endl;
 #endif
-  store->file.seekg(BLOCKSIZE*(blockNumber=block));
+  store->file[f].seekg(BLOCKSIZE*(blockNumber=block));
   for (i=0;i<RECORDS;i++)
-    points[i].read(store->file);
-  store->file.clear();
+    points[i].read(store->file[f]);
+  store->file[f].clear();
   /* If a new block is read in, all points will be at (0,0,0).
    * In any other case (including all points being at (NAN,NAN,NAN)),
    * points' locations will be unequal. (NAN is not equal to NAN.)
@@ -347,14 +347,20 @@ void OctStore::open(string fileName)
 {
   int i;
   OctBuffer *blkPtr;
-  file.open(fileName,ios::in|ios::out|ios::binary|ios::trunc);
-  cout<<fileName<<' '<<file.is_open()<<endl;
+  nFiles=1;
+  for (i=0;i<nFiles;i++)
+  {
+    file[i].open(fileName+to_string(i),ios::in|ios::out|ios::binary|ios::trunc);
+    cout<<fileName+to_string(i)<<' '<<file[i].is_open()<<endl;
+  }
 }
 
 void OctStore::close()
 {
+  int i;
   flush();
-  file.close();
+  for (i=0;i<nFiles;i++)
+    file[i].close();
 }
 
 LasPoint OctStore::get(xyz key)
@@ -417,11 +423,11 @@ int OctStore::newBlock()
 OctBuffer *OctStore::getBlock(long long block,bool mustExist)
 {
   streampos fileSize;
-  int lru,bufnum=-1,i;
+  int lru,bufnum=-1,i,f=block%nFiles;
   bool found=false,transitResult;
   fileMutex.lock();
-  file.seekg(0,file.end); // With more than one file, seek the file the block is in.
-  fileSize=file.tellg();
+  file[f].seekg(0,file[f].end); // With more than one file, seek the file the block is in.
+  fileSize=file[f].tellg();
   fileMutex.unlock();
   assert(block>=0);
   lru=leastRecentlyUsed();
