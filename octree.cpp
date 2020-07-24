@@ -422,6 +422,7 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
   file.seekg(0,file.end); // With more than one file, seek the file the block is in.
   fileSize=file.tellg();
   fileMutex.unlock();
+  assert(block>=0);
   lru=leastRecentlyUsed();
   if (BLOCKSIZE*block>=fileSize && mustExist)
     return nullptr;
