@@ -112,7 +112,7 @@ public:
   bool isConsistent();
 private:
   std::map<int,std::fstream> file;
-  std::mutex fileMutex; // lock when read/writing file
+  std::map<int,std::mutex> fileMutex; // lock when read/writing file
   std::shared_mutex setBlockMutex; // lock when adding new blocks to file
   std::shared_mutex nowUsedMutex; // lock when updating nowUsed
   std::recursive_mutex splitMutex; // lock when splitting

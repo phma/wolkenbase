@@ -160,7 +160,7 @@ void OctBuffer::write()
 {
   int i,f=blockNumber%store->nFiles;
   blockMutex.lock_shared();
-  store->fileMutex.lock();
+  store->fileMutex[f].lock();
 #if DEBUG_STORE
   cout<<"Writing block "<<blockNumber<<endl;
 #endif
@@ -170,7 +170,7 @@ void OctBuffer::write()
   for (i=0;i<RECORDS;i++)
     points[i].write(store->file[f]);
   dirty=false;
-  store->fileMutex.unlock();
+  store->fileMutex[f].unlock();
   blockMutex.unlock_shared();
 }
 
@@ -203,7 +203,7 @@ void OctBuffer::read(long long block)
 {
   int i,f=block%store->nFiles;
   blockMutex.lock();
-  store->fileMutex.lock();
+  store->fileMutex[f].lock();
 #if DEBUG_STORE
   cout<<"Reading block "<<block<<" into "<<this<<' '<<this_thread::get_id()<<endl;
 #endif
@@ -218,7 +218,7 @@ void OctBuffer::read(long long block)
   if (points[0].location==points[1].location)
     for (i=0;i<RECORDS;i++)
       points[i].location=nanxyz;
-  store->fileMutex.unlock();
+  store->fileMutex[f].unlock();
   blockMutex.unlock();
 }
 
@@ -425,10 +425,10 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
   streampos fileSize;
   int lru,bufnum=-1,i,f=block%nFiles;
   bool found=false,transitResult;
-  fileMutex.lock();
+  fileMutex[f].lock();
   file[f].seekg(0,file[f].end); // With more than one file, seek the file the block is in.
   fileSize=file[f].tellg();
-  fileMutex.unlock();
+  fileMutex[f].unlock();
   assert(block>=0);
   lru=leastRecentlyUsed();
   if (BLOCKSIZE*block>=fileSize && mustExist)
