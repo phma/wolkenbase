@@ -104,7 +104,7 @@ public:
   void disown();
   bool setTransit(int buffer,bool t);
   void resize(int n);
-  void open(std::string fileName);
+  void open(std::string fileName,int numFiles=1);
   void close();
   LasPoint get(xyz key);
   void put(LasPoint pnt);

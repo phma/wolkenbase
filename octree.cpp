@@ -158,13 +158,13 @@ OctBuffer::OctBuffer()
 
 void OctBuffer::write()
 {
-  int i,f=blockNumber%store->nFiles;
+  int i,f=blockNumber%store->nFiles,b=blockNumber/store->nFiles;
   blockMutex.lock_shared();
   store->fileMutex[f].lock();
 #if DEBUG_STORE
   cout<<"Writing block "<<blockNumber<<endl;
 #endif
-  store->file[f].seekp(BLOCKSIZE*blockNumber);
+  store->file[f].seekp(BLOCKSIZE*b);
   //cout<<store->file.rdstate()<<' '<<ios::failbit<<endl;
   store->file[f].clear();
   for (i=0;i<RECORDS;i++)
@@ -201,13 +201,14 @@ bool OctBuffer::ownAlone()
 
 void OctBuffer::read(long long block)
 {
-  int i,f=block%store->nFiles;
+  int i,f=block%store->nFiles,b=block/store->nFiles;
   blockMutex.lock();
   store->fileMutex[f].lock();
 #if DEBUG_STORE
   cout<<"Reading block "<<block<<" into "<<this<<' '<<this_thread::get_id()<<endl;
 #endif
-  store->file[f].seekg(BLOCKSIZE*(blockNumber=block));
+  blockNumber=block;
+  store->file[f].seekg(BLOCKSIZE*b);
   for (i=0;i<RECORDS;i++)
     points[i].read(store->file[f]);
   store->file[f].clear();
@@ -343,11 +344,13 @@ void OctStore::resize(int n)
     blocks.erase(i);
 }
 
-void OctStore::open(string fileName)
+void OctStore::open(string fileName,int numFiles)
 {
   int i;
   OctBuffer *blkPtr;
-  nFiles=1;
+  nFiles=numFiles;
+  if (nFiles<1)
+    nFiles=1;
   for (i=0;i<nFiles;i++)
   {
     file[i].open(fileName+to_string(i),ios::in|ios::out|ios::binary|ios::trunc);
@@ -423,7 +426,7 @@ int OctStore::newBlock()
 OctBuffer *OctStore::getBlock(long long block,bool mustExist)
 {
   streampos fileSize;
-  int lru,bufnum=-1,i,f=block%nFiles;
+  int lru,bufnum=-1,i,f=block%nFiles,b=block/nFiles;
   bool found=false,transitResult;
   fileMutex[f].lock();
   file[f].seekg(0,file[f].end); // With more than one file, seek the file the block is in.
@@ -431,7 +434,7 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
   fileMutex[f].unlock();
   assert(block>=0);
   lru=leastRecentlyUsed();
-  if (BLOCKSIZE*block>=fileSize && mustExist)
+  if (BLOCKSIZE*b>=fileSize && mustExist)
     return nullptr;
   else
   {
