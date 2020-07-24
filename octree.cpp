@@ -453,7 +453,7 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
     }
     blocks[bufnum].update();
     setTransit(lru,false);
-    return &blocks[lru];
+    return &blocks[bufnum];
   }
 }
 
