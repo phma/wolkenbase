@@ -375,6 +375,7 @@ void OctStore::put(LasPoint pnt)
   OctBuffer *pBlock=getBlock(key,true);
   assert(pBlock);
   blkn0=pBlock->blockNumber;
+  assert(blkn0>=0);
   if (!pBlock->put(pnt))
   {
     blkn1=pBlock->blockNumber;
