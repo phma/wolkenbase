@@ -101,6 +101,7 @@ int main(int argc,char **argv)
     }
     cout<<files[i].numberPoints()<<" points\n";
   }
+  waitForQueueEmpty();
   waitForThreads(TH_STOP);
   octStore.flush();
   joinThreads();

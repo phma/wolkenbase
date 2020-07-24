@@ -179,6 +179,15 @@ LasPoint debufferPoint()
   return ret;
 }
 
+bool pointBufferEmpty()
+{
+  size_t sz;
+  bufferMutex.lock();
+  sz=pointBuffer.size();
+  bufferMutex.unlock();
+  return sz==0;
+}
+
 void sleepRead()
 // Called when reading a ptin file that has many dots per triangle.
 {
@@ -282,12 +291,12 @@ void waitForThreads(int newStatus)
 }
 
 void waitForQueueEmpty()
-// Waits until the action queue is empty and all threads have completed their actions.
+// Waits until the action queue and point buffer are empty and all threads have completed their actions.
 {
   int i,n;
   do
   {
-    n=actQueue.size();
+    n=actQueue.size()+pointBuffer.size();
     threadStatusMutex.lock_shared();
     for (i=0;i<threadStatus.size();i++)
       if (threadStatus[i]<256)

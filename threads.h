@@ -91,6 +91,7 @@ bool actionQueueEmpty();
 bool resultQueueEmpty();
 void embufferPoint(LasPoint point);
 LasPoint debufferPoint();
+bool pointBufferEmpty();
 void setThreadCommand(int newStatus);
 int getThreadStatus();
 void waitForThreads(int newStatus);
