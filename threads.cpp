@@ -302,7 +302,7 @@ void waitForQueueEmpty()
       if (threadStatus[i]<256)
 	n++;
     threadStatusMutex.unlock_shared();
-    this_thread::sleep_for(chrono::milliseconds(n));
+    this_thread::sleep_for(chrono::milliseconds(30));
   } while (n);
 }
 
