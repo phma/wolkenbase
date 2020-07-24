@@ -313,8 +313,7 @@ int thisThread()
 
 void WolkenThread::operator()(int thread)
 {
-  int e=0,t=0,d=0;
-  int triResult,edgeResult;
+  int i=0;
   ThreadAction act;
   LasPoint point;
   startMutex.lock();
@@ -339,7 +338,11 @@ void WolkenThread::operator()(int thread)
       else
       {
 	octStore.put(point);
-	octStore.disown();
+	if (++i>RECORDS)
+	{
+	  octStore.disown();
+	  i=0;
+	}
 	unsleep(thread);
       }
     }
