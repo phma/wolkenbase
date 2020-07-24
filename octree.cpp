@@ -152,6 +152,7 @@ OctBuffer::OctBuffer()
   int i;
   lastUsed=0;
   dirty=false;
+  points.reserve(RECORDS);
   for (i=0;i<RECORDS;i++)
     points.emplace_back();
 }
