@@ -330,6 +330,7 @@ void WolkenThread::operator()(int thread)
       else
       {
 	octStore.put(point);
+	octStore.disown();
 	unsleep(thread);
       }
     }
