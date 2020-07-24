@@ -103,6 +103,7 @@ int main(int argc,char **argv)
     cout<<files[i].numberPoints()<<" points\n";
   }
   waitForQueueEmpty();
+  cout<<"All points in octree\n";
   waitForThreads(TH_STOP);
   octStore.flush();
   joinThreads();
