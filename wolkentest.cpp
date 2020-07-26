@@ -47,6 +47,21 @@ using namespace std;
 bool testfail=false;
 vector<string> args;
 
+void outsizeof(string typeName,int size)
+{
+  cout<<"size of "<<typeName<<" is "<<size<<endl;
+}
+
+void testsizeof()
+// This is not run as part of "make test".
+{
+  outsizeof("LasPoint",sizeof(LasPoint));
+  outsizeof("OctBuffer",sizeof(OctBuffer));
+  /* LasPoint	104
+   * OctBuffer	152
+   */
+}
+
 void testflat()
 {
   flatScene(10,100);
@@ -155,6 +170,8 @@ int main(int argc, char *argv[])
   for (i=1;i<argc;i++)
     args.push_back(argv[i]);
   octStore.open("store.oct");
+  if (shoulddo("sizeof"))
+    testsizeof();
   if (shoulddo("complex"))
     testcomplex();
   if (shoulddo("pageinx"))
