@@ -36,6 +36,7 @@
 #include "eisenstein.h"
 #include "random.h"
 #include "ps.h"
+#include "freeram.h"
 #include "flowsnake.h"
 
 #define tassert(x) testfail|=(!(x))
@@ -60,6 +61,11 @@ void testsizeof()
   /* LasPoint	104
    * OctBuffer	152
    */
+}
+
+void testfreeram()
+{
+  cout<<"Free RAM "<<freeRam()<<endl;
 }
 
 void testflat()
@@ -172,6 +178,8 @@ int main(int argc, char *argv[])
   octStore.open("store.oct");
   if (shoulddo("sizeof"))
     testsizeof();
+  if (shoulddo("freeram"))
+    testfreeram();
   if (shoulddo("complex"))
     testcomplex();
   if (shoulddo("pageinx"))
