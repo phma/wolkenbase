@@ -22,12 +22,14 @@
 #include <cassert>
 #include <cmath>
 #include "octree.h"
+#include "freeram.h"
 #define DEBUG_STORE 0
 #define DEBUG_LOCK 0
 using namespace std;
 
 Octree octRoot;
 OctStore octStore;
+double lowRam;
 
 #if defined(_WIN32) || defined(__CYGWIN__)
 // Linux and BSD have this function in the library; Windows doesn't.
@@ -450,7 +452,7 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
       int oldblock=blocks[lru].blockNumber;
       bufnum=lru;
       transitResult=setTransit(bufnum,true);
-      if (transitResult && blocks[bufnum].ownAlone())
+      if (transitResult && blocks[bufnum].ownAlone() && freeRam()>lowRam)
       {
 	blocks[bufnum].flush();
 	blocks[bufnum].read(block);

@@ -35,6 +35,7 @@
 #include "relprime.h"
 #include "ldecimal.h"
 #include "octree.h"
+#include "freeram.h"
 using namespace std;
 namespace po=boost::program_options;
 
@@ -80,6 +81,7 @@ int main(int argc,char **argv)
     limits.push_back(files[i].maxCorner());
     cout<<files[i].numberPoints()<<" points\n";
   }
+  lowRam=freeRam()/7;
   octRoot.sizeFit(limits);
   center=octRoot.getCenter();
   cout<<'('<<ldecimal(center.getx())<<','<<ldecimal(center.gety())<<','<<ldecimal(center.getz())<<")±";
