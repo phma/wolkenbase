@@ -501,7 +501,7 @@ void OctStore::split(long long block,xyz camelStraw)
   OctBuffer *currentBlock;
   int i,fullth;
   currentBlock=getBlock(block);
-  splitMutex.lock();
+  //splitMutex.lock();
 #if DEBUG_STORE
   cout<<"Splitting block "<<block<<endl;
 #endif
@@ -525,5 +525,5 @@ void OctStore::split(long long block,xyz camelStraw)
 #if DEBUG_STORE
   cout<<"Block "<<block<<" is split\n";
 #endif
-  splitMutex.unlock();
+  //splitMutex.unlock();
 }
