@@ -108,6 +108,7 @@ void testflowsnake()
   PostScript ps;
   int i,n;
   int sz=6;
+  double squareSize=biggestSquare(sz);
   Eisenstein e;
   complex<double> z;
   complex<double> corners[6];
@@ -142,6 +143,14 @@ void testflowsnake()
   ps.endpage();
   ps.startpage();
   ps.setscale(-linearSize[sz],-linearSize[sz],linearSize[sz],linearSize[sz]);
+  ps.setcolor(1,1,0);
+  ps.startline();
+  ps.lineto(xy(squareSize,squareSize));
+  ps.lineto(xy(-squareSize,squareSize));
+  ps.lineto(xy(-squareSize,-squareSize));
+  ps.lineto(xy(squareSize,-squareSize));
+  ps.endline(false,true);
+  ps.setcolor(0,0,0);
   ps.startline();
   for (i=loLim[sz];i<=hiLim[sz];i++)
   {
