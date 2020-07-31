@@ -23,6 +23,7 @@
 #ifndef OCTREE_H
 #define OCTREE_H
 #include <map>
+#include <set>
 #include "shape.h"
 #include "las.h"
 #include "threads.h"
@@ -67,12 +68,14 @@ extern Octree octRoot;
 extern OctStore octStore;
 
 
-class OctBlock
+class OctBuffer
 {
 public:
-  OctBlock();
+  OctBuffer();
   void write();
   void markDirty();
+  void own();
+  bool ownAlone();
   void read(long long block);
   void update();
   void flush();
@@ -82,8 +85,10 @@ public:
   //bool isConsistent();
 private:
   long long blockNumber;
-  bool dirty;
+  bool dirty; // The contents of the buffer may differ from the contents of the block.
+  bool inTransit; // The correspondence between buffer and block is being changed.
   int lastUsed;
+  std::set<int> owningThread;
   std::vector<LasPoint> points;
   std::shared_mutex blockMutex;
   OctStore *store;
@@ -96,27 +101,33 @@ public:
   OctStore();
   ~OctStore();
   void flush();
+  void disown();
+  bool setTransit(int buffer,bool t);
   void resize(int n);
-  void open(std::string fileName);
+  void open(std::string fileName,int numFiles=1);
   void close();
   LasPoint get(xyz key);
   void put(LasPoint pnt);
   void dump();
   bool isConsistent();
 private:
-  std::fstream file;
-  std::mutex fileMutex;
-  std::shared_mutex setBlockMutex;
-  std::shared_mutex nowUsedMutex;
-  std::recursive_mutex splitMutex;
+  std::map<int,std::fstream> file;
+  std::map<int,std::mutex> fileMutex; // lock when read/writing file
+  std::shared_mutex setBlockMutex; // lock when adding new blocks to file
+  std::shared_mutex nowUsedMutex; // lock when updating nowUsed
+  std::recursive_mutex splitMutex; // lock when splitting
+  std::mutex ownMutex; // lock when owning or disowning blocks
+  std::mutex transitMutex; // lock when setting or clearing inTransit
   int nowUsed;
+  int nFiles;
   int leastRecentlyUsed();
   long long nBlocks;
-  OctBlock *getBlock(long long block,bool mustExist=false);
-  OctBlock *getBlock(xyz key,bool writing);
-  std::map<int,OctBlock> blocks;
+  int newBlock();
+  OctBuffer *getBlock(long long block,bool mustExist=false);
+  OctBuffer *getBlock(xyz key,bool writing);
+  std::map<int,OctBuffer> blocks;
   std::map<int,std::shared_mutex> blockMutexes;
   void split(long long block,xyz camelStraw);
-  friend class OctBlock;
+  friend class OctBuffer;
 };
 #endif

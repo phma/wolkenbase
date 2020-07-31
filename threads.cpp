@@ -22,6 +22,7 @@
 #include <queue>
 #include <map>
 #include <set>
+#include <cassert>
 #include <atomic>
 #include "threads.h"
 #include "angle.h"
@@ -37,7 +38,7 @@ mutex startMutex;
 mutex opTimeMutex;
 mutex bufferMutex;
 shared_mutex threadStatusMutex;
-map<int,shared_mutex> modMutex;
+mutex metaMutex;
 
 atomic<int> threadCommand;
 vector<thread> threads;
@@ -48,9 +49,9 @@ vector<vector<int> > heldTriangles; // one list of triangles per thread
 double stageTolerance;
 double minArea;
 queue<ThreadAction> actQueue,resQueue;
-queue<LasPoint> pointBuffer; // to be turned later into a random-access buffer
+vector<LasPoint> pointBuffer;
+int bufferPos=0;
 int currentAction;
-int modMutexSize;
 map<thread::id,int> threadNums;
 
 cr::steady_clock clk;
@@ -87,9 +88,6 @@ void startThreads(int n)
   sleepTime.resize(n);
   opTime=0;
   threadNums[this_thread::get_id()]=-1;
-  modMutexSize=relprime(55*n);
-  for (i=0;i<modMutexSize;i++)
-    modMutex[i];
   for (i=0;i<n;i++)
   {
     threads.push_back(thread(WolkenThread(),i));
@@ -159,8 +157,12 @@ bool resultQueueEmpty()
 
 void embufferPoint(LasPoint point)
 {
+  int sz;
   bufferMutex.lock();
-  pointBuffer.push(point);
+  pointBuffer.push_back(point);
+  sz=pointBuffer.size();
+  bufferPos=(bufferPos+relprime(sz))%sz;
+  swap(pointBuffer.back(),pointBuffer[bufferPos]);
   bufferMutex.unlock();
 }
 
@@ -170,11 +172,20 @@ LasPoint debufferPoint()
   bufferMutex.lock();
   if (pointBuffer.size())
   {
-    ret=pointBuffer.front();
-    pointBuffer.pop();
+    ret=pointBuffer.back();
+    pointBuffer.pop_back();
   }
   bufferMutex.unlock();
   return ret;
+}
+
+bool pointBufferEmpty()
+{
+  size_t sz;
+  bufferMutex.lock();
+  sz=pointBuffer.size();
+  bufferMutex.unlock();
+  return sz==0;
 }
 
 void sleepRead()
@@ -280,18 +291,18 @@ void waitForThreads(int newStatus)
 }
 
 void waitForQueueEmpty()
-// Waits until the action queue is empty and all threads have completed their actions.
+// Waits until the action queue and point buffer are empty and all threads have completed their actions.
 {
   int i,n;
   do
   {
-    n=actQueue.size();
+    n=actQueue.size()+pointBuffer.size();
     threadStatusMutex.lock_shared();
     for (i=0;i<threadStatus.size();i++)
       if (threadStatus[i]<256)
 	n++;
     threadStatusMutex.unlock_shared();
-    this_thread::sleep_for(chrono::milliseconds(n));
+    this_thread::sleep_for(chrono::milliseconds(30));
   } while (n);
 }
 
@@ -302,8 +313,7 @@ int thisThread()
 
 void WolkenThread::operator()(int thread)
 {
-  int e=0,t=0,d=0;
-  int triResult,edgeResult;
+  int i=0;
   ThreadAction act;
   LasPoint point;
   startMutex.lock();
@@ -328,6 +338,11 @@ void WolkenThread::operator()(int thread)
       else
       {
 	octStore.put(point);
+	if (++i>RECORDS)
+	{
+	  octStore.disown();
+	  i=0;
+	}
 	unsleep(thread);
       }
     }

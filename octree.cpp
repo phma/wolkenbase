@@ -23,7 +23,7 @@
 #include <cmath>
 #include "octree.h"
 #define DEBUG_STORE 0
-#define DEBUG_LOCK 1
+#define DEBUG_LOCK 0
 using namespace std;
 
 Octree octRoot;
@@ -147,50 +147,72 @@ void Octree::split(xyz pnt)
     ((Octree *)sub[i])->split(pnt);
 }
 
-OctBlock::OctBlock()
+OctBuffer::OctBuffer()
 {
   int i;
   lastUsed=0;
   dirty=false;
+  points.reserve(RECORDS);
   for (i=0;i<RECORDS;i++)
     points.emplace_back();
 }
 
-void OctBlock::write()
+void OctBuffer::write()
 {
-  int i;
+  int i,f=blockNumber%store->nFiles,b=blockNumber/store->nFiles;
   blockMutex.lock_shared();
-  store->fileMutex.lock();
+  store->fileMutex[f].lock();
 #if DEBUG_STORE
   cout<<"Writing block "<<blockNumber<<endl;
 #endif
-  store->file.seekp(BLOCKSIZE*blockNumber);
+  store->file[f].seekp(BLOCKSIZE*b);
   //cout<<store->file.rdstate()<<' '<<ios::failbit<<endl;
-  store->file.clear();
+  store->file[f].clear();
   for (i=0;i<RECORDS;i++)
-    points[i].write(store->file);
+    points[i].write(store->file[f]);
   dirty=false;
-  store->fileMutex.unlock();
+  store->fileMutex[f].unlock();
   blockMutex.unlock_shared();
 }
 
-void OctBlock::markDirty()
+void OctBuffer::markDirty()
 {
   dirty=true;
 }
 
-void OctBlock::read(long long block)
+void OctBuffer::own()
 {
-  int i;
+  int t=thisThread();
+  store->ownMutex.lock();
+  owningThread.insert(t);
+  store->ownMutex.unlock();
+}
+
+bool OctBuffer::ownAlone()
+{
+  bool ret;
+  int t=thisThread();
+  store->ownMutex.lock();
+  ret=owningThread.size()==owningThread.count(t);
+  if (ret)
+    owningThread.insert(t);
+  store->ownMutex.unlock();
+  return ret;
+}
+
+void OctBuffer::read(long long block)
+{
+  int i,f=block%store->nFiles,b=block/store->nFiles;
   blockMutex.lock();
-  store->fileMutex.lock();
+  store->fileMutex[f].lock();
 #if DEBUG_STORE
   cout<<"Reading block "<<block<<" into "<<this<<' '<<this_thread::get_id()<<endl;
 #endif
-  store->file.seekg(BLOCKSIZE*(blockNumber=block));
+  blockNumber=block;
+  store->file[f].seekg(BLOCKSIZE*b);
   for (i=0;i<RECORDS;i++)
-    points[i].read(store->file);
-  store->file.clear();
+    points[i].read(store->file[f]);
+  store->file[f].clear();
   /* If a new block is read in, all points will be at (0,0,0).
    * In any other case (including all points being at (NAN,NAN,NAN)),
    * points' locations will be unequal. (NAN is not equal to NAN.)
@@ -198,24 +220,24 @@ void OctBlock::read(long long block)
   if (points[0].location==points[1].location)
     for (i=0;i<RECORDS;i++)
       points[i].location=nanxyz;
-  store->fileMutex.unlock();
+  store->fileMutex[f].unlock();
   blockMutex.unlock();
 }
 
-void OctBlock::update()
+void OctBuffer::update()
 {
   store->nowUsedMutex.lock();
   lastUsed=++(store->nowUsed);
   store->nowUsedMutex.unlock();
 }
 
-void OctBlock::flush()
+void OctBuffer::flush()
 {
   if (dirty)
     write();
 }
 
-LasPoint OctBlock::get(xyz key)
+LasPoint OctBuffer::get(xyz key)
 {
   int i,inx=-1;
   LasPoint ret;
@@ -234,7 +256,7 @@ LasPoint OctBlock::get(xyz key)
   return ret;
 }
 
-bool OctBlock::put(LasPoint pnt)
+bool OctBuffer::put(LasPoint pnt)
 // Returns true if put, false if no room.
 {
   int i,inx=-1;
@@ -282,6 +304,33 @@ void OctStore::flush()
   }
 }
 
+void OctStore::disown()
+{
+  int i,t=thisThread();
+  ownMutex.lock();
+  for (i=0;i<blocks.size();i++)
+  blocks[i].owningThread.erase(t);
+  ownMutex.unlock();
+}
+
+bool OctStore::setTransit(int buffer,bool t)
+/* Returns true if successful. If t is true, and the buffer is already
+ * in transit, returns false.
+ */
+{
+  bool ret=true;
+  transitMutex.lock();
+  if (t)
+    if (blocks[buffer].inTransit)
+      ret=false;
+    else
+      blocks[buffer].inTransit=true;
+  else
+    blocks[buffer].inTransit=false;
+  transitMutex.unlock();
+  return ret;
+}
+
 void OctStore::resize(int n)
 // The number of blocks should be more than eight times the number of threads.
 {
@@ -296,54 +345,55 @@ void OctStore::resize(int n)
     blocks.erase(i);
 }
 
-void OctStore::open(string fileName)
+void OctStore::open(string fileName,int numFiles)
 {
   int i;
-  OctBlock *blkPtr;
-  file.open(fileName,ios::in|ios::out|ios::binary|ios::trunc);
-  cout<<fileName<<' '<<file.is_open()<<endl;
+  OctBuffer *blkPtr;
+  nFiles=numFiles;
+  if (nFiles<1)
+    nFiles=1;
+  for (i=0;i<nFiles;i++)
+  {
+    file[i].open(fileName+to_string(i),ios::in|ios::out|ios::binary|ios::trunc);
+    cout<<fileName+to_string(i)<<' '<<file[i].is_open()<<endl;
+  }
 }
 
 void OctStore::close()
 {
+  int i;
   flush();
-  file.close();
+  for (i=0;i<nFiles;i++)
+    file[i].close();
 }
 
 LasPoint OctStore::get(xyz key)
 {
   int i,inx=-1;
   LasPoint ret;
-  OctBlock *pBlock=getBlock(key,false); // locks the mutex
+  OctBuffer *pBlock=getBlock(key,false);
   assert(pBlock);
   ret=pBlock->get(key);
-  modMutex[pBlock->blockNumber%modMutexSize].unlock_shared();
-#if DEBUG_LOCK
-  if (thisThread()==0) cout<<"reggle "<<pBlock->blockNumber<<" get\n";
-#endif
   return ret;
 }
 
 void OctStore::put(LasPoint pnt)
 {
   int i,inx=-1;
+  int blkn0=-1,blkn1=-1,blkn2=-1;
   xyz key=pnt.location;
-  OctBlock *pBlock=getBlock(key,true); // locks the mutex
+  OctBuffer *pBlock=getBlock(key,true);
   assert(pBlock);
+  blkn0=pBlock->blockNumber;
+  assert(blkn0>=0);
   if (!pBlock->put(pnt))
   {
-    modMutex[pBlock->blockNumber%modMutexSize].unlock();
-#if DEBUG_LOCK
-    if (thisThread()==0) cout<<"weggle "<<pBlock->blockNumber<<" put1\n";
-#endif
+    blkn1=pBlock->blockNumber;
     split(pBlock->blockNumber,key);
     pBlock=getBlock(key,true);
     pBlock->put(pnt);
   }
-  modMutex[pBlock->blockNumber%modMutexSize].unlock();
-#if DEBUG_LOCK
-  if (thisThread()==0) cout<<"weggle "<<pBlock->blockNumber<<" put2\n";
-#endif
+  blkn2=pBlock->blockNumber;
 }
 
 int OctStore::leastRecentlyUsed()
@@ -363,17 +413,29 @@ int OctStore::leastRecentlyUsed()
   return ret;
 }
 
-OctBlock *OctStore::getBlock(long long block,bool mustExist)
+int OctStore::newBlock()
+// The new block is owned.
+{
+  ownMutex.lock();
+  int i=blocks.size();
+  blocks[i].store=this;
+  blocks[i].owningThread.insert(thisThread());
+  ownMutex.unlock();
+  return i;
+}
+
+OctBuffer *OctStore::getBlock(long long block,bool mustExist)
 {
   streampos fileSize;
-  int lru,i;
-  bool found=false;
-  fileMutex.lock();
-  file.seekg(0,file.end);
-  fileSize=file.tellg();
-  fileMutex.unlock();
+  int lru,bufnum=-1,i,f=block%nFiles,b=block/nFiles;
+  bool found=false,transitResult;
+  fileMutex[f].lock();
+  file[f].seekg(0,file[f].end); // With more than one file, seek the file the block is in.
+  fileSize=file[f].tellg();
+  fileMutex[f].unlock();
+  assert(block>=0);
   lru=leastRecentlyUsed();
-  if (BLOCKSIZE*block>=fileSize && mustExist)
+  if (BLOCKSIZE*b>=fileSize && mustExist)
     return nullptr;
   else
   {
@@ -381,40 +443,38 @@ OctBlock *OctStore::getBlock(long long block,bool mustExist)
       if (blocks[i].blockNumber==block)
       {
         found=true;
-        lru=i;
+        bufnum=i;
       }
     if (!found)
     {
-      blocks[lru].flush();
-      blocks[lru].read(block);
+      int oldblock=blocks[lru].blockNumber;
+      bufnum=lru;
+      transitResult=setTransit(bufnum,true);
+      if (transitResult && blocks[bufnum].ownAlone())
+      {
+	blocks[bufnum].flush();
+	blocks[bufnum].read(block);
+      }
+      else
+      {
+	bufnum=newBlock();
+	blocks[bufnum].blockNumber=block;
+      }
     }
-    blocks[lru].update();
-    return &blocks[lru];
+    blocks[bufnum].update();
+    setTransit(lru,false);
+    return &blocks[bufnum];
   }
 }
 
-OctBlock *OctStore::getBlock(xyz key,bool writing)
+OctBuffer *OctStore::getBlock(xyz key,bool writing)
 {
-  OctBlock *ret;
+  OctBuffer *ret;
   setBlockMutex.lock_shared();
   long long blknum=octRoot.findBlock(key);
   setBlockMutex.unlock_shared();
   if (blknum>=0)
   {
-    if (writing)
-    {
-      modMutex[blknum%modMutexSize].lock();
-#if DEBUG_LOCK
-    if (thisThread()==0) cout<<"woggle "<<blknum<<" getBlock1\n";
-#endif
-    }
-    else
-    {
-      modMutex[blknum%modMutexSize].lock_shared();
-#if DEBUG_LOCK
-    if (thisThread()==0) cout<<"roggle "<<blknum<<" getBlock1\n";
-#endif
-    }
     ret=getBlock(blknum);
   }
   else
@@ -426,30 +486,17 @@ OctBlock *OctStore::getBlock(xyz key,bool writing)
       blknum=nBlocks++;
       octRoot.setBlock(key,blknum);
     }
-    if (writing)
-    {
-      modMutex[blknum%modMutexSize].lock();
-#if DEBUG_LOCK
-      if (thisThread()==0) cout<<"woggle "<<blknum<<" getBlock2\n";
-#endif
-    }
-    else
-    {
-      modMutex[blknum%modMutexSize].lock_shared();
-#if DEBUG_LOCK
-      if (thisThread()==0) cout<<"roggle "<<blknum<<" getBlock2\n";
-#endif
-    }
     ret=getBlock(blknum);
     setBlockMutex.unlock();
   }
+  assert(ret->blockNumber>=0);
   return ret;
 }
 
 void OctStore::split(long long block,xyz camelStraw)
 {
   vector<LasPoint> tempPoints;
-  OctBlock *currentBlock;
+  OctBuffer *currentBlock;
   int i,fullth;
   currentBlock=getBlock(block);
   splitMutex.lock();
@@ -460,10 +507,6 @@ void OctStore::split(long long block,xyz camelStraw)
   currentBlock->markDirty();
   while (true)
   {
-    modMutex[block%modMutexSize].lock();
-#if DEBUG_LOCK
-    if (thisThread()==0) cout<<"woggle "<<block<<" split\n";
-#endif
     fullth=0;
     for (i=0;i<RECORDS;i++)
     {
@@ -471,10 +514,6 @@ void OctStore::split(long long block,xyz camelStraw)
 	++fullth;
       currentBlock->points[i].location=nanxyz;
     }
-    modMutex[block%modMutexSize].unlock();
-#if DEBUG_LOCK
-    if (thisThread()==0) cout<<"weggle "<<block<<" split\n";
-#endif
     if (fullth<RECORDS)
       break;
     octRoot.split(camelStraw);

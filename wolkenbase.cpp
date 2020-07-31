@@ -32,6 +32,7 @@
 #include <boost/program_options.hpp>
 #include "las.h"
 #include "threads.h"
+#include "relprime.h"
 #include "ldecimal.h"
 #include "octree.h"
 using namespace std;
@@ -86,10 +87,9 @@ int main(int argc,char **argv)
   lPoint.location=xyz(M_PI,exp(1),sqrt(2));
   for (i=0;i<RECORDS;i++)
     lPoint.write(testFile);
-  octStore.open("store.oct");
   if (nthreads<1)
     nthreads=1;
-  nthreads=2;
+  octStore.open("store.oct",nthreads+relprime(nthreads));
   octStore.resize(8*nthreads+1);
   startThreads(nthreads);
   waitForThreads(TH_RUN);
@@ -102,7 +102,10 @@ int main(int argc,char **argv)
     }
     cout<<files[i].numberPoints()<<" points\n";
   }
+  waitForQueueEmpty();
+  cout<<"All points in octree\n";
   waitForThreads(TH_STOP);
+  octStore.flush();
   joinThreads();
   return 0;
 }

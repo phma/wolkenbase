@@ -3,7 +3,7 @@
 /* point.h - classes for points                       */
 /*                                                    */
 /******************************************************/
-/* Copyright 2019 Pierre Abbat.
+/* Copyright 2019,2020 Pierre Abbat.
  * This file is part of Wolkenbase.
  * 
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -91,7 +91,7 @@ public:
   double length();
   void raise(double height);
   void _roscat(xy tfrom,int ro,double sca,xy cis,xy tto);
-  virtual void roscat(xy tfrom,int ro,double sca,xy tto);
+  void roscat(xy tfrom,int ro,double sca,xy tto);
   void setelev(double h)
   {
     z=h;

@@ -1,4 +1,4 @@
-/* Copyright 2019 Pierre Abbat.
+/* Copyright 2019,2020 Pierre Abbat.
  * This file is part of Wolkenbase.
  * 
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -17,6 +17,13 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 #cmakedefine BIGENDIAN
+#cmakedefine HAVE_TIME_H
+#cmakedefine HAVE_WINDOWS_H
+#cmakedefine HAVE_SYS_TIME_H
+#cmakedefine HAVE_SYS_RESOURCE_H
+#cmakedefine HAVE_SYS_SYSINFO_H
+#define SYSTEM_NAME @CMAKE_SYSTEM_NAME@
+#define SYSTEM_VERSION @CMAKE_SYSTEM_VERSION@
 #define VERSION "@WOLKENBASE_VERSION@"
 #endif
 

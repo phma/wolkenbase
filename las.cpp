@@ -133,10 +133,10 @@ void LasHeader::open(std::string fileName)
   int i;
   size_t total;
   unsigned int legacyNPoints[6];
-  int whichNPoints=3;
+  int whichNPoints=15;
   if (lasfile)
     close();
-  lasfile=new ifstream(fileName);
+  lasfile=new ifstream(fileName,ios::binary);
   magicBytes=readbeint(*lasfile);
   if (magicBytes==0x4c415346)
   {
@@ -186,27 +186,53 @@ void LasHeader::open(std::string fileName)
       for (i=0;i<16;i++)
 	nPoints[i]=0;
     }
+    /* Check the numbers of points by return. They should add up to the total:
+     * 986 377 233 144 89 55 34 21 13 8 5 3 2 1 1 0
+     * In some files, the total (nPoints[0], legacyNPoints[0]) is nonzero,
+     * but the numbers of points by return are all 0. This is invalid, but
+     * seen in the wild in files produced by photogrammetry.
+     */
     for (i=1,total=0;i<6;i++)
+    {
       total+=legacyNPoints[i];
+      if (legacyNPoints[i]>legacyNPoints[0])
+	whichNPoints&=~5;
+    }
     if (total!=legacyNPoints[0])
       whichNPoints&=~1;
+    if (total!=0 || legacyNPoints[0]==0)
+      whichNPoints&=~4;
     for (i=1,total=0;i<16;i++)
+    {
       total+=nPoints[i];
+      if (nPoints[i]>nPoints[0])
+	whichNPoints&=~10;
+    }
     if (total!=nPoints[0])
       whichNPoints&=~2;
+    if (total!=0 || nPoints[0]==0)
+      whichNPoints&=~8;
     for (i=0;i<6;i++)
     {
       if (legacyNPoints[i]!=nPoints[i] && legacyNPoints[i]!=0)
-	whichNPoints&=~2;
+	whichNPoints&=~10;
       if (nPoints[i]!=legacyNPoints[i] && nPoints[i]!=0)
-	whichNPoints&=~1;
+	whichNPoints&=~5;
     }
-    if (whichNPoints==1)
+    if (whichNPoints>0 && (whichNPoints&3)==0)
+    {
+      cerr<<"Number of points by return are all 0. Setting first return to all points.\n";
+      nPoints[1]=nPoints[0];
+      legacyNPoints[1]=legacyNPoints[0];
+    }
+    if (whichNPoints==1 || whichNPoints==4)
       for (i=0;i<6;i++)
 	nPoints[i]=legacyNPoints[i];
     if (whichNPoints==0)
       for (i=0;i<6;i++)
 	nPoints[i]=0;
+    if (pointLength==0)
+      versionMajor=versionMinor=nPoints[0]=0;
   }
   else // file does not begin with "LASF"
     versionMajor=versionMinor=nPoints[0]=0;
@@ -259,7 +285,24 @@ LasPoint LasHeader::readPoint(size_t num)
     ret.scanAngle=degtobin((signed char)lasfile->get());
     ret.userData=(unsigned char)lasfile->get();
     ret.pointSource=readleshort(*lasfile);
-    // switch(pointFormat)...
+    if ((1<<pointFormat)&0x3a) // 5, 4, 3, or 1
+      ret.gpsTime=readledouble(*lasfile);
+    if ((1<<pointFormat)&0x2c) // 5, 3, or 2
+    {
+      ret.red=readleshort(*lasfile);
+      ret.green=readleshort(*lasfile);
+      ret.blue=readleshort(*lasfile);
+    }
+    if (pointFormat>=4) // 5 or 4
+    {
+      ret.waveIndex=(unsigned char)lasfile->get();
+      ret.waveformOffset=readlelong(*lasfile);
+      ret.waveformSize=readleint(*lasfile);
+      ret.waveformTime=readlefloat(*lasfile);
+      ret.xDir=readlefloat(*lasfile);
+      ret.yDir=readlefloat(*lasfile);
+      ret.zDir=readlefloat(*lasfile);
+    }
   }
   else
   {
@@ -279,6 +322,8 @@ LasPoint LasHeader::readPoint(size_t num)
     // switch(pointFormat)...
   }
   ret.location=xyz(xOffset+xScale*xInt,yOffset+yScale*yInt,zOffset+zScale*zInt);
+  if (!lasfile->good())
+    throw -1;
   return ret;
 }
 
