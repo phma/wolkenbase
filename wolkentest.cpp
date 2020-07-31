@@ -35,6 +35,7 @@
 #include "testpattern.h"
 #include "eisenstein.h"
 #include "random.h"
+#include "ldecimal.h"
 #include "ps.h"
 #include "flowsnake.h"
 
@@ -165,6 +166,8 @@ void testflowsnake()
     ps.lineto(xy(coast[i].real(),coast[i].imag()));
   ps.endline(true);
   ps.endpage();
+  for (i=0;i<12;i++)
+    cout<<i<<"  "<<ldecimal(2*biggestSquare(i))<<endl;
 }
 
 bool shoulddo(string testname)
