@@ -95,10 +95,21 @@ void testflowsnake()
   int sz=6;
   Eisenstein e;
   complex<double> z;
+  complex<double> corners[6];
+  vector<complex<double> > coast,side;
   for (i=0;i<256;i++)
   {
     n=rng.usrandom()-32768;
     tassert(baseSeven(baseFlow(n))==n);
+  }
+  corners[0]=complex<double>(0,M_SQRT_1_3)*pow(cFlowBase,sz);
+  for (i=1;i<6;i++)
+    corners[i]=corners[i-1]*(complex<double>)Eisenstein(1,1);
+  for (i=0;i<6;i++)
+  {
+    side=crinklyLine(corners[i],corners[(i+1)%6],0.5);
+    for (n=0;n<side.size();n++)
+      coast.push_back(side[n]);
   }
   ps.open("flowsnake.ps");
   ps.setpaper(papersizes["A4 landscape"],0);
@@ -124,6 +135,11 @@ void testflowsnake()
     ps.lineto(xy(z.real(),z.imag()));
   }
   ps.endline();
+  ps.setcolor(0,0,1);
+  ps.startline();
+  for (i=0;i<coast.size();i++)
+    ps.lineto(xy(coast[i].real(),coast[i].imag()));
+  ps.endline(true);
   ps.endpage();
 }
 
