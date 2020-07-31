@@ -99,8 +99,8 @@ void testcylinder()
   tassert(!c1.intersect(o));
 }
 
-const int linearSize[]={1,2,3,9,24,65,171};
-const int quadraticSize[]={0,3,24,171,1200,8403,58824};
+const int linearSize[]={1,2,3,9,24,65,171,454,1200,3176,8403,22234};
+const int quadraticSize[]={0,3,24,171,1200,8403,58824,411771,2882400,20176803,141237624,988663371};
 const int loLim[]={0,-4,-18,-214,-900,-10504,-44118};
 const int hiLim[]={0,2,30,128,1500,6302,73530};
 
