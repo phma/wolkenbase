@@ -25,6 +25,21 @@ using namespace std;
 
 const Eisenstein flowBase(2,-1);
 const complex<double> cFlowBase(2.5,-M_SQRT_3_4);
+const double squareSides[]=
+{
+  0.6583539906808145, // This is the biggest square that fits inside
+  1.8501627472990723, // a Gosper island of size n. It's used to size
+  4.286014912881196,  // the flowsnake to the octree. The table goes
+  12.6716160058597,   // to 11 because 7**11 is the largest <2**32.
+  32.85016274729906,
+  79.01914481623778,
+  243.0343734125204,
+  592.8501627472989,
+  1510.850162747299,
+  4399.956311577825,
+  10731.850162747294,
+  29198.8501627473
+};
 
 char forwardFlowsnakeTable[][7]=
 {
