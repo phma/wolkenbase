@@ -166,6 +166,7 @@ double biggestSquare(complex<double> begin,complex<double> end,double sofar)
       if (seg[i]<ret)
 	ret=seg[i];
   }
+  return ret;
 }
 
 double biggestSquare(int size)
