@@ -107,7 +107,7 @@ const int hiLim[]={0,2,30,128,1500,6302,73530};
 void testflowsnake()
 {
   PostScript ps;
-  int i,n;
+  int i,j,n;
   int sz=6;
   double squareSize=biggestSquare(sz);
   Eisenstein e;
@@ -166,8 +166,36 @@ void testflowsnake()
     ps.lineto(xy(coast[i].real(),coast[i].imag()));
   ps.endline(true);
   ps.endpage();
-  for (i=0;i<12;i++)
-    cout<<i<<"  "<<ldecimal(2*biggestSquare(i))<<endl;
+  for (n=0;n<12;n++)
+  {
+    ps.startpage();
+    ps.setscale(-linearSize[n],-linearSize[n],linearSize[n],linearSize[n]);
+    corners[0]=complex<double>(0,M_SQRT_1_3)*pow(cFlowBase,n);
+    squareSize=biggestSquare(n);
+    for (i=1;i<6;i++)
+      corners[i]=corners[i-1]*(complex<double>)Eisenstein(1,1);
+    coast.clear();
+    for (i=0;i<6;i++)
+    {
+      side=crinklyLine(corners[i],corners[(i+1)%6],squareSize/1000);
+      for (j=0;j<side.size();j++)
+	coast.push_back(side[j]);
+    }
+    ps.setcolor(1,1,0);
+    ps.startline();
+    ps.lineto(xy(squareSize,squareSize));
+    ps.lineto(xy(-squareSize,squareSize));
+    ps.lineto(xy(-squareSize,-squareSize));
+    ps.lineto(xy(squareSize,-squareSize));
+    ps.endline(false,true);
+    ps.setcolor(0,0,1);
+    ps.startline();
+    for (i=0;i<coast.size();i++)
+      ps.lineto(xy(coast[i].real(),coast[i].imag()));
+    ps.endline(true);
+    ps.endpage();
+    cout<<n<<"  "<<ldecimal(2*squareSize)<<endl;
+  }
 }
 
 bool shoulddo(string testname)
