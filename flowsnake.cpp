@@ -21,6 +21,7 @@
  */
 
 #include "flowsnake.h"
+using namespace std;
 
 const Eisenstein flowBase(2,-1);
 
@@ -111,4 +112,28 @@ Eisenstein baseFlow(int n)
 Eisenstein toFlowsnake(int n)
 {
   return baseFlow(iToFlowsnake(n));
+}
+
+vector<complex<double> > crinklyLine(complex<double> begin,complex<double> end,double precision)
+{
+  vector<complex<double> > ret,seg;
+  complex<double> bend1,bend2;
+  int i;
+  if (abs(end-begin)<precision)
+    ret.push_back(begin);
+  else
+  {
+    bend1=begin+(end-begin)/(complex<double>)flowBase;
+    bend2=end+(begin-end)/(complex<double>)flowBase;
+    seg=crinklyLine(begin,bend1,precision);
+    for (i=0;i<seg.size();i++)
+      ret.push_back(seg[i]);
+    seg=crinklyLine(bend1,bend2,precision);
+    for (i=0;i<seg.size();i++)
+      ret.push_back(seg[i]);
+    seg=crinklyLine(bend2,end,precision);
+    for (i=0;i<seg.size();i++)
+      ret.push_back(seg[i]);
+  }
+  return ret;
 }
