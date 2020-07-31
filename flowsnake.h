@@ -68,6 +68,9 @@
 #include <vector>
 #include "eisenstein.h"
 
+extern const Eisenstein flowBase;
+extern const std::complex<double> cFlowBase;;
+
 int baseSeven(Eisenstein e);
 Eisenstein baseFlow(int n);
 Eisenstein toFlowsnake(int n);

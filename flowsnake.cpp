@@ -24,6 +24,7 @@
 using namespace std;
 
 const Eisenstein flowBase(2,-1);
+const complex<double> cFlowBase(2.5,-M_SQRT_3_4);
 
 char forwardFlowsnakeTable[][7]=
 {
@@ -123,8 +124,8 @@ vector<complex<double> > crinklyLine(complex<double> begin,complex<double> end,d
     ret.push_back(begin);
   else
   {
-    bend1=begin+(end-begin)/(complex<double>)flowBase;
-    bend2=end+(begin-end)/(complex<double>)flowBase;
+    bend1=begin+(end-begin)/cFlowBase;
+    bend2=end+(begin-end)/cFlowBase;
     seg=crinklyLine(begin,bend1,precision);
     for (i=0;i<seg.size();i++)
       ret.push_back(seg[i]);
