@@ -188,6 +188,11 @@ void testflowsnake()
     ps.lineto(xy(-squareSize,-squareSize));
     ps.lineto(xy(squareSize,-squareSize));
     ps.endline(false,true);
+    if (n==0)
+    {
+      ps.setcolor(1,0.5,0.5);
+      ps.circle(xy(0.574918626350463586,0.07052452345448619644),0.01);
+    }
     ps.setcolor(0,0,1);
     ps.startline();
     for (i=0;i<coast.size();i++)
