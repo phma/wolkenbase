@@ -21,8 +21,25 @@
  */
 
 #include "flowsnake.h"
+using namespace std;
 
 const Eisenstein flowBase(2,-1);
+const complex<double> cFlowBase(2.5,-M_SQRT_3_4);
+const double squareSides[]=
+{
+  0.6583539906808145, // This is the biggest square that fits inside
+  1.8501627472990723, // a Gosper island of size n. It's used to size
+  4.286014912881196,  // the flowsnake to the octree. The table goes
+  12.6716160058597,   // to 11 because 7**11 is the largest <2**32.
+  32.85016274729906,
+  79.01914481623778,
+  243.0343734125204,
+  592.8501627472989,
+  1510.850162747299,
+  4399.956311577825,
+  10731.850162747294,
+  29198.8501627473
+};
 
 char forwardFlowsnakeTable[][7]=
 {
@@ -111,4 +128,74 @@ Eisenstein baseFlow(int n)
 Eisenstein toFlowsnake(int n)
 {
   return baseFlow(iToFlowsnake(n));
+}
+
+double squareSize(complex<double> z)
+// Returns half the side of the square, centered at the origin, that z lies on.
+{
+  return max(fabs(z.real()),fabs(z.imag()));
+}
+
+vector<complex<double> > crinklyLine(complex<double> begin,complex<double> end,double precision)
+{
+  vector<complex<double> > ret,seg;
+  complex<double> bend1,bend2;
+  int i;
+  if (abs(end-begin)<precision)
+    ret.push_back(begin);
+  else
+  {
+    bend1=begin+(end-begin)/cFlowBase;
+    bend2=end+(begin-end)/cFlowBase;
+    seg=crinklyLine(begin,bend1,precision);
+    for (i=0;i<seg.size();i++)
+      ret.push_back(seg[i]);
+    seg=crinklyLine(bend1,bend2,precision);
+    for (i=0;i<seg.size();i++)
+      ret.push_back(seg[i]);
+    seg=crinklyLine(bend2,end,precision);
+    for (i=0;i<seg.size();i++)
+      ret.push_back(seg[i]);
+  }
+  return ret;
+}
+
+double biggestSquare(complex<double> begin,complex<double> end,double sofar)
+/* Returns the size of the biggest square centered at the origin
+ * whose interior contains none of the crinkly line.
+ */
+{
+  double ret=min(squareSize(begin),squareSize(end));
+  complex<double> bend1=begin+(end-begin)/cFlowBase;
+  complex<double> bend2=end+(begin-end)/cFlowBase;
+  if ((begin==bend1)+(bend1==bend2)+(bend2==end)<2 && ret-sofar<2*abs(end-begin))
+  {
+    double seg[3];
+    int i;
+    if (ret<sofar)
+      sofar=ret;
+    seg[0]=biggestSquare(begin,bend1,sofar);
+    seg[1]=biggestSquare(bend1,bend2,sofar);
+    seg[2]=biggestSquare(bend2,end,sofar);
+    for (i=0;i<3;i++)
+      if (seg[i]<ret)
+	ret=seg[i];
+  }
+  return ret;
+}
+
+double biggestSquare(int size)
+{
+  complex<double> corners[4];
+  int i;
+  double ret=INFINITY,seg;
+  corners[0]=complex<double>(0,M_SQRT_1_3)*pow(cFlowBase,size);
+  for (i=1;i<4;i++)
+  {
+    corners[i]=corners[i-1]*(complex<double>)Eisenstein(1,1);
+    seg=biggestSquare(corners[i-1],corners[i],ret);
+    if (seg<ret)
+      ret=seg;
+  }
+  return ret;
 }

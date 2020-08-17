@@ -35,6 +35,7 @@
 #include "testpattern.h"
 #include "eisenstein.h"
 #include "random.h"
+#include "ldecimal.h"
 #include "ps.h"
 #include "freeram.h"
 #include "flowsnake.h"
@@ -104,22 +105,34 @@ void testcylinder()
   tassert(!c1.intersect(o));
 }
 
-const int linearSize[]={1,2,3,9,24,65,171};
-const int quadraticSize[]={0,3,24,171,1200,8403,58824};
+const int linearSize[]={1,2,3,9,24,65,171,454,1200,3176,8403,22234};
+const int quadraticSize[]={0,3,24,171,1200,8403,58824,411771,2882400,20176803,141237624,988663371};
 const int loLim[]={0,-4,-18,-214,-900,-10504,-44118};
 const int hiLim[]={0,2,30,128,1500,6302,73530};
 
 void testflowsnake()
 {
   PostScript ps;
-  int i,n;
+  int i,j,n;
   int sz=6;
+  double squareSize=biggestSquare(sz);
   Eisenstein e;
   complex<double> z;
+  complex<double> corners[6];
+  vector<complex<double> > coast,side;
   for (i=0;i<256;i++)
   {
     n=rng.usrandom()-32768;
     tassert(baseSeven(baseFlow(n))==n);
+  }
+  corners[0]=complex<double>(0,M_SQRT_1_3)*pow(cFlowBase,sz);
+  for (i=1;i<6;i++)
+    corners[i]=corners[i-1]*(complex<double>)Eisenstein(1,1);
+  for (i=0;i<6;i++)
+  {
+    side=crinklyLine(corners[i],corners[(i+1)%6],0.5);
+    for (n=0;n<side.size();n++)
+      coast.push_back(side[n]);
   }
   ps.open("flowsnake.ps");
   ps.setpaper(papersizes["A4 landscape"],0);
@@ -137,6 +150,14 @@ void testflowsnake()
   ps.endpage();
   ps.startpage();
   ps.setscale(-linearSize[sz],-linearSize[sz],linearSize[sz],linearSize[sz]);
+  ps.setcolor(1,1,0);
+  ps.startline();
+  ps.lineto(xy(squareSize,squareSize));
+  ps.lineto(xy(-squareSize,squareSize));
+  ps.lineto(xy(-squareSize,-squareSize));
+  ps.lineto(xy(squareSize,-squareSize));
+  ps.endline(false,true);
+  ps.setcolor(0,0,0);
   ps.startline();
   for (i=loLim[sz];i<=hiLim[sz];i++)
   {
@@ -145,7 +166,47 @@ void testflowsnake()
     ps.lineto(xy(z.real(),z.imag()));
   }
   ps.endline();
+  ps.setcolor(0,0,1);
+  ps.startline();
+  for (i=0;i<coast.size();i++)
+    ps.lineto(xy(coast[i].real(),coast[i].imag()));
+  ps.endline(true);
   ps.endpage();
+  for (n=0;n<12;n++)
+  {
+    ps.startpage();
+    ps.setscale(-linearSize[n],-linearSize[n],linearSize[n],linearSize[n]);
+    corners[0]=complex<double>(0,M_SQRT_1_3)*pow(cFlowBase,n);
+    squareSize=biggestSquare(n);
+    for (i=1;i<6;i++)
+      corners[i]=corners[i-1]*(complex<double>)Eisenstein(1,1);
+    coast.clear();
+    for (i=0;i<6;i++)
+    {
+      side=crinklyLine(corners[i],corners[(i+1)%6],squareSize/1000);
+      for (j=0;j<side.size();j++)
+	coast.push_back(side[j]);
+    }
+    ps.setcolor(1,1,0);
+    ps.startline();
+    ps.lineto(xy(squareSize,squareSize));
+    ps.lineto(xy(-squareSize,squareSize));
+    ps.lineto(xy(-squareSize,-squareSize));
+    ps.lineto(xy(squareSize,-squareSize));
+    ps.endline(false,true);
+    if (n==0)
+    {
+      ps.setcolor(1,0.5,0.5);
+      ps.circle(xy(0.574918626350463586,0.07052452345448619644),0.01);
+    }
+    ps.setcolor(0,0,1);
+    ps.startline();
+    for (i=0;i<coast.size();i++)
+      ps.lineto(xy(coast[i].real(),coast[i].imag()));
+    ps.endline(true);
+    ps.endpage();
+    cout<<n<<"  "<<ldecimal(2*squareSize)<<endl;
+  }
 }
 
 bool shoulddo(string testname)
