@@ -116,6 +116,7 @@ private:
   std::shared_mutex setBlockMutex; // lock when adding new blocks to file
   std::shared_mutex nowUsedMutex; // lock when updating nowUsed
   std::recursive_mutex splitMutex; // lock when splitting
+  std::shared_mutex revMutex; // lock when changing revBlocks
   std::mutex ownMutex; // lock when owning or disowning blocks
   std::mutex transitMutex; // lock when setting or clearing inTransit
   int nowUsed;
@@ -126,6 +127,7 @@ private:
   OctBuffer *getBlock(long long block,bool mustExist=false);
   OctBuffer *getBlock(xyz key,bool writing);
   std::map<int,OctBuffer> blocks;
+  std::map<int,int> revBlocks;
   std::map<int,std::shared_mutex> blockMutexes;
   void split(long long block,xyz camelStraw);
   friend class OctBuffer;

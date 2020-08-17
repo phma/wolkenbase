@@ -441,7 +441,12 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
     return nullptr;
   else
   {
-    for (i=0;i<blocks.size();i++)
+    revMutex.lock_shared();
+    found=revBlocks.count(block);
+    if (found)
+      bufnum=revBlocks[block];
+    revMutex.unlock_shared();
+    for (i=0;!found && i<blocks.size();i++)
       if (blocks[i].blockNumber==block)
       {
         found=true;
