@@ -84,10 +84,11 @@ public:
   //void dump();
   //bool isConsistent();
 private:
+  int bufferNumber;
   long long blockNumber;
   bool dirty; // The contents of the buffer may differ from the contents of the block.
   bool inTransit; // The correspondence between buffer and block is being changed.
-  int lastUsed;
+  long long lastUsed;
   std::set<int> owningThread;
   std::vector<LasPoint> points;
   std::shared_mutex blockMutex;
@@ -119,7 +120,7 @@ private:
   std::shared_mutex revMutex; // lock when changing revBlocks
   std::mutex ownMutex; // lock when owning or disowning blocks
   std::mutex transitMutex; // lock when setting or clearing inTransit
-  int nowUsed;
+  long long nowUsed;
   int nFiles;
   int leastRecentlyUsed();
   long long nBlocks;
@@ -128,6 +129,7 @@ private:
   OctBuffer *getBlock(xyz key,bool writing);
   std::map<int,OctBuffer> blocks;
   std::map<int,int> revBlocks;
+  std::map<long long,int> lastUsedMap;
   std::map<int,std::shared_mutex> blockMutexes;
   void split(long long block,xyz camelStraw);
   friend class OctBuffer;

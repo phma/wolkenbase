@@ -229,7 +229,9 @@ void OctBuffer::read(long long block)
 void OctBuffer::update()
 {
   store->nowUsedMutex.lock();
+  store->lastUsedMap.erase(lastUsed);
   lastUsed=++(store->nowUsed);
+  store->lastUsedMap[lastUsed]=bufferNumber;
   store->nowUsedMutex.unlock();
 }
 
@@ -287,6 +289,7 @@ OctStore::OctStore()
   for (i=0;i<9;i++)
   {
     blocks[i].store=this;
+    blocks[i].bufferNumber=i;
     blocks[i].blockNumber=-1;
   }
 }
@@ -401,16 +404,21 @@ void OctStore::put(LasPoint pnt)
 int OctStore::leastRecentlyUsed()
 {
   int i,age,maxAge=-1,ret;
+  map<long long,int>::iterator j;
   nowUsedMutex.lock_shared();
-  for (i=0;i<blocks.size();i++)
-  {
-    age=nowUsed-blocks[i].lastUsed;
-    if (age>maxAge)
+  j=lastUsedMap.begin();
+  if (lastUsedMap.size())
+    ret=j->second;
+  else
+    for (i=0;i<blocks.size();i++)
     {
-      maxAge=age;
-      ret=i;
+      age=nowUsed-blocks[i].lastUsed;
+      if (age>maxAge)
+      {
+	maxAge=age;
+	ret=i;
+      }
     }
-  }
   nowUsedMutex.unlock_shared();
   return ret;
 }
@@ -421,6 +429,7 @@ int OctStore::newBlock()
   ownMutex.lock();
   int i=blocks.size();
   blocks[i].store=this;
+  blocks[i].bufferNumber=i;
   blocks[i].owningThread.insert(thisThread());
   ownMutex.unlock();
   return i;
@@ -446,12 +455,6 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
     if (found)
       bufnum=revBlocks[block];
     revMutex.unlock_shared();
-    /*for (i=0;!found && i<blocks.size();i++)
-      if (blocks[i].blockNumber==block)
-      {
-        found=true;
-        bufnum=i;
-      }*/
     if (!found)
     {
       int oldblock=blocks[lru].blockNumber;
