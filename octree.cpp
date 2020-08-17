@@ -446,12 +446,12 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
     if (found)
       bufnum=revBlocks[block];
     revMutex.unlock_shared();
-    for (i=0;!found && i<blocks.size();i++)
+    /*for (i=0;!found && i<blocks.size();i++)
       if (blocks[i].blockNumber==block)
       {
         found=true;
         bufnum=i;
-      }
+      }*/
     if (!found)
     {
       int oldblock=blocks[lru].blockNumber;
@@ -459,6 +459,9 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
       transitResult=setTransit(bufnum,true);
       if (transitResult && blocks[bufnum].ownAlone() && freeRam()>lowRam)
       {
+	revMutex.lock();
+	revBlocks.erase(blocks[bufnum].blockNumber);
+	revMutex.unlock();
 	blocks[bufnum].flush();
 	blocks[bufnum].read(block);
       }
@@ -467,6 +470,9 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
 	bufnum=newBlock();
 	blocks[bufnum].blockNumber=block;
       }
+      revMutex.lock();
+      revBlocks[block]=bufnum;
+      revMutex.unlock();
     }
     blocks[bufnum].update();
     setTransit(lru,false);
