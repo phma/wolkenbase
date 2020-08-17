@@ -187,6 +187,7 @@ void OctBuffer::own()
   int t=thisThread();
   store->ownMutex.lock();
   owningThread.insert(t);
+  store->ownMap[t].push_back(bufferNumber);
   store->ownMutex.unlock();
 }
 
@@ -197,7 +198,10 @@ bool OctBuffer::ownAlone()
   store->ownMutex.lock();
   ret=owningThread.size()==owningThread.count(t);
   if (ret)
+  {
     owningThread.insert(t);
+    store->ownMap[t].push_back(bufferNumber);
+  }
   store->ownMutex.unlock();
   return ret;
 }
@@ -313,8 +317,9 @@ void OctStore::disown()
 {
   int i,t=thisThread();
   ownMutex.lock();
-  for (i=0;i<blocks.size();i++)
-  blocks[i].owningThread.erase(t);
+  for (i=0;i<ownMap[t].size();i++)
+    blocks[ownMap[t][i]].owningThread.erase(t);
+  ownMap[t].clear();
   ownMutex.unlock();
 }
 
@@ -431,6 +436,7 @@ int OctStore::newBlock()
   blocks[i].store=this;
   blocks[i].bufferNumber=i;
   blocks[i].owningThread.insert(thisThread());
+  ownMap[thisThread()].push_back(i);
   ownMutex.unlock();
   return i;
 }
