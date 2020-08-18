@@ -179,6 +179,15 @@ LasPoint debufferPoint()
   return ret;
 }
 
+size_t pointBufferSize()
+{
+  size_t sz;
+  bufferMutex.lock();
+  sz=pointBuffer.size();
+  bufferMutex.unlock();
+  return sz;
+}
+
 bool pointBufferEmpty()
 {
   size_t sz;

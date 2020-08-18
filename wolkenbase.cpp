@@ -102,7 +102,7 @@ int main(int argc,char **argv)
       lPoint=files[i].readPoint(j);
       embufferPoint(lPoint);
     }
-    cout<<files[i].numberPoints()<<" points\n";
+    cout<<files[i].numberPoints()<<" points, "<<pointBufferSize()<<" points in buffer\n";
   }
   waitForQueueEmpty();
   cout<<"All points in octree\n";
