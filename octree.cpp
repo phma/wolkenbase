@@ -469,7 +469,7 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
       int oldblock=blocks[lru].blockNumber;
       bufnum=lru;
       transitResult=setTransit(bufnum,true);
-      if (transitResult && blocks[bufnum].ownAlone() && freeRam()<lowRam)
+      if (transitResult && blocks[bufnum].ownAlone() && (!blocks[bufnum].dirty || freeRam()<lowRam))
       {
 	revMutex.lock();
 	revBlocks.erase(blocks[bufnum].blockNumber);
