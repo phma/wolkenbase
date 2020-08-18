@@ -105,6 +105,14 @@ public:
   void disown();
   bool setTransit(int buffer,bool t);
   void resize(int n);
+  size_t getNumBuffers()
+  {
+    return blocks.size();
+  }
+  size_t getNumBlocks()
+  {
+    return nBlocks;
+  }
   void open(std::string fileName,int numFiles=1);
   void close();
   LasPoint get(xyz key);

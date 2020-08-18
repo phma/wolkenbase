@@ -103,9 +103,11 @@ int main(int argc,char **argv)
       embufferPoint(lPoint);
     }
     cout<<files[i].numberPoints()<<" points, "<<pointBufferSize()<<" points in buffer\n";
+    cout<<octStore.getNumBuffers()<<" buffers, "<<octStore.getNumBlocks()<<" blocks\n";
   }
   waitForQueueEmpty();
   cout<<"All points in octree\n";
+  cout<<octStore.getNumBuffers()<<" buffers, "<<octStore.getNumBlocks()<<" blocks\n";
   waitForThreads(TH_STOP);
   octStore.flush();
   joinThreads();
