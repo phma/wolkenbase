@@ -295,6 +295,7 @@ OctStore::OctStore()
     blocks[i].store=this;
     blocks[i].bufferNumber=i;
     blocks[i].blockNumber=-1;
+    blocks[i].update();
   }
 }
 
@@ -349,7 +350,9 @@ void OctStore::resize(int n)
   for (i=blocks.size();i<n;i++)
   {
     blocks[i].store=this;
+    blocks[i].bufferNumber=i;
     blocks[i].blockNumber=-1;
+    blocks[i].update();
   }
   for (i=blocks.size()-1;i>=n;i--)
     blocks.erase(i);
