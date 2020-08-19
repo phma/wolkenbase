@@ -197,8 +197,8 @@ bool pointBufferEmpty()
   return sz==0;
 }
 
-void sleepRead()
-// Called when reading a ptin file that has many dots per triangle.
+void sleepOct()
+// Called when making an octree and running into low memory.
 {
   this_thread::sleep_for(chrono::milliseconds(10));
 }

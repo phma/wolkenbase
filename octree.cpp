@@ -448,13 +448,14 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
 {
   streampos fileSize;
   int lru,bufnum=-1,i,f=block%nFiles,b=block/nFiles;
-  bool found=false,transitResult;
+  bool found=false,transitResult,ownResult;
+  int gotBlock=0;
+  double fram;
   fileMutex[f].lock();
   file[f].seekg(0,file[f].end); // With more than one file, seek the file the block is in.
   fileSize=file[f].tellg();
   fileMutex[f].unlock();
   assert(block>=0);
-  lru=leastRecentlyUsed();
   if (BLOCKSIZE*b>=fileSize && mustExist)
     return nullptr;
   else
@@ -466,10 +467,47 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
     revMutex.unlock_shared();
     if (!found)
     {
-      int oldblock=blocks[lru].blockNumber;
-      bufnum=lru;
-      transitResult=setTransit(bufnum,true);
-      if (transitResult && blocks[bufnum].ownAlone() && (!blocks[bufnum].dirty || freeRam()<lowRam))
+      while (!gotBlock)
+      {
+	lru=leastRecentlyUsed();
+	bufnum=lru;
+	fram=freeRam();
+	/* If fram>lowRam, always allocate a new buffer.
+	 * If fram<lowRam but fram>lowRam/2, allocate a new buffer or reuse an old one.
+	 * If fram<lowRam/2, wait until the LRU buffer can be used.
+	 */
+	if (fram>lowRam)
+	  gotBlock=2;
+	else if (fram>lowRam/2)
+	{
+	  transitResult=setTransit(bufnum,true);
+	  if (transitResult)
+	    ownResult=blocks[bufnum].ownAlone();
+	  if (transitResult && ownResult)
+	    gotBlock=1;
+	  else
+	  {
+	    if (transitResult)
+	      setTransit(bufnum,false);
+	    gotBlock=2;
+	  }
+	}
+	else
+	{
+	  transitResult=setTransit(bufnum,true);
+	  if (transitResult)
+	    ownResult=blocks[bufnum].ownAlone();
+	  if (transitResult && ownResult)
+	    gotBlock=1;
+	  else
+	  {
+	    if (transitResult)
+	      setTransit(bufnum,false);
+	    sleepOct();
+	  }
+	}
+      }
+      if (gotBlock==1)
       {
 	revMutex.lock();
 	revBlocks.erase(blocks[bufnum].blockNumber);
