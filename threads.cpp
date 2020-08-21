@@ -347,11 +347,7 @@ void WolkenThread::operator()(int thread)
       else
       {
 	octStore.put(point);
-	if (++i>RECORDS)
-	{
-	  octStore.disown();
-	  i=0;
-	}
+	octStore.disown();
 	unsleep(thread);
       }
     }
