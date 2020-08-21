@@ -453,7 +453,7 @@ int OctStore::newBlock()
 OctBuffer *OctStore::getBlock(long long block,bool mustExist)
 {
   streampos fileSize;
-  int lru,bufnum=-1,i,f=block%nFiles,b=block/nFiles;
+  int lru,bufnum=-1,i=0,f=block%nFiles,b=block/nFiles;
   bool found=false,transitResult,ownResult;
   int gotBlock=0;
   double fram;
@@ -475,7 +475,7 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
     {
       while (!gotBlock)
       {
-	lru=leastRecentlyUsed();
+	lru=(leastRecentlyUsed()+i)%blocks.size();
 	bufnum=lru;
 	fram=freeRam();
 	/* If fram>lowRam, always allocate a new buffer.
@@ -509,7 +509,7 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
 	  {
 	    if (transitResult)
 	      setTransit(bufnum,false);
-	    sleepOct();
+	    ++i;
 	  }
 	}
       }
