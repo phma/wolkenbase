@@ -44,16 +44,18 @@ long long Octree::findBlock(xyz pnt)
 // Returns the disk block number that contains pnt, or -1 if none.
 {
   int xbit,ybit,zbit,i;
+  uintptr_t subi;
   xbit=pnt.getx()>=center.getx();
   ybit=pnt.gety()>=center.gety();
   zbit=pnt.getz()>=center.getz();
   i=zbit*4+ybit*2+xbit;
-  if (sub[i]==0)
+  subi=sub[i];
+  if (subi==0)
     return -1;
-  else if (sub[i]&1)
-    return sub[i]>>1;
+  else if (subi&1)
+    return subi>>1;
   else
-    return ((Octree *)sub[i])->findBlock(pnt);
+    return ((Octree *)subi)->findBlock(pnt);
 }
 
 void Octree::setBlock(xyz pnt,long long blk)
