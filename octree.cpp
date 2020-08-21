@@ -186,6 +186,8 @@ void OctBuffer::own()
 {
   int t=thisThread();
   store->ownMutex.lock();
+  if (store->ownMap[t].size() && store->ownMap[t].back()==bufferNumber)
+    cout<<"own: "<<t<<" already owns "<<bufferNumber<<endl;
   owningThread.insert(t);
   store->ownMap[t].push_back(bufferNumber);
   store->ownMutex.unlock();
@@ -199,6 +201,8 @@ bool OctBuffer::ownAlone()
   ret=owningThread.size()==owningThread.count(t);
   if (ret)
   {
+    if (store->ownMap[t].size() && store->ownMap[t].back()==bufferNumber)
+      cout<<"ownAlone: "<<t<<" already owns "<<bufferNumber<<endl;
     owningThread.insert(t);
     store->ownMap[t].push_back(bufferNumber);
   }
