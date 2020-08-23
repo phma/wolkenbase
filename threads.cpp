@@ -175,6 +175,8 @@ LasPoint debufferPoint()
   {
     ret=pointBuffer.back();
     pointBuffer.pop_back();
+    if (pointBuffer.capacity()>2*pointBuffer.size())
+      pointBuffer.shrink_to_fit();
   }
   bufferMutex.unlock();
   return ret;
