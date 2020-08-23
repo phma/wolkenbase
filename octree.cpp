@@ -317,6 +317,7 @@ void OctStore::flush()
   OctBuffer *buf;
   for (i=0;i<blocks.size();i++)
   {
+    assert(blocks.count(i));
     buf=&blocks[i];
     buf->flush();
   }
@@ -324,12 +325,14 @@ void OctStore::flush()
 
 void OctStore::disown()
 {
-  int i,t=thisThread();
+  int i,n,t=thisThread();
   ownMutex.lock();
   for (i=0;i<ownMap[t].size();i++)
   {
     bufferMutex.lock_shared();
-    blocks[ownMap[t][i]].owningThread.erase(t);
+    n=ownMap[t][i];
+    assert(n>=0);
+    blocks[n].owningThread.erase(t);
     bufferMutex.unlock_shared();
   }
   ownMap[t].clear();
@@ -342,14 +345,18 @@ bool OctStore::setTransit(int buffer,bool t)
  */
 {
   bool ret=true;
+  bufferMutex.lock_shared();
+  assert(buffer>=0);
+  OctBuffer *buf=&blocks[buffer];
+  bufferMutex.unlock_shared();
   transitMutex.lock();
   if (t)
-    if (blocks[buffer].inTransit)
+    if (buf->inTransit)
       ret=false;
     else
-      blocks[buffer].inTransit=true;
+      buf->inTransit=true;
   else
-    blocks[buffer].inTransit=false;
+    buf->inTransit=false;
   transitMutex.unlock();
   return ret;
 }
@@ -490,6 +497,7 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
 	lru=(leastRecentlyUsed()+i)%blocks.size();
 	bufnum=lru;
 	bufferMutex.lock_shared();
+	assert(bufnum>=0);
 	buf=&blocks[bufnum];
 	bufferMutex.unlock_shared();
 	fram=freeRam();
@@ -539,12 +547,14 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
       else
       {
 	bufnum=newBlock();
+	assert(bufnum>=0);
 	blocks[bufnum].blockNumber=block;
       }
       revMutex.lock();
       revBlocks[block]=bufnum;
       revMutex.unlock();
     }
+    assert(bufnum>=0);
     blocks[bufnum].update();
     setTransit(lru,false);
     return &blocks[bufnum];
