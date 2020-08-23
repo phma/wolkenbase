@@ -139,7 +139,6 @@ private:
   std::map<int,int> revBlocks; // block number -> buffer number
   std::map<long long,int> lastUsedMap; // time counter -> buffer number
   std::map<int,std::vector<int> > ownMap; // thread -> buffer number
-  std::map<int,std::shared_mutex> blockMutexes;
   void split(long long block,xyz camelStraw);
   friend class OctBuffer;
 };
