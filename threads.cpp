@@ -29,6 +29,7 @@
 #include "random.h"
 #include "relprime.h"
 #include "las.h"
+#include "freeram.h"
 #include "octree.h"
 using namespace std;
 namespace cr=std::chrono;
@@ -311,6 +312,8 @@ void waitForQueueEmpty()
       if (threadStatus[i]<256)
 	n++;
     threadStatusMutex.unlock_shared();
+    if (freeRam()<lowRam/4)
+      cout<<"aoeu\n";
     this_thread::sleep_for(chrono::milliseconds(30));
   } while (n);
 }
