@@ -471,7 +471,7 @@ int OctStore::newBlock()
 OctBuffer *OctStore::getBlock(long long block,bool mustExist)
 {
   streampos fileSize;
-  int lru,bufnum=-1,i=0,f=block%nFiles,b=block/nFiles;
+  int lru=-1,bufnum=-1,i=0,f=block%nFiles,b=block/nFiles;
   bool found=false,transitResult,ownResult;
   int gotBlock=0;
   OctBuffer *buf;
@@ -556,7 +556,9 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
     }
     assert(bufnum>=0);
     blocks[bufnum].update();
-    setTransit(lru,false);
+    assert(lru>=-1);
+    if (lru>=0)
+      setTransit(lru,false);
     return &blocks[bufnum];
   }
 }
