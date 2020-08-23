@@ -314,9 +314,11 @@ OctStore::~OctStore()
 void OctStore::flush()
 {
   int i;
+  OctBuffer *buf;
   for (i=0;i<blocks.size();i++)
   {
-    blocks[i].flush();
+    buf=&blocks[i];
+    buf->flush();
   }
 }
 
@@ -325,7 +327,11 @@ void OctStore::disown()
   int i,t=thisThread();
   ownMutex.lock();
   for (i=0;i<ownMap[t].size();i++)
+  {
+    bufferMutex.lock_shared();
     blocks[ownMap[t][i]].owningThread.erase(t);
+    bufferMutex.unlock_shared();
+  }
   ownMap[t].clear();
   ownMutex.unlock();
 }
@@ -353,6 +359,7 @@ void OctStore::resize(int n)
 {
   int i;
   flush();
+  bufferMutex.lock();
   for (i=blocks.size();i<n;i++)
   {
     blocks[i].store=this;
@@ -362,6 +369,7 @@ void OctStore::resize(int n)
   }
   for (i=blocks.size()-1;i>=n;i--)
     blocks.erase(i);
+  bufferMutex.unlock();
 }
 
 void OctStore::open(string fileName,int numFiles)
@@ -440,11 +448,14 @@ int OctStore::leastRecentlyUsed()
 int OctStore::newBlock()
 // The new block is owned.
 {
-  ownMutex.lock();
+  bufferMutex.lock();
   int i=blocks.size();
-  blocks[i].store=this;
-  blocks[i].bufferNumber=i;
-  blocks[i].owningThread.insert(thisThread());
+  OctBuffer *buf=&blocks[i];
+  bufferMutex.unlock();
+  ownMutex.lock();
+  buf->store=this;
+  buf->bufferNumber=i;
+  buf->owningThread.insert(thisThread());
   ownMap[thisThread()].push_back(i);
   ownMutex.unlock();
   return i;
@@ -456,6 +467,7 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
   int lru,bufnum=-1,i=0,f=block%nFiles,b=block/nFiles;
   bool found=false,transitResult,ownResult;
   int gotBlock=0;
+  OctBuffer *buf;
   double fram;
   fileMutex[f].lock();
   file[f].seekg(0,file[f].end); // With more than one file, seek the file the block is in.
@@ -477,6 +489,9 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
       {
 	lru=(leastRecentlyUsed()+i)%blocks.size();
 	bufnum=lru;
+	bufferMutex.lock_shared();
+	buf=&blocks[bufnum];
+	bufferMutex.unlock_shared();
 	fram=freeRam();
 	/* If fram>lowRam, always allocate a new buffer.
 	 * If fram<lowRam but fram>lowRam/2, allocate a new buffer or reuse an old one.
@@ -488,7 +503,7 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
 	{
 	  transitResult=setTransit(bufnum,true);
 	  if (transitResult)
-	    ownResult=blocks[bufnum].ownAlone();
+	    ownResult=buf->ownAlone();
 	  if (transitResult && ownResult)
 	    gotBlock=1;
 	  else
@@ -502,7 +517,7 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
 	{
 	  transitResult=setTransit(bufnum,true);
 	  if (transitResult)
-	    ownResult=blocks[bufnum].ownAlone();
+	    ownResult=buf->ownAlone();
 	  if (transitResult && ownResult)
 	    gotBlock=1;
 	  else
@@ -516,10 +531,10 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
       if (gotBlock==1)
       {
 	revMutex.lock();
-	revBlocks.erase(blocks[bufnum].blockNumber);
+	revBlocks.erase(buf->blockNumber);
 	revMutex.unlock();
-	blocks[bufnum].flush();
-	blocks[bufnum].read(block);
+	buf->flush();
+	buf->read(block);
       }
       else
       {

@@ -128,6 +128,7 @@ private:
   std::shared_mutex revMutex; // lock when changing revBlocks
   std::mutex ownMutex; // lock when owning or disowning blocks
   std::mutex transitMutex; // lock when setting or clearing inTransit
+  std::shared_mutex bufferMutex; // lock when adding new buffers to store
   long long nowUsed;
   int nFiles;
   int leastRecentlyUsed();
