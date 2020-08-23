@@ -311,11 +311,12 @@ OctStore::~OctStore()
   close();
 }
 
-void OctStore::flush()
+void OctStore::flush(int thread,int nthreads)
 {
   int i;
   OctBuffer *buf;
-  for (i=0;i<blocks.size();i++)
+  assert(nthreads>0);
+  for (i=thread;i<blocks.size();i+=nthreads)
   {
     assert(blocks.count(i));
     buf=&blocks[i];

@@ -396,6 +396,7 @@ void WolkenThread::operator()(int thread)
       }
     }
   }
+  octStore.flush(thread,threads.size());
   threadStatusMutex.lock();
   threadStatus[thread]=TH_STOP;
   threadStatusMutex.unlock();

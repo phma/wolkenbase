@@ -101,7 +101,7 @@ class OctStore
 public:
   OctStore();
   ~OctStore();
-  void flush();
+  void flush(int thread=0,int nthreads=1);
   void disown();
   bool setTransit(int buffer,bool t);
   void resize(int n);
