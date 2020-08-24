@@ -41,11 +41,12 @@ double freeRam()
 #ifdef HAVE_SYS_SYSCTL_H
 // BSD. Linux has sys/sysctl.h, but it is deprecated.
 #include <sys/sysctl.h>
+#include <sys/vmmeter.h>
 #include <unistd.h>
 
 double freeRam()
 {
-  struct vmstats vms;
+  vmstats vms;
   size_t vms_size=sizeof(vms);
   double ret;
   int rval=sysctlbyname("vm.vmstats",&vms,&vms_size,nullptr,0);
