@@ -165,6 +165,8 @@ void embufferPoint(LasPoint point)
   bufferPos=(bufferPos+relprime(sz))%sz;
   swap(pointBuffer.back(),pointBuffer[bufferPos]);
   bufferMutex.unlock();
+  while (pointBufferSize()*sizeof(point)>lowRam)
+    this_thread::sleep_for(chrono::milliseconds(1));
 }
 
 LasPoint debufferPoint()
