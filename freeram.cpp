@@ -19,6 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Wolkenbase. If not, see <http://www.gnu.org/licenses/>.
  */
+#include <cmath>
 #include "config.h"
 #include "freeram.h"
 
@@ -36,5 +37,25 @@ double freeRam()
   return (double)info.freeram*info.mem_unit;
 }
 
+#else
+#ifdef HAVE_SYS_SYSCTL_H
+// BSD. Linux has sys/sysctl.h, but it is deprecated.
+#include <sys/sysctl.h>
+#include <unistd.h>
+
+double freeRam()
+{
+  struct vmstats vms;
+  size_t vms_size=sizeof(vms);
+  double ret;
+  int rval=sysctlbyname("vm.vmstats",&vms,&vms_size,nullptr,0);
+  if (rval)
+    ret=NAN;
+  else
+    ret=vms.v_free_count*(double)getpagesize();
+  return ret;
+}
+
+#endif
 #endif
 
