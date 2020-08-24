@@ -52,6 +52,7 @@ check_include_files(time.h HAVE_TIME_H)
 check_include_files(sys/time.h HAVE_SYS_TIME_H)
 check_include_files(sys/resource.h HAVE_SYS_RESOURCE_H)
 check_include_files(sys/sysinfo.h HAVE_SYS_SYSINFO_H)
+check_include_files(sys/sysctl.h HAVE_SYS_SYSCTL_H)
 check_include_files(windows.h HAVE_WINDOWS_H)
 test_big_endian(BIGENDIAN)
 
