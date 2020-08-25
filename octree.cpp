@@ -133,6 +133,7 @@ void Octree::split(xyz pnt)
     cerr<<"Can't split empty block\n";
   else if (sub[i]&1)
   {
+    octStore.setBlockMutex.lock();
     blknum=sub[i];
     sub[i]=(uintptr_t)(newblk=new Octree);
     newblk->center=xyz(center.getx()+(2*xbit-1)*side/4,
@@ -146,6 +147,7 @@ void Octree::split(xyz pnt)
     zbit=pnt.getz()>=newblk->center.getz();
     i=zbit*4+ybit*2+xbit;
     newblk->sub[i]=blknum;
+    octStore.setBlockMutex.unlock();
   }
   else
     ((Octree *)sub[i])->split(pnt);

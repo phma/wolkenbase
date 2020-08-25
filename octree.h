@@ -142,5 +142,6 @@ private:
   std::map<int,std::vector<int> > ownMap; // thread -> buffer number
   void split(long long block,xyz camelStraw);
   friend class OctBuffer;
+  friend class Octree;
 };
 #endif
