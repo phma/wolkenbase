@@ -231,6 +231,13 @@ bool shoulddo(string testname)
   return ret;
 }
 
+/* Files for testing block splitting:
+ * 719: 1, 710, 81
+ * 727: 1, 10, 100
+ * 5749: 1, 18, 324
+ * 5779: 1, 5762, 289
+ */
+
 int main(int argc, char *argv[])
 {
   int i;
