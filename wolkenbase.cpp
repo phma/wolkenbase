@@ -50,6 +50,7 @@ int main(int argc,char **argv)
   vector<xyz> limits;
   xyz center;
   ofstream testFile("testfile");
+  ofstream dumpFile("dumpfile");
   bool validArgs,validCmd=true;
   po::options_description generic("Options");
   po::options_description hidden("Hidden options");
@@ -109,7 +110,8 @@ int main(int argc,char **argv)
   cout<<"All points in octree\n";
   cout<<octStore.getNumBuffers()<<" buffers, "<<octStore.getNumBlocks()<<" blocks\n";
   waitForThreads(TH_STOP);
-  octStore.flush();
+  cout<<"Dumping octree\n";
+  octStore.dump(dumpFile);
   joinThreads();
   return 0;
 }

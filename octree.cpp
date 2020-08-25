@@ -21,6 +21,7 @@
  */
 #include <cassert>
 #include <cmath>
+#include "ldecimal.h"
 #include "octree.h"
 #include "freeram.h"
 #define DEBUG_STORE 0
@@ -151,6 +152,20 @@ void Octree::split(xyz pnt)
   }
   else
     ((Octree *)sub[i])->split(pnt);
+}
+
+void Octree::dump(ofstream &file)
+{
+  int i;
+  uintptr_t subi;
+  for (i=0;i<8;i++)
+  {
+    subi=sub[i];
+    if (subi&1)
+      octStore.getBlock(subi>>1)->dump(file,cube());
+    else if (subi)
+      ((Octree *)subi)->dump(file);
+  }
 }
 
 OctBuffer::OctBuffer()
@@ -288,7 +303,24 @@ bool OctBuffer::put(LasPoint pnt)
   blockMutex.unlock();
   return inx>=0;
 }
-  
+
+void OctBuffer::dump(ofstream &file,Cube cube)
+{
+  int i,nPoints=0,nIn=0;
+  xyz ctr=cube.getCenter();
+  file<<'('<<ldecimal(ctr.getx())<<','<<ldecimal(ctr.gety())<<','<<ldecimal(ctr.getz())<<")±";
+  file<<ldecimal(cube.getSide())<<' ';
+  for (i=0;i<RECORDS;i++)
+  {
+    nPoints+=points[i].location.isfinite();
+    nIn+=cube.in(points[i].location);
+  }
+  file<<nPoints<<" points";
+  if (nPoints-nIn)
+    file<<nPoints-nIn<<", stray points";
+  file<<endl;
+}
+
 OctStore::OctStore()
 {
   int i;
@@ -427,6 +459,11 @@ void OctStore::put(LasPoint pnt)
     pBlock->put(pnt);
   }
   blkn2=pBlock->blockNumber;
+}
+
+void OctStore::dump(ofstream &file)
+{
+  octRoot.dump(file);
 }
 
 int OctStore::leastRecentlyUsed()
