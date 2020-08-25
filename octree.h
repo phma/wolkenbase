@@ -58,7 +58,7 @@ public:
   {
     return Cube(center,side);
   }
-  void dump(std::ofstream &file);
+  int dump(std::ofstream &file);
 private:
   xyz center;
   double side;
@@ -82,7 +82,7 @@ public:
   void flush();
   LasPoint get(xyz key);
   bool put(LasPoint pnt);
-  void dump(std::ofstream &file,Cube cube);
+  int dump(std::ofstream &file,Cube cube);
   //bool isConsistent();
 private:
   int bufferNumber;

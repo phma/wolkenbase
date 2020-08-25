@@ -154,18 +154,19 @@ void Octree::split(xyz pnt)
     ((Octree *)sub[i])->split(pnt);
 }
 
-void Octree::dump(ofstream &file)
+int Octree::dump(ofstream &file)
 {
-  int i;
+  int i,totalPoints=0;
   uintptr_t subi;
   for (i=0;i<8;i++)
   {
     subi=sub[i];
     if (subi&1)
-      octStore.getBlock(subi>>1)->dump(file,cube());
+      totalPoints+=octStore.getBlock(subi>>1)->dump(file,cube());
     else if (subi)
-      ((Octree *)subi)->dump(file);
+      totalPoints+=((Octree *)subi)->dump(file);
   }
+  return totalPoints;
 }
 
 OctBuffer::OctBuffer()
@@ -304,7 +305,7 @@ bool OctBuffer::put(LasPoint pnt)
   return inx>=0;
 }
 
-void OctBuffer::dump(ofstream &file,Cube cube)
+int OctBuffer::dump(ofstream &file,Cube cube)
 {
   int i,nPoints=0,nIn=0;
   xyz ctr=cube.getCenter();
@@ -319,6 +320,7 @@ void OctBuffer::dump(ofstream &file,Cube cube)
   if (nPoints-nIn)
     file<<nPoints-nIn<<", stray points";
   file<<endl;
+  return nPoints;
 }
 
 OctStore::OctStore()
@@ -463,7 +465,7 @@ void OctStore::put(LasPoint pnt)
 
 void OctStore::dump(ofstream &file)
 {
-  octRoot.dump(file);
+  file<<octRoot.dump(file)<<" total points\n";
 }
 
 int OctStore::leastRecentlyUsed()
