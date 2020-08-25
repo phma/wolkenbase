@@ -329,7 +329,7 @@ int thisThread()
 
 void WolkenThread::operator()(int thread)
 {
-  int i=0;
+  int i=0,nPoints=0;
   ThreadAction act;
   LasPoint point;
   startMutex.lock();
@@ -353,6 +353,7 @@ void WolkenThread::operator()(int thread)
 	sleep(thread);
       else
       {
+	nPoints++;
 	octStore.put(point);
 	octStore.disown();
 	unsleep(thread);
@@ -401,5 +402,6 @@ void WolkenThread::operator()(int thread)
   octStore.flush(thread,threads.size());
   threadStatusMutex.lock();
   threadStatus[thread]=TH_STOP;
+  cout<<"Thread "<<thread<<"processed "<<nPoints<<" points\n";
   threadStatusMutex.unlock();
 }
