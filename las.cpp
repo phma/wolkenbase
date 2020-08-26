@@ -239,6 +239,24 @@ void LasHeader::openRead(std::string fileName)
     versionMajor=versionMinor=nPoints[0]=0;
 }
 
+void LasHeader::openWrite(std::string fileName)
+{
+  int i;
+  if (lasfile)
+    close();
+  lasfile=new fstream(fileName,ios::binary|ios::out);
+  reading=false;
+  versionMajor=1;
+  versionMinor=4;
+  xScale=yScale=zScale=0;
+  xOffset=yOffset=zOffset=NAN;
+  pointFormat=pointLength=0;
+  maxX=maxY=maxZ=-INFINITY;
+  minX=minY=minZ=INFINITY;
+  for (i=0;i<16;i++)
+    nPoints[i]=0;
+}
+
 bool LasHeader::isValid()
 {
   return versionMajor>0 && versionMinor>0;

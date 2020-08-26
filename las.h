@@ -63,7 +63,6 @@ private:
   unsigned short guid2,guid3;
   char guid4[8];
   char versionMajor,versionMinor;
-  bool reading;
   std::string systemId,softwareName;
   unsigned short creationDay,creationYear;
   unsigned int pointOffset;
@@ -74,10 +73,12 @@ private:
   size_t startWaveform,startExtendedVariableLength;
   unsigned int nExtendedVariableLength;
   size_t nPoints[16]; // [0] is total; [1]..[15] are each return
+  bool reading;
 public:
   LasHeader();
   ~LasHeader();
   void openRead(std::string fileName);
+  void openWrite(std::string fileName);
   bool isValid();
   void close();
   size_t numberPoints(int r=0);
