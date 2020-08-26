@@ -262,6 +262,31 @@ bool LasHeader::isValid()
   return versionMajor>0 && versionMinor>0;
 }
 
+void LasHeader::setScale(xyz minCor,xyz maxCor,xyz scale)
+/* If scale is (0,0,0), sets (xScale,yScale,zScale) so that any point in the box
+ * can be expressed with a four-byte integer. If scale components are nonzero,
+ * sets (xScale,yScale,zScale) to scale. Sets (xOffset,yOffset,zOffset) to
+ * the middle of the box. Does not set (minX,minY,minZ) or (maxX,maxY,maxZ);
+ * those are computed as the points are written.
+ */
+{
+  xOffset=(minCor.getx()+maxCor.getx())/2;
+  if (scale.getx()!=0 && isfinite(scale.getx()))
+    xScale=scale.getx();
+  else
+    xScale=(maxCor.getx()-minCor.getx())/4294967294.;
+  yOffset=(minCor.gety()+maxCor.gety())/2;
+  if (scale.gety()!=0 && isfinite(scale.gety()))
+    yScale=scale.gety();
+  else
+    yScale=(maxCor.gety()-minCor.gety())/4294967294.;
+  zOffset=(minCor.getz()+maxCor.getz())/2;
+  if (scale.getz()!=0 && isfinite(scale.getz()))
+    zScale=scale.getz();
+  else
+    zScale=(maxCor.getz()-minCor.getz())/4294967294.;
+}
+
 void LasHeader::close()
 {
   delete(lasfile);

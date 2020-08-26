@@ -80,6 +80,7 @@ public:
   void openRead(std::string fileName);
   void openWrite(std::string fileName);
   bool isValid();
+  void setScale(xyz minCor,xyz maxCor,xyz scale);
   void close();
   size_t numberPoints(int r=0);
   xyz minCorner();
