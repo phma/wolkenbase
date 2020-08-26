@@ -57,12 +57,13 @@ public:
 class LasHeader
 {
 private:
-  std::ifstream *lasfile;
+  std::fstream *lasfile;
   unsigned short sourceId,globalEncoding;
   unsigned int guid1;
   unsigned short guid2,guid3;
   char guid4[8];
   char versionMajor,versionMinor;
+  bool reading;
   std::string systemId,softwareName;
   unsigned short creationDay,creationYear;
   unsigned int pointOffset;
@@ -76,7 +77,7 @@ private:
 public:
   LasHeader();
   ~LasHeader();
-  void open(std::string fileName);
+  void openRead(std::string fileName);
   bool isValid();
   void close();
   size_t numberPoints(int r=0);

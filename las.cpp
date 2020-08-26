@@ -107,7 +107,7 @@ void LasPoint::write(ostream &file)
   writelefloat(file,zDir);
 }
 
-string read32(ifstream &file)
+string read32(istream &file)
 {
   char buf[40];
   memset(buf,0,40);
@@ -126,7 +126,7 @@ LasHeader::~LasHeader()
   close();
 }
 
-void LasHeader::open(std::string fileName)
+void LasHeader::openRead(std::string fileName)
 {
   int magicBytes;
   int headerSize;
@@ -136,7 +136,8 @@ void LasHeader::open(std::string fileName)
   int whichNPoints=15;
   if (lasfile)
     close();
-  lasfile=new ifstream(fileName,ios::binary);
+  lasfile=new fstream(fileName,ios::binary|ios::in);
+  reading=true;
   magicBytes=readbeint(*lasfile);
   if (magicBytes==0x4c415346)
   {
@@ -332,7 +333,7 @@ void readLas(string fileName)
   size_t i;
   LasHeader header;
   LasPoint pnt;
-  header.open(fileName);
+  header.openRead(fileName);
   //cout<<"File contains "<<header.numberPoints()<<" dots\n";
   for (i=0;i<header.numberPoints();i++)
   {

@@ -75,7 +75,7 @@ int main(int argc,char **argv)
   }
   files.resize(inputFiles.size());
   for (i=0;i<inputFiles.size();i++)
-    files[i].open(inputFiles[i]);
+    files[i].openRead(inputFiles[i]);
   for (i=0;i<files.size();i++)
   {
     limits.push_back(files[i].minCorner());
