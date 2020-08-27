@@ -312,6 +312,16 @@ xyz LasHeader::maxCorner()
   return xyz(maxX,maxY,maxZ);
 }
 
+int LasHeader::getVersion()
+{
+  return (versionMajor<<8)+versionMinor;
+}
+
+int LasHeader::getPointFormat()
+{
+  return pointFormat;
+}
+
 LasPoint LasHeader::readPoint(size_t num)
 {
   LasPoint ret;

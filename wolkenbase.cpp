@@ -78,9 +78,12 @@ int main(int argc,char **argv)
     files[i].openRead(inputFiles[i]);
   for (i=0;i<files.size();i++)
   {
+    int ver;
     limits.push_back(files[i].minCorner());
     limits.push_back(files[i].maxCorner());
-    cout<<files[i].numberPoints()<<" points\n";
+    ver=files[i].getVersion();
+    cout<<"Version "<<(ver>>8)<<'.'<<(ver&255)<<' ';
+    cout<<files[i].numberPoints()<<" points, format "<<files[i].getPointFormat()<<endl;
   }
   lowRam=freeRam()/7;
   octRoot.sizeFit(limits);

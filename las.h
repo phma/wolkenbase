@@ -85,6 +85,8 @@ public:
   size_t numberPoints(int r=0);
   xyz minCorner();
   xyz maxCorner();
+  int getVersion();
+  int getPointFormat();
   LasPoint readPoint(size_t num);
 };
 
