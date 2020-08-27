@@ -90,5 +90,4 @@ public:
   LasPoint readPoint(size_t num);
 };
 
-void readLas(std::string fileName);
 #endif

@@ -24,7 +24,6 @@
 #include "las.h"
 #include "binio.h"
 #include "angle.h"
-#include "cloud.h"
 
 const int MASK_GPSTIME=0x7fa;
 const int MASK_RGB=0x5ac;
@@ -384,20 +383,4 @@ LasPoint LasHeader::readPoint(size_t num)
   if (!lasfile->good())
     throw -1;
   return ret;
-}
-
-void readLas(string fileName)
-{
-  size_t i;
-  LasHeader header;
-  LasPoint pnt;
-  header.openRead(fileName);
-  //cout<<"File contains "<<header.numberPoints()<<" dots\n";
-  for (i=0;i<header.numberPoints();i++)
-  {
-    pnt=header.readPoint(i);
-    //if (i%1000000==0)
-      //cout<<"return "<<pnt.returnNum<<" of "<<pnt.nReturns<<endl;
-    cloud.push_back(pnt.location);
-  }
 }
