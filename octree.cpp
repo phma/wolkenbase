@@ -422,7 +422,7 @@ void OctStore::open(string fileName,int numFiles)
   for (i=0;i<nFiles;i++)
   {
     file[i].open(fileName+to_string(i),ios::in|ios::out|ios::binary|ios::trunc);
-    cout<<fileName+to_string(i)<<' '<<file[i].is_open()<<endl;
+    //cout<<fileName+to_string(i)<<' '<<file[i].is_open()<<endl;
   }
 }
 
