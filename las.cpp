@@ -25,10 +25,11 @@
 #include "binio.h"
 #include "angle.h"
 
-const int MASK_GPSTIME=0x7fa;
-const int MASK_RGB=0x5ac;
-const int MASK_NIR=0x500;
-const int MASK_WAVE=0x630;
+const int MASK_GPSTIME=0x7fa; // GPS time takes 8 bytes
+const int MASK_RGB=    0x5ac; // RGB takes 6 bytes
+const int MASK_NIR=    0x500; // NIR takes 2 bytes
+const int MASK_WAVE=   0x630; // Wave data take 29 bytes
+const short pointLengths[]={20,28,26,34,57,63,30,36,38,59,67};
 
 using namespace std;
 
@@ -186,7 +187,6 @@ LasHeader::~LasHeader()
 void LasHeader::openRead(string fileName)
 {
   int magicBytes;
-  int headerSize;
   int i;
   size_t total;
   unsigned int legacyNPoints[6];
@@ -316,7 +316,30 @@ void LasHeader::openWrite(string fileName)
 
 bool LasHeader::isValid()
 {
-  return versionMajor>0 && versionMinor>0;
+  return versionMajor>0 && versionMinor>0 && headerSize>0 && pointLength>0 &&
+	 (headerSize>0xe3 || pointFormat<6);
+}
+
+void LasHeader::setVersion(int major,int minor)
+{
+  versionMajor=major;
+  versionMinor=minor;
+  if (major==1)
+    if (minor<4)
+      headerSize=0xe3;
+    else
+      headerSize=0x177;
+  else
+    headerSize=0;
+}
+
+void LasHeader::setPointFormat(int format)
+{
+  pointFormat=format;
+  if (format>=0 && format<=sizeof(pointLengths)/sizeof(short))
+    pointLength=pointLengths[format];
+  else
+    pointLength=0;
 }
 
 void LasHeader::setScale(xyz minCor,xyz maxCor,xyz scale)

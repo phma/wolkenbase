@@ -87,6 +87,7 @@ private:
   char versionMajor,versionMinor;
   std::string systemId,softwareName;
   unsigned short creationDay,creationYear;
+  unsigned int headerSize;
   unsigned int pointOffset;
   unsigned int nVariableLength;
   unsigned short pointFormat,pointLength;
@@ -102,6 +103,8 @@ public:
   void openRead(std::string fileName);
   void openWrite(std::string fileName);
   bool isValid();
+  void setVersion(int major,int minor);
+  void setPointFormat(int format);
   void setScale(xyz minCor,xyz maxCor,xyz scale);
   void close();
   size_t numberPoints(int r=0);
