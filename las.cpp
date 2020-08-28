@@ -128,6 +128,12 @@ string read32(istream &file)
   return string(buf);
 }
 
+void write32(ostream &file,string str)
+{
+  str.resize(32);
+  file<<str;
+}
+
 VariableLengthRecord::VariableLengthRecord()
 {
   reserved=recordId=0;
@@ -312,6 +318,54 @@ void LasHeader::openWrite(string fileName)
   minX=minY=minZ=INFINITY;
   for (i=0;i<16;i++)
     nPoints[i]=0;
+}
+
+void LasHeader::writeHeader()
+{
+  int i;
+  unsigned int legacyNPoints[6];
+  lasfile->seekp(0,ios_base::beg);
+  writebeint(*lasfile,0x4c415346);
+  writeleshort(*lasfile,sourceId);
+  writeleshort(*lasfile,globalEncoding);
+  writeleint(*lasfile,guid1);
+  writeleshort(*lasfile,guid2);
+  writeleshort(*lasfile,guid3);
+  lasfile->write(guid4,8);
+  lasfile->put(versionMajor);
+  lasfile->put(versionMinor);
+  write32(*lasfile,systemId);
+  write32(*lasfile,softwareName);
+  writeleshort(*lasfile,creationDay);
+  writeleshort(*lasfile,creationYear);
+  writeleshort(*lasfile,headerSize);
+  writeleint(*lasfile,pointOffset);
+  writeleint(*lasfile,nVariableLength);
+  lasfile->put(pointFormat);
+  writeleshort(*lasfile,pointLength);
+  for (i=0;i<6;i++)
+    writeleint(*lasfile,legacyNPoints[i]);
+  writeledouble(*lasfile,xScale);
+  writeledouble(*lasfile,yScale);
+  writeledouble(*lasfile,zScale);
+  writeledouble(*lasfile,xOffset);
+  writeledouble(*lasfile,yOffset);
+  writeledouble(*lasfile,zOffset);
+  writeledouble(*lasfile,maxX);
+  writeledouble(*lasfile,minX);
+  writeledouble(*lasfile,maxY);
+  writeledouble(*lasfile,minY);
+  writeledouble(*lasfile,maxZ);
+  writeledouble(*lasfile,minZ);
+  // Here ends the LAS 1.2 header (length 0xe3). The LAS 1.4 header (length 0x177) continues.
+  if (headerSize>0xe3)
+  {
+    writelelong(*lasfile,startWaveform);
+    writelelong(*lasfile,startExtendedVariableLength);
+    writeleint(*lasfile,nExtendedVariableLength);
+    for (i=0;i<16;i++)
+      writelelong(*lasfile,nPoints[i]);
+  }
 }
 
 bool LasHeader::isValid()

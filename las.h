@@ -102,6 +102,7 @@ public:
   ~LasHeader();
   void openRead(std::string fileName);
   void openWrite(std::string fileName);
+  void writeHeader();
   bool isValid();
   void setVersion(int major,int minor);
   void setPointFormat(int format);

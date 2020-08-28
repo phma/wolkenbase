@@ -223,6 +223,7 @@ void testsplitfile()
   lasHeader.setVersion(1,2);
   lasHeader.setPointFormat(0);
   lasHeader.setScale(xyz(0,0,0),xyz(1,1,1),xyz(1/719.,1/719.,1/719.));
+  lasHeader.writeHeader();
 }
 
 bool shoulddo(string testname)
