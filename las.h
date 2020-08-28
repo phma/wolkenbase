@@ -54,6 +54,28 @@ public:
   friend class OctBlock;
 };
 
+class VariableLengthRecord
+// Used for extended variable length records as well.
+{
+private:
+  unsigned short reserved;
+  std::string userId;
+  unsigned short recordId;
+  std::string description;
+  std::string data;
+public:
+  VariableLengthRecord();
+  void setUserId(std::string uid);
+  void setRecordId(int rid);
+  void setDescription(std::string desc);
+  void setData(std::string dat);
+  std::string getUserId();
+  int getRecordId();
+  std::string getDescription();
+  std::string getData();
+  friend class LasHeader;
+};
+
 class LasHeader
 {
 private:

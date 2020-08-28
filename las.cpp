@@ -111,12 +111,65 @@ void LasPoint::write(ostream &file)
   writelefloat(file,zDir);
 }
 
+string read16(istream &file)
+{
+  char buf[24];
+  memset(buf,0,24);
+  file.read(buf,16);
+  return string(buf);
+}
+
 string read32(istream &file)
 {
   char buf[40];
   memset(buf,0,40);
   file.read(buf,32);
   return string(buf);
+}
+
+VariableLengthRecord::VariableLengthRecord()
+{
+  reserved=recordId=0;
+}
+
+void VariableLengthRecord::setUserId(string uid)
+{
+  userId=uid;
+}
+
+void VariableLengthRecord::setRecordId(int rid)
+{
+  recordId=rid;
+}
+
+void VariableLengthRecord::setDescription(string desc)
+{
+  description=desc;
+}
+
+void VariableLengthRecord::setData(string dat)
+{
+  data=dat;
+}
+
+string VariableLengthRecord::getUserId()
+{
+  return userId;
+}
+
+int VariableLengthRecord::getRecordId()
+{
+  return recordId;
+}
+
+string VariableLengthRecord::getDescription()
+{
+  return description;
+}
+
+string VariableLengthRecord::getData()
+{
+  return data;
 }
 
 LasHeader::LasHeader()
@@ -130,7 +183,7 @@ LasHeader::~LasHeader()
   close();
 }
 
-void LasHeader::openRead(std::string fileName)
+void LasHeader::openRead(string fileName)
 {
   int magicBytes;
   int headerSize;
@@ -243,7 +296,7 @@ void LasHeader::openRead(std::string fileName)
     versionMajor=versionMinor=nPoints[0]=0;
 }
 
-void LasHeader::openWrite(std::string fileName)
+void LasHeader::openWrite(string fileName)
 {
   int i;
   if (lasfile)
