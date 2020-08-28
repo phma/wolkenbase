@@ -20,6 +20,7 @@
  * along with Wolkenbase. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <cassert>
 #include <cstring>
 #include "las.h"
 #include "binio.h"
@@ -394,6 +395,7 @@ void LasHeader::setVersion(int major,int minor)
       headerSize=0x177;
   else
     headerSize=0;
+  writePos=pointOffset=headerSize;
 }
 
 void LasHeader::setPointFormat(int format)
@@ -522,4 +524,39 @@ LasPoint LasHeader::readPoint(size_t num)
   if (!lasfile->good())
     throw -1;
   return ret;
+}
+
+void LasHeader::writePoint(const LasPoint &pnt)
+{
+  int xInt,yInt,zInt;
+  double writtenX,writtenY,writtenZ;
+  lasfile->seekp(writePos,ios::beg);
+  xInt=lrint((pnt.location.getx()-xOffset)/xScale);
+  yInt=lrint((pnt.location.gety()-yOffset)/yScale);
+  zInt=lrint((pnt.location.getz()-zOffset)/zScale);
+  writeleint(*lasfile,xInt);
+  writeleint(*lasfile,yInt);
+  writeleint(*lasfile,zInt);
+  writtenX=xInt*xScale+xOffset;
+  writtenY=yInt*yScale+yOffset;
+  writtenZ=zInt*zScale+zOffset;
+  if (writtenX>maxX)
+    maxX=writtenX;
+  if (writtenX<minX)
+    minX=writtenX;
+  if (writtenY>maxY)
+    maxY=writtenY;
+  if (writtenY<minY)
+    minY=writtenY;
+  if (writtenZ>maxZ)
+    maxZ=writtenZ;
+  if (writtenZ<minZ)
+    minZ=writtenZ;
+  assert(dist(xyz(writtenX,writtenY,writtenZ),pnt.location)<sqrt(sqr(xScale)+sqr(yScale)+sqr(zScale))*0.6);
+  writeleshort(*lasfile,pnt.intensity);
+  nPoints[0]++;
+  if (pnt.returnNum>0 && pnt.returnNum<16)
+    nPoints[pnt.returnNum]++;
+  writePos+=pointLength;
+  startExtendedVariableLength=writePos;
 }

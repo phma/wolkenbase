@@ -97,6 +97,7 @@ private:
   unsigned int nExtendedVariableLength;
   size_t nPoints[16]; // [0] is total; [1]..[15] are each return
   bool reading;
+  size_t writePos;
 public:
   LasHeader();
   ~LasHeader();
@@ -114,6 +115,7 @@ public:
   int getVersion();
   int getPointFormat();
   LasPoint readPoint(size_t num);
+  void writePoint(const LasPoint &pnt);
 };
 
 #endif

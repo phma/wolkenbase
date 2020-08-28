@@ -219,10 +219,17 @@ void testsplitfile()
 {
   int i;
   LasHeader lasHeader;
+  LasPoint pnt;
   lasHeader.openWrite("719.las");
   lasHeader.setVersion(1,2);
   lasHeader.setPointFormat(0);
   lasHeader.setScale(xyz(0,0,0),xyz(1,1,1),xyz(1/719.,1/719.,1/719.));
+  for (i=0;i<719;i++)
+  {
+    pnt.location=xyz((i+0.5)/719,((i*710)%719+0.5)/719,((i*81)%719+0.5)/719);
+    pnt.returnNum=1;
+    lasHeader.writePoint(pnt);
+  }
   lasHeader.writeHeader();
 }
 
