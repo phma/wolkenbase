@@ -209,6 +209,22 @@ void testflowsnake()
   }
 }
 
+/* Files for testing block splitting:
+ * 719: 1, 710, 81
+ * 727: 1, 10, 100
+ * 5749: 1, 18, 324
+ * 5779: 1, 5762, 289
+ */
+void testsplitfile()
+{
+  int i;
+  LasHeader lasHeader;
+  lasHeader.openWrite("719.las");
+  lasHeader.setVersion(1,2);
+  lasHeader.setPointFormat(0);
+  lasHeader.setScale(xyz(0,0,0),xyz(1,1,1),xyz(1/719.,1/719.,1/719.));
+}
+
 bool shoulddo(string testname)
 {
   int i;
@@ -230,13 +246,6 @@ bool shoulddo(string testname)
     cout<<testname<<endl;
   return ret;
 }
-
-/* Files for testing block splitting:
- * 719: 1, 710, 81
- * 727: 1, 10, 100
- * 5749: 1, 18, 324
- * 5779: 1, 5762, 289
- */
 
 int main(int argc, char *argv[])
 {
@@ -260,6 +269,8 @@ int main(int argc, char *argv[])
     testflat();
   if (shoulddo("flowsnake"))
     testflowsnake();
+  if (shoulddo("splitfile"))
+    testsplitfile();
   cout<<"\nTest "<<(testfail?"failed":"passed")<<endl;
   return testfail;
 }
