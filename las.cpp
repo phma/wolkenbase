@@ -323,7 +323,16 @@ void LasHeader::openWrite(string fileName)
 void LasHeader::writeHeader()
 {
   int i;
+  bool legacyValid=true;
   unsigned int legacyNPoints[6];
+  for (i=0;i<6;i++)
+    if (nPoints[i]>4294967295)
+      legacyValid=false;
+  for (;i<16;i++)
+    if (nPoints[i]>0)
+      legacyValid=false;
+  for (i=0;i<6;i++)
+    legacyNPoints[i]=legacyValid*nPoints[i];
   lasfile->seekp(0,ios_base::beg);
   writebeint(*lasfile,0x4c415346);
   writeleshort(*lasfile,sourceId);
