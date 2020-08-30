@@ -154,6 +154,17 @@ void Octree::split(xyz pnt)
     ((Octree *)sub[i])->split(pnt);
 }
 
+Cube Octree::cube(int n)
+{
+  int xbit=n&1,ybit=(n&2)/2,zbit=(n&4)/4;
+  if (n<0)
+    return Cube(center,side);
+  else
+    return Cube(xyz(center.getx()+(2*xbit-1)*side/4,
+		    center.gety()+(2*ybit-1)*side/4,
+		    center.getz()+(2*zbit-1)*side/4),side/2);
+}
+
 int Octree::dump(ofstream &file)
 {
   int i,totalPoints=0;
@@ -162,7 +173,7 @@ int Octree::dump(ofstream &file)
   {
     subi=sub[i];
     if (subi&1)
-      totalPoints+=octStore.getBlock(subi>>1)->dump(file,cube());
+      totalPoints+=octStore.getBlock(subi>>1)->dump(file,cube(i));
     else if (subi)
       totalPoints+=((Octree *)subi)->dump(file);
   }
@@ -310,7 +321,7 @@ int OctBuffer::dump(ofstream &file,Cube cube)
   int i,nPoints=0,nIn=0;
   xyz ctr=cube.getCenter();
   file<<'('<<ldecimal(ctr.getx())<<','<<ldecimal(ctr.gety())<<','<<ldecimal(ctr.getz())<<")±";
-  file<<ldecimal(cube.getSide())<<' ';
+  file<<ldecimal(cube.getSide()/2)<<' ';
   for (i=0;i<RECORDS;i++)
   {
     nPoints+=points[i].location.isfinite();

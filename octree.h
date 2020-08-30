@@ -54,10 +54,7 @@ public:
   {
     return side;
   }
-  Cube cube()
-  {
-    return Cube(center,side);
-  }
+  Cube cube(int n=-1);
   int dump(std::ofstream &file);
 private:
   xyz center;
