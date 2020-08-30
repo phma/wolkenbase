@@ -317,6 +317,7 @@ void LasHeader::openWrite(string fileName)
   pointFormat=pointLength=0;
   maxX=maxY=maxZ=-INFINITY;
   minX=minY=minZ=INFINITY;
+  nVariableLength=nExtendedVariableLength=0;
   for (i=0;i<16;i++)
     nPoints[i]=0;
 }
