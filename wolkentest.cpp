@@ -214,6 +214,11 @@ void testflowsnake()
  * 727: 1, 10, 100
  * 5749: 1, 18, 324
  * 5779: 1, 5762, 289
+ * The number of points in one octree block is 720, and in eight blocks is 5760.
+ * These numbers are the next primes above and below them. The numbers 710, 10,
+ * 18, and 5762 are primitive roots of the respective primes close to their
+ * positive or negative cube roots, for even distribution of points in the cube.
+ * The test showed that points were being lost when splitting a block.
  */
 void test1splitfile(int p,int proot)
 {
