@@ -644,21 +644,22 @@ void OctStore::split(long long block,xyz camelStraw)
   OctBuffer *currentBlock;
   int i,fullth;
   currentBlock=getBlock(block);
-  //splitMutex.lock();
 #if DEBUG_STORE
   cout<<"Splitting block "<<block<<endl;
 #endif
-  tempPoints=currentBlock->points;
-  currentBlock->markDirty();
   while (true)
   {
     fullth=0;
+    currentBlock->blockMutex.lock();
+    tempPoints=currentBlock->points;
+    currentBlock->markDirty();
     for (i=0;i<RECORDS;i++)
     {
       if (currentBlock->points[i].location.isfinite())
 	++fullth;
       currentBlock->points[i].location=nanxyz;
     }
+    currentBlock->blockMutex.unlock();
     if (fullth<RECORDS)
       break;
     octRoot.split(camelStraw);
@@ -668,5 +669,4 @@ void OctStore::split(long long block,xyz camelStraw)
 #if DEBUG_STORE
   cout<<"Block "<<block<<" is split\n";
 #endif
-  //splitMutex.unlock();
 }
