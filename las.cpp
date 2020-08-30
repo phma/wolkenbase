@@ -572,6 +572,26 @@ void LasHeader::writePoint(const LasPoint &pnt)
     writeleshort(*lasfile,lrint(bintodeg(pnt.scanAngle)/0.006));
     writeleshort(*lasfile,pnt.pointSource);
   }
+  if ((1<<pointFormat)&MASK_GPSTIME) // 10-5, 4, 3, or 1
+    writeledouble(*lasfile,pnt.gpsTime);
+  if ((1<<pointFormat)&MASK_RGB) // 10, 8, 7, 5, 3, or 2
+  {
+    writeleshort(*lasfile,pnt.red);
+    writeleshort(*lasfile,pnt.green);
+    writeleshort(*lasfile,pnt.blue);
+  }
+  if ((1<<pointFormat)&MASK_NIR) // 10 or 8
+    writeleshort(*lasfile,pnt.nir);
+  if ((1<<pointFormat)&MASK_WAVE) // 10, 9, 5 or 4
+  {
+    lasfile->put(pnt.waveIndex);
+    writelelong(*lasfile,pnt.waveformOffset);
+    writeleint(*lasfile,pnt.waveformSize);
+    writelefloat(*lasfile,pnt.waveformTime);
+    writelefloat(*lasfile,pnt.xDir);
+    writelefloat(*lasfile,pnt.yDir);
+    writelefloat(*lasfile,pnt.zDir);
+  }
   nPoints[0]++;
   if (pnt.returnNum>0 && pnt.returnNum<16)
     nPoints[pnt.returnNum]++;
