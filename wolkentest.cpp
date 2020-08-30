@@ -215,22 +215,31 @@ void testflowsnake()
  * 5749: 1, 18, 324
  * 5779: 1, 5762, 289
  */
-void testsplitfile()
+void test1splitfile(int p,int proot)
 {
   int i;
+  int zstep=(proot*proot)%p;
   LasHeader lasHeader;
   LasPoint pnt;
-  lasHeader.openWrite("719.las");
+  lasHeader.openWrite(to_string(p)+".las");
   lasHeader.setVersion(1,2);
   lasHeader.setPointFormat(0);
-  lasHeader.setScale(xyz(0,0,0),xyz(1,1,1),xyz(1/719.,1/719.,1/719.));
-  for (i=0;i<719;i++)
+  lasHeader.setScale(xyz(0,0,0),xyz(1,1,1),xyz(1./p,1./p,1./p));
+  for (i=0;i<p;i++)
   {
-    pnt.location=xyz((i+0.5)/719,((i*710)%719+0.5)/719,((i*81)%719+0.5)/719);
+    pnt.location=xyz((i+0.5)/p,((i*proot)%p+0.5)/p,((i*zstep)%p+0.5)/p);
     pnt.returnNum=1;
     lasHeader.writePoint(pnt);
   }
   lasHeader.writeHeader();
+}
+
+void testsplitfile()
+{
+  test1splitfile(719,710);
+  test1splitfile(727,10);
+  test1splitfile(5749,18);
+  test1splitfile(5779,5762);
 }
 
 bool shoulddo(string testname)
