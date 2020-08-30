@@ -555,6 +555,23 @@ void LasHeader::writePoint(const LasPoint &pnt)
     minZ=writtenZ;
   assert(dist(xyz(writtenX,writtenY,writtenZ),pnt.location)<sqrt(sqr(xScale)+sqr(yScale)+sqr(zScale))*0.6);
   writeleshort(*lasfile,pnt.intensity);
+  if (pointFormat<6)
+  {
+    lasfile->put((pnt.returnNum&7)+((pnt.nReturns&7)<<3)+((pnt.scanDirection&1)<<6)+((pnt.edgeLine&1)<<7));
+    lasfile->put(pnt.classification);
+    lasfile->put(lrint(bintodeg(pnt.scanAngle)));
+    lasfile->put(pnt.userData);
+    writeleshort(*lasfile,pnt.pointSource);
+  }
+  else
+  {
+    lasfile->put((pnt.returnNum&15)+((pnt.nReturns&15)<<4));
+    lasfile->put((pnt.classificationFlags&15)+((pnt.scannerChannel&3)<<4)+((pnt.scanDirection&1)<<6)+((pnt.edgeLine&1)<<7));
+    lasfile->put(pnt.classification);
+    lasfile->put(pnt.userData);
+    writeleshort(*lasfile,lrint(bintodeg(pnt.scanAngle)/0.006));
+    writeleshort(*lasfile,pnt.pointSource);
+  }
   nPoints[0]++;
   if (pnt.returnNum>0 && pnt.returnNum<16)
     nPoints[pnt.returnNum]++;
