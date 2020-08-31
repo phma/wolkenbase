@@ -472,6 +472,8 @@ void OctStore::put(LasPoint pnt)
     pBlock->put(pnt);
   }
   blkn2=pBlock->blockNumber;
+  if (blkn1<0 && blkn0!=blkn2)
+    cout<<"Block number changed\n";
 }
 
 void OctStore::dump(ofstream &file)
