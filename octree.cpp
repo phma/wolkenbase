@@ -666,6 +666,8 @@ void OctStore::split(long long block,xyz camelStraw)
     for (i=0;i<RECORDS;i++)
       put(tempPoints[i]);
   }
+  for (i=0;i<RECORDS;i++)
+    put(tempPoints[i]);
 #if DEBUG_STORE
   cout<<"Block "<<block<<" is split\n";
 #endif
