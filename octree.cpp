@@ -204,6 +204,8 @@ void OctBuffer::write()
   for (i=0;i<RECORDS;i++)
     points[i].write(store->file[f]);
   dirty=false;
+  for (i=RECORDS*LASPOINT_SIZE;i<BLOCKSIZE;i++)
+    store->file[f].put(0);
   store->fileMutex[f].unlock();
   blockMutex.unlock_shared();
 }
