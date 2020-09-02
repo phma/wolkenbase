@@ -26,6 +26,8 @@
 #include "freeram.h"
 #define DEBUG_STORE 0
 #define DEBUG_LOCK 0
+#define WATCH_BLOCK_START 0
+#define WATCH_BLOCK_END 10
 using namespace std;
 
 Octree octRoot;
@@ -193,6 +195,7 @@ OctBuffer::OctBuffer()
 void OctBuffer::write()
 {
   int i,f=blockNumber%store->nFiles,b=blockNumber/store->nFiles;
+  int nPoints=0;
   blockMutex.lock_shared();
   store->fileMutex[f].lock();
 #if DEBUG_STORE
@@ -202,10 +205,15 @@ void OctBuffer::write()
   //cout<<store->file.rdstate()<<' '<<ios::failbit<<endl;
   store->file[f].clear();
   for (i=0;i<RECORDS;i++)
+  {
     points[i].write(store->file[f]);
+    nPoints+=!points[i].isEmpty();
+  }
   dirty=false;
   for (i=RECORDS*LASPOINT_SIZE;i<BLOCKSIZE;i++)
     store->file[f].put(0);
+  if (blockNumber>=WATCH_BLOCK_START && blockNumber<WATCH_BLOCK_END)
+    cout<<"Writing block "<<blockNumber<<' '<<nPoints<<" points\n";
   store->fileMutex[f].unlock();
   blockMutex.unlock_shared();
 }
@@ -242,6 +250,7 @@ bool OctBuffer::ownAlone()
 void OctBuffer::read(long long block)
 {
   int i,f=block%store->nFiles,b=block/store->nFiles;
+  int nPoints=0;
   blockMutex.lock();
   store->fileMutex[f].lock();
 #if DEBUG_STORE
@@ -250,7 +259,10 @@ void OctBuffer::read(long long block)
   blockNumber=block;
   store->file[f].seekg(BLOCKSIZE*b);
   for (i=0;i<RECORDS;i++)
+  {
     points[i].read(store->file[f]);
+    nPoints+=!points[i].isEmpty();
+  }
   store->file[f].clear();
   /* If a new block is read in, all points will be at (0,0,0).
    * In any other case (including all points being at (NAN,NAN,NAN)),
@@ -259,6 +271,8 @@ void OctBuffer::read(long long block)
   if (points[0].location==points[1].location)
     for (i=0;i<RECORDS;i++)
       points[i].location=nanxyz;
+  if (blockNumber>=WATCH_BLOCK_START && blockNumber<WATCH_BLOCK_END)
+    cout<<"Reading block "<<blockNumber<<' '<<nPoints<<" points\n";
   store->fileMutex[f].unlock();
   blockMutex.unlock();
 }
