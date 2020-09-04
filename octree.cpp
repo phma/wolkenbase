@@ -33,6 +33,8 @@ using namespace std;
 Octree octRoot;
 OctStore octStore;
 double lowRam;
+set<int> watchedBuffers;
+mutex msgMutex;
 
 #if defined(_WIN32) || defined(__CYGWIN__)
 // Linux and BSD have this function in the library; Windows doesn't.
@@ -212,8 +214,13 @@ void OctBuffer::write()
   dirty=false;
   for (i=RECORDS*LASPOINT_SIZE;i<BLOCKSIZE;i++)
     store->file[f].put(0);
-  if (blockNumber>=WATCH_BLOCK_START && blockNumber<WATCH_BLOCK_END)
+  if ((blockNumber>=WATCH_BLOCK_START && blockNumber<WATCH_BLOCK_END) || watchedBuffers.count(bufferNumber))
+  {
+    msgMutex.lock();
     cout<<"Writing block "<<blockNumber<<" buffer "<<bufferNumber<<' '<<nPoints<<" points\n";
+    watchedBuffers.insert(bufferNumber);
+    msgMutex.unlock();
+  }
   store->fileMutex[f].unlock();
   blockMutex.unlock_shared();
 }
@@ -271,8 +278,13 @@ void OctBuffer::read(long long block)
   if (points[0].location==points[1].location)
     for (i=0;i<RECORDS;i++)
       points[i].location=nanxyz;
-  if (blockNumber>=WATCH_BLOCK_START && blockNumber<WATCH_BLOCK_END)
+  if ((blockNumber>=WATCH_BLOCK_START && blockNumber<WATCH_BLOCK_END) || watchedBuffers.count(bufferNumber))
+  {
+    msgMutex.lock();
     cout<<"Reading block "<<blockNumber<<" buffer "<<bufferNumber<<' '<<nPoints<<" points\n";
+    watchedBuffers.erase(bufferNumber);
+    msgMutex.unlock();
+  }
   store->fileMutex[f].unlock();
   blockMutex.unlock();
 }
@@ -547,6 +559,12 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
   file[f].seekg(0,file[f].end); // With more than one file, seek the file the block is in.
   fileSize=file[f].tellg();
   fileMutex[f].unlock();
+  if (block>=WATCH_BLOCK_START && block<WATCH_BLOCK_END)
+  {
+    msgMutex.lock();
+    cout<<"Getting block "<<block<<endl;
+    msgMutex.unlock();
+  }
   assert(block>=0);
   if (BLOCKSIZE*b>=fileSize && mustExist)
     return nullptr;
@@ -626,6 +644,12 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
     assert(lru>=-1);
     if (lru>=0)
       setTransit(lru,false);
+    if (block>=WATCH_BLOCK_START && block<WATCH_BLOCK_END)
+    {
+      msgMutex.lock();
+      cout<<"Got block "<<block<<" in buffer "<<bufnum<<endl;
+      msgMutex.unlock();
+    }
     return &blocks[bufnum];
   }
 }
