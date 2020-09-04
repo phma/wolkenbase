@@ -213,7 +213,7 @@ void OctBuffer::write()
   for (i=RECORDS*LASPOINT_SIZE;i<BLOCKSIZE;i++)
     store->file[f].put(0);
   if (blockNumber>=WATCH_BLOCK_START && blockNumber<WATCH_BLOCK_END)
-    cout<<"Writing block "<<blockNumber<<' '<<nPoints<<" points\n";
+    cout<<"Writing block "<<blockNumber<<" buffer "<<bufferNumber<<' '<<nPoints<<" points\n";
   store->fileMutex[f].unlock();
   blockMutex.unlock_shared();
 }
@@ -272,7 +272,7 @@ void OctBuffer::read(long long block)
     for (i=0;i<RECORDS;i++)
       points[i].location=nanxyz;
   if (blockNumber>=WATCH_BLOCK_START && blockNumber<WATCH_BLOCK_END)
-    cout<<"Reading block "<<blockNumber<<' '<<nPoints<<" points\n";
+    cout<<"Reading block "<<blockNumber<<" buffer "<<bufferNumber<<' '<<nPoints<<" points\n";
   store->fileMutex[f].unlock();
   blockMutex.unlock();
 }
