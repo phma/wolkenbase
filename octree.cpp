@@ -633,6 +633,7 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
       {
 	bufnum=newBlock();
 	assert(bufnum>=0);
+	blocks[bufnum].read(block);
 	blocks[bufnum].blockNumber=block;
       }
       revMutex.lock();
