@@ -74,6 +74,7 @@ public:
   void markDirty();
   void own();
   bool ownAlone();
+  bool iOwn();
   void read(long long block);
   void update();
   void flush();

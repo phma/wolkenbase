@@ -254,6 +254,16 @@ bool OctBuffer::ownAlone()
   return ret;
 }
 
+bool OctBuffer::iOwn()
+{
+  bool ret;
+  int t=thisThread();
+  store->ownMutex.lock();
+  ret=owningThread.count(t);
+  store->ownMutex.unlock();
+  return ret;
+}
+
 void OctBuffer::read(long long block)
 {
   int i,f=block%store->nFiles,b=block/store->nFiles;
@@ -490,6 +500,7 @@ void OctStore::put(LasPoint pnt)
   xyz key=pnt.location;
   OctBuffer *pBlock=getBlock(key,true);
   assert(pBlock);
+  assert(pBlock->iOwn());
   blkn0=pBlock->blockNumber;
   assert(blkn0>=0);
   if (!pBlock->put(pnt))
@@ -573,7 +584,10 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
     revMutex.lock_shared();
     found=revBlocks.count(block);
     if (found)
+    {
       bufnum=revBlocks[block];
+      blocks[bufnum].own();
+    }
     revMutex.unlock_shared();
     if (!found)
     {
