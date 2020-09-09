@@ -347,6 +347,8 @@ bool OctBuffer::put(LasPoint pnt)
     }
   if (inx>=0)
   {
+    if (points[inx].location==key)
+      cout<<"point already in octree at "<<key.getx()<<','<<key.gety()<<','<<key.getz()<<endl;
     markDirty();
     points[inx]=pnt;
   }
