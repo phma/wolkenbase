@@ -27,7 +27,7 @@
 #define DEBUG_STORE 0
 #define DEBUG_LOCK 0
 #define WATCH_BLOCK_START 0
-#define WATCH_BLOCK_END 10
+#define WATCH_BLOCK_END 0
 using namespace std;
 
 Octree octRoot;
@@ -357,7 +357,7 @@ int OctBuffer::dump(ofstream &file,Cube cube)
   }
   file<<nPoints<<" points";
   if (nPoints-nIn)
-    file<<nPoints-nIn<<", stray points";
+    file<<", "<<nPoints-nIn<<" stray points";
   file<<endl;
   return nPoints;
 }
