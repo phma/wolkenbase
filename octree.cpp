@@ -492,6 +492,8 @@ LasPoint OctStore::get(xyz key)
   OctBuffer *pBlock=getBlock(key,false);
   assert(pBlock);
   ret=pBlock->get(key);
+  if (ret.isEmpty())
+    cout<<"Point not found\n";
   return ret;
 }
 
