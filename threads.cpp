@@ -331,7 +331,7 @@ void WolkenThread::operator()(int thread)
 {
   int i=0,nPoints=0;
   ThreadAction act;
-  LasPoint point;
+  LasPoint point,gotPoint;
   startMutex.lock();
   if (threadStatus.size()!=thread)
   {
@@ -355,6 +355,9 @@ void WolkenThread::operator()(int thread)
       {
 	nPoints++;
 	octStore.put(point);
+	gotPoint=octStore.get(point.location);
+	if (gotPoint.isEmpty())
+	  cout<<"Point missing\n";
 	octStore.disown();
 	unsleep(thread);
       }
