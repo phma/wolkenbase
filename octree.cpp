@@ -35,6 +35,8 @@ OctStore octStore;
 double lowRam;
 set<int> watchedBuffers;
 mutex msgMutex;
+shared_mutex cubeMutex;
+map<int,Cube> lockedCubes;
 
 #if defined(_WIN32) || defined(__CYGWIN__)
 // Linux and BSD have this function in the library; Windows doesn't.
@@ -44,6 +46,31 @@ double significand(double x)
   return frexp(x,&dummy)*2;
 }
 #endif
+
+bool cubeLocked(xyz pnt)
+/* cubeMutex must be read-locked when calling this.
+ * Returns true iff pnt is in a cube locked by another thread.
+ */
+{
+  int t=thisThread();
+  map<int,Cube>::iterator i;
+  bool ret=false;
+  for (i=lockedCubes.begin();!ret && i!=lockedCubes.end();++i)
+    ret=t!=i->first && i->second.in(pnt);
+  return ret;
+}
+
+void lockCube(Cube cube)
+// cubeMutex must be write-locked when calling this.
+{
+  lockedCubes[thisThread()]=cube;
+}
+
+void unlockCube()
+// cubeMutex must be write-locked when calling this.
+{
+  lockedCubes.erase(thisThread());
+}
 
 long long Octree::findBlock(xyz pnt)
 // Returns the disk block number that contains pnt, or -1 if none.
@@ -61,6 +88,22 @@ long long Octree::findBlock(xyz pnt)
     return subi>>1;
   else
     return ((Octree *)subi)->findBlock(pnt);
+}
+
+Cube Octree::findCube(xyz pnt)
+// Returns the cube that contains pnt.
+{
+  int xbit,ybit,zbit,i;
+  uintptr_t subi;
+  xbit=pnt.getx()>=center.getx();
+  ybit=pnt.gety()>=center.gety();
+  zbit=pnt.getz()>=center.getz();
+  i=zbit*4+ybit*2+xbit;
+  subi=sub[i];
+  if (subi==0 || (subi&1))
+    return cube(i);
+  else
+    return ((Octree *)subi)->findCube(pnt);
 }
 
 void Octree::setBlock(xyz pnt,long long blk)
@@ -704,6 +747,9 @@ void OctStore::split(long long block,xyz camelStraw)
   vector<LasPoint> tempPoints;
   OctBuffer *currentBlock;
   int i,fullth;
+  cubeMutex.lock();
+  lockCube(octRoot.findCube(camelStraw));
+  cubeMutex.unlock();
   currentBlock=getBlock(block);
 #if DEBUG_STORE
   cout<<"Splitting block "<<block<<endl;
@@ -732,4 +778,7 @@ void OctStore::split(long long block,xyz camelStraw)
 #if DEBUG_STORE
   cout<<"Block "<<block<<" is split\n";
 #endif
+  cubeMutex.lock();
+  unlockCube();
+  cubeMutex.unlock();
 }
