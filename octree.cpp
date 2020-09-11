@@ -759,9 +759,17 @@ void OctStore::split(long long block,xyz camelStraw)
   vector<LasPoint> tempPoints;
   OctBuffer *currentBlock;
   int i,fullth;
-  cubeMutex.lock();
-  lockCube(octRoot.findCube(camelStraw));
-  cubeMutex.unlock();
+  bool gotCubeLock=false;
+  while (!gotCubeLock)
+  {
+    cubeMutex.lock();
+    if (!cubeLocked(camelStraw))
+    {
+      lockCube(octRoot.findCube(camelStraw));
+      gotCubeLock=true;
+    }
+    cubeMutex.unlock();
+  }
   currentBlock=getBlock(block);
 #if DEBUG_STORE
   cout<<"Splitting block "<<block<<endl;
