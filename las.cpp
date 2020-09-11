@@ -474,6 +474,8 @@ LasPoint LasHeader::readPoint(size_t num)
   yInt=readleint(*lasfile);
   zInt=readleint(*lasfile);
   ret.intensity=readleshort(*lasfile);
+  if (xInt==0 && yInt==0 && zInt==0)
+    cout<<"xyz0\n";
   if (pointFormat<6)
   {
     temp=lasfile->get();
