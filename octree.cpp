@@ -545,6 +545,8 @@ void OctStore::put(LasPoint pnt)
   int i,inx=-1;
   int blkn0=-1,blkn1=-1,blkn2=-1;
   xyz key=pnt.location;
+  if (pnt.isEmpty())
+    return;
   OctBuffer *pBlock=getBlock(key,true);
   assert(pBlock);
   assert(pBlock->iOwn());
