@@ -722,7 +722,6 @@ OctBuffer *OctStore::getBlock(xyz key,bool writing)
 {
   OctBuffer *ret;
   long long blknum;
-  setBlockMutex.lock_shared();
   while (true)
   {
     cubeMutex.lock_shared();
@@ -730,12 +729,13 @@ OctBuffer *OctStore::getBlock(xyz key,bool writing)
       cubeMutex.unlock_shared();
     else
     {
+      setBlockMutex.lock_shared();
       blknum=octRoot.findBlock(key);
+      setBlockMutex.unlock_shared();
       cubeMutex.unlock_shared();
       break;
     }
   }
-  setBlockMutex.unlock_shared();
   if (blknum>=0)
   {
     ret=getBlock(blknum);
