@@ -36,7 +36,7 @@ double lowRam;
 set<int> watchedBuffers;
 mutex msgMutex;
 shared_mutex cubeMutex;
-map<int,Cube> lockedCubes;
+map<int,Cube> lockedCubes,readLockedCubes;
 
 #if defined(_WIN32) || defined(__CYGWIN__)
 // Linux and BSD have this function in the library; Windows doesn't.
@@ -48,7 +48,7 @@ double significand(double x)
 #endif
 
 bool cubeLocked(xyz pnt)
-/* cubeMutex must be read-locked when calling this.
+/* cubeMutex must be locked when calling this.
  * Returns true iff pnt is in a cube locked by another thread.
  */
 {
@@ -60,16 +60,49 @@ bool cubeLocked(xyz pnt)
   return ret;
 }
 
-void lockCube(Cube cube)
-// cubeMutex must be write-locked when calling this.
+bool cubeReadLocked(xyz pnt)
+/* cubeMutex must be locked when calling this.
+ * Returns true iff pnt is in a cube read-locked by another thread.
+ */
 {
-  lockedCubes[thisThread()]=cube;
+  int t=thisThread();
+  map<int,Cube>::iterator i;
+  bool ret=false;
+  for (i=readLockedCubes.begin();!ret && i!=readLockedCubes.end();++i)
+    ret=t!=i->first && i->second.in(pnt);
+  return ret;
+}
+
+bool lockCube(Cube cube)
+// Returns true if successful.
+{
+  bool ret;
+  cubeMutex.lock();
+  ret=!(cubeLocked(cube.getCenter()) || cubeReadLocked(cube.getCenter()));
+  if (ret)
+    lockedCubes[thisThread()]=cube;
+  cubeMutex.unlock();
+  return ret;
+}
+
+bool readLockCube(Cube cube)
+// Returns true if successful.
+{
+  bool ret;
+  cubeMutex.lock();
+  ret=!cubeLocked(cube.getCenter());
+  if (ret)
+    readLockedCubes[thisThread()]=cube;
+  cubeMutex.unlock();
+  return ret;
 }
 
 void unlockCube()
-// cubeMutex must be write-locked when calling this.
 {
+  cubeMutex.lock();
   lockedCubes.erase(thisThread());
+  readLockedCubes.erase(thisThread());
+  cubeMutex.unlock();
 }
 
 long long Octree::findBlock(xyz pnt)
@@ -168,6 +201,7 @@ void Octree::sizeFit(vector<xyz> pnts)
 void Octree::split(xyz pnt)
 /* Splits the block containing pnt into eight blocks. The subblock with pnt in it
  * is the same as the original block; the others are set to none.
+ * Called from OctStore::split.
  */
 {
   int xbit,ybit,zbit,i;
@@ -537,6 +571,7 @@ LasPoint OctStore::get(xyz key)
   ret=pBlock->get(key);
   if (ret.isEmpty())
     cout<<"Point not found\n";
+  unlockCube();
   return ret;
 }
 
@@ -547,7 +582,7 @@ void OctStore::put(LasPoint pnt)
   xyz key=pnt.location;
   if (pnt.isEmpty())
     return;
-  OctBuffer *pBlock=getBlock(key,true);
+  OctBuffer *pBlock=getBlock(key,true); // Leaves cube read-locked
   assert(pBlock);
   assert(pBlock->iOwn());
   blkn0=pBlock->blockNumber;
@@ -555,11 +590,12 @@ void OctStore::put(LasPoint pnt)
   if (!pBlock->put(pnt))
   {
     blkn1=pBlock->blockNumber;
-    split(pBlock->blockNumber,key);
-    pBlock=getBlock(key,true);
+    split(pBlock->blockNumber,key); // Write-locks cube, then unlocks it
+    pBlock=getBlock(key,true); // Read-locks a smaller cube
     pBlock->put(pnt);
   }
   blkn2=pBlock->blockNumber;
+  unlockCube();
   if (blkn1<0 && blkn0!=blkn2)
     cout<<"Block number changed\n";
 }
@@ -719,23 +755,16 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
 }
 
 OctBuffer *OctStore::getBlock(xyz key,bool writing)
+// Leaves the cube read-locked.
 {
   OctBuffer *ret;
   long long blknum;
-  while (true)
-  {
-    cubeMutex.lock_shared();
-    if (cubeLocked(key))
-      cubeMutex.unlock_shared();
-    else
-    {
-      setBlockMutex.lock_shared();
-      blknum=octRoot.findBlock(key);
-      setBlockMutex.unlock_shared();
-      cubeMutex.unlock_shared();
-      break;
-    }
-  }
+  bool gotCubeLock=false;
+  while (!gotCubeLock)
+    gotCubeLock=readLockCube(octRoot.findCube(key));
+  setBlockMutex.lock_shared();
+  blknum=octRoot.findBlock(key);
+  setBlockMutex.unlock_shared();
   if (blknum>=0)
   {
     ret=getBlock(blknum);
@@ -763,15 +792,7 @@ void OctStore::split(long long block,xyz camelStraw)
   int i,fullth;
   bool gotCubeLock=false;
   while (!gotCubeLock)
-  {
-    cubeMutex.lock();
-    if (!cubeLocked(camelStraw))
-    {
-      lockCube(octRoot.findCube(camelStraw));
-      gotCubeLock=true;
-    }
-    cubeMutex.unlock();
-  }
+    gotCubeLock=lockCube(octRoot.findCube(camelStraw));
   currentBlock=getBlock(block);
 #if DEBUG_STORE
   cout<<"Splitting block "<<block<<endl;
@@ -800,7 +821,5 @@ void OctStore::split(long long block,xyz camelStraw)
 #if DEBUG_STORE
   cout<<"Block "<<block<<" is split\n";
 #endif
-  cubeMutex.lock();
   unlockCube();
-  cubeMutex.unlock();
 }
