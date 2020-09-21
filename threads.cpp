@@ -216,6 +216,19 @@ void sleep(int thread)
   threadStatusMutex.unlock();
 }
 
+void sleepDead(int thread)
+// Sleep to get out of deadlock.
+{
+  sleepTime[thread]*=1+thread/1e3;
+  threadStatusMutex.lock();
+  threadStatus[thread]|=256;
+  threadStatusMutex.unlock();
+  this_thread::sleep_for(chrono::milliseconds(lrint(sleepTime[thread])));
+  threadStatusMutex.lock();
+  threadStatus[thread]&=255;
+  threadStatusMutex.unlock();
+}
+
 void unsleep(int thread)
 {
   sleepTime[thread]-=1+sleepTime[thread]/1e3;

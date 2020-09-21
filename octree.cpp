@@ -792,7 +792,14 @@ void OctStore::split(long long block,xyz camelStraw)
   int i,fullth;
   bool gotCubeLock=false;
   while (!gotCubeLock)
+  {
     gotCubeLock=lockCube(octRoot.findCube(camelStraw));
+    if (!gotCubeLock)
+    {
+      unlockCube();
+      sleepDead(thisThread());
+    }
+  }
   currentBlock=getBlock(block);
 #if DEBUG_STORE
   cout<<"Splitting block "<<block<<endl;
