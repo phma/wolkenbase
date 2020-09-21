@@ -119,7 +119,7 @@ public:
   void open(std::string fileName,int numFiles=1);
   void close();
   LasPoint get(xyz key);
-  void put(LasPoint pnt);
+  void put(LasPoint pnt,bool splitting=false);
   void dump(std::ofstream &file);
   bool isConsistent();
 private:

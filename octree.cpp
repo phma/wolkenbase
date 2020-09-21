@@ -575,7 +575,7 @@ LasPoint OctStore::get(xyz key)
   return ret;
 }
 
-void OctStore::put(LasPoint pnt)
+void OctStore::put(LasPoint pnt,bool splitting)
 {
   int i,inx=-1;
   int blkn0=-1,blkn1=-1,blkn2=-1;
@@ -589,13 +589,16 @@ void OctStore::put(LasPoint pnt)
   assert(blkn0>=0);
   if (!pBlock->put(pnt))
   {
+    if (splitting)
+      cout<<"split called inside split\n";
     blkn1=pBlock->blockNumber;
     split(pBlock->blockNumber,key); // Write-locks cube, then unlocks it
     pBlock=getBlock(key,true); // Read-locks a smaller cube
     pBlock->put(pnt);
   }
   blkn2=pBlock->blockNumber;
-  unlockCube();
+  if (!splitting)
+    unlockCube();
   if (blkn1<0 && blkn0!=blkn2)
     cout<<"Block number changed\n";
 }
@@ -821,10 +824,10 @@ void OctStore::split(long long block,xyz camelStraw)
       break;
     octRoot.split(camelStraw);
     for (i=0;i<RECORDS;i++)
-      put(tempPoints[i]);
+      put(tempPoints[i],true);
   }
   for (i=0;i<RECORDS;i++)
-    put(tempPoints[i]);
+    put(tempPoints[i],true);
 #if DEBUG_STORE
   cout<<"Block "<<block<<" is split\n";
 #endif
