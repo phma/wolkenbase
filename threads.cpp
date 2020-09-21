@@ -202,12 +202,6 @@ bool pointBufferEmpty()
   return sz==0;
 }
 
-void sleepOct()
-// Called when making an octree and running into low memory.
-{
-  this_thread::sleep_for(chrono::milliseconds(10));
-}
-
 void sleep(int thread)
 {
   sleepTime[thread]+=1+sleepTime[thread]/1e3;

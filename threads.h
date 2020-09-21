@@ -93,7 +93,6 @@ void embufferPoint(LasPoint point);
 LasPoint debufferPoint();
 size_t pointBufferSize();
 bool pointBufferEmpty();
-void sleepOct();
 void setThreadCommand(int newStatus);
 int getThreadStatus();
 void waitForThreads(int newStatus);
