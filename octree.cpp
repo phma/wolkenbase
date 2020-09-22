@@ -36,7 +36,7 @@ double lowRam;
 set<int> watchedBuffers;
 mutex msgMutex;
 shared_mutex cubeMutex;
-map<int,Cube> lockedCubes,readLockedCubes;
+multimap<int,Cube> lockedCubes,readLockedCubes;
 
 #if defined(_WIN32) || defined(__CYGWIN__)
 // Linux and BSD have this function in the library; Windows doesn't.
@@ -80,7 +80,7 @@ bool lockCube(Cube cube)
   cubeMutex.lock();
   ret=!(cubeLocked(cube.getCenter()) || cubeReadLocked(cube.getCenter()));
   if (ret)
-    lockedCubes[thisThread()]=cube;
+    lockedCubes.insert(pair<int,Cube>(thisThread(),cube));
   cubeMutex.unlock();
   return ret;
 }
@@ -92,7 +92,7 @@ bool readLockCube(Cube cube)
   cubeMutex.lock();
   ret=!cubeLocked(cube.getCenter());
   if (ret)
-    readLockedCubes[thisThread()]=cube;
+    readLockedCubes.insert(pair<int,Cube>(thisThread(),cube));
   cubeMutex.unlock();
   return ret;
 }
