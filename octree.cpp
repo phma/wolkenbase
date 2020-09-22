@@ -795,12 +795,13 @@ void OctStore::split(long long block,xyz camelStraw)
 {
   vector<LasPoint> tempPoints;
   OctBuffer *currentBlock;
+  Cube thisCube;
   int i,fullth;
   bool gotCubeLock=false;
   while (!gotCubeLock)
   {
     setBlockMutex.lock_shared();
-    gotCubeLock=lockCube(octRoot.findCube(camelStraw));
+    gotCubeLock=lockCube(thisCube=octRoot.findCube(camelStraw));
     setBlockMutex.unlock_shared();
     if (!gotCubeLock)
     {
