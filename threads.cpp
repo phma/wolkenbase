@@ -156,7 +156,7 @@ bool resultQueueEmpty()
   return resQueue.size()==0;
 }
 
-void embufferPoint(LasPoint point)
+void embufferPoint(LasPoint point,bool fromFile)
 {
   int sz;
   bufferMutex.lock();
@@ -165,7 +165,7 @@ void embufferPoint(LasPoint point)
   bufferPos=(bufferPos+relprime(sz))%sz;
   swap(pointBuffer.back(),pointBuffer[bufferPos]);
   bufferMutex.unlock();
-  while (pointBufferSize()*sizeof(point)>lowRam)
+  while (fromFile && pointBufferSize()*sizeof(point)>lowRam)
     this_thread::sleep_for(chrono::milliseconds(1));
 }
 
@@ -375,7 +375,7 @@ void WolkenThread::operator()(int thread)
 	  unsleep(thread);
 	}
 	else
-	  embufferPoint(point);
+	  embufferPoint(point,false);
       }
     }
     if (threadCommand==TH_PAUSE)

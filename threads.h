@@ -89,7 +89,7 @@ void enqueueAction(ThreadAction a);
 ThreadAction dequeueResult();
 bool actionQueueEmpty();
 bool resultQueueEmpty();
-void embufferPoint(LasPoint point);
+void embufferPoint(LasPoint point,bool fromFile);
 LasPoint debufferPoint();
 size_t pointBufferSize();
 bool pointBufferEmpty();

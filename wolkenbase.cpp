@@ -104,7 +104,7 @@ int main(int argc,char **argv)
     for (j=0;j<files[i].numberPoints();j++)
     {
       lPoint=files[i].readPoint(j);
-      embufferPoint(lPoint);
+      embufferPoint(lPoint,true);
     }
     cout<<files[i].numberPoints()<<" points, "<<pointBufferSize()<<" points in buffer\n";
     cout<<octStore.getNumBuffers()<<" buffers, "<<octStore.getNumBlocks()<<" blocks\n";
