@@ -95,7 +95,6 @@ int main(int argc,char **argv)
     lPoint.write(testFile);
   if (nthreads<1)
     nthreads=1;
-  nthreads=3;
   octStore.open("store.oct",nthreads+relprime(nthreads));
   octStore.resize(8*nthreads+1);
   startThreads(nthreads);
