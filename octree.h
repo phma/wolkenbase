@@ -36,9 +36,9 @@
  * equal to or slightly smaller than BLOCKSIZE, which is a power of 2 at least
  * 4096, and RECORDS<=1000.
  */
-#define shared_mutex mutex
-#define lock_shared lock
-#define unlock_shared unlock
+//#define shared_mutex mutex
+//#define lock_shared lock
+//#define unlock_shared unlock
 
 class OctStore;
 
