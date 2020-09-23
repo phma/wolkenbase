@@ -337,6 +337,7 @@ int thisThread()
 void WolkenThread::operator()(int thread)
 {
   int i=0,nPoints=0;
+  long long blknum;
   ThreadAction act;
   LasPoint point,gotPoint;
   startMutex.lock();
@@ -360,13 +361,21 @@ void WolkenThread::operator()(int thread)
 	sleep(thread);
       else
       {
-	nPoints++;
-	octStore.put(point);
-	gotPoint=octStore.get(point.location);
-	if (gotPoint.isEmpty())
-	  cout<<"Point missing\n";
-	octStore.disown();
-	unsleep(thread);
+	blknum=octRoot.findBlock(point.location);
+	if (blknum<0)
+	  blknum+=threadStatus.size();
+	if (blknum%threadStatus.size()==thread)
+	{
+	  nPoints++;
+	  octStore.put(point);
+	  gotPoint=octStore.get(point.location);
+	  if (gotPoint.isEmpty())
+	    cout<<"Point missing\n";
+	  octStore.disown();
+	  unsleep(thread);
+	}
+	else
+	  embufferPoint(point);
       }
     }
     if (threadCommand==TH_PAUSE)
