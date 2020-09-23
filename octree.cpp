@@ -36,7 +36,7 @@ double lowRam;
 set<int> watchedBuffers;
 mutex msgMutex;
 shared_mutex cubeMutex;
-multimap<int,Cube> lockedCubes,readLockedCubes;
+map<int,Cube> lockedCubes,readLockedCubes;
 
 #if defined(_WIN32) || defined(__CYGWIN__)
 // Linux and BSD have this function in the library; Windows doesn't.
@@ -758,18 +758,18 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
 }
 
 OctBuffer *OctStore::getBlock(xyz key,bool writing)
-// Leaves the cube read-locked.
+// Leaves the cube locked.
 {
   OctBuffer *ret;
   long long blknum;
   bool gotCubeLock=false;
   while (!gotCubeLock)
   {
-    setBlockMutex.lock_shared();
-    gotCubeLock=readLockCube(octRoot.findCube(key));
+    setBlockMutex.lock();
+    gotCubeLock=lockCube(octRoot.findCube(key));
     if (gotCubeLock)
       blknum=octRoot.findBlock(key);
-    setBlockMutex.unlock_shared();
+    setBlockMutex.unlock();
   }
   if (blknum>=0)
   {
@@ -800,9 +800,9 @@ void OctStore::split(long long block,xyz camelStraw)
   bool gotCubeLock=false;
   while (!gotCubeLock)
   {
-    setBlockMutex.lock_shared();
+    setBlockMutex.lock();
     gotCubeLock=lockCube(thisCube=octRoot.findCube(camelStraw));
-    setBlockMutex.unlock_shared();
+    setBlockMutex.unlock();
     if (!gotCubeLock)
     {
       unlockCube();
