@@ -105,6 +105,11 @@ int main(int argc,char **argv)
     {
       lPoint=files[i].readPoint(j);
       embufferPoint(lPoint,true);
+      if (j%987==0)
+      {
+	cout<<j<<"    \r";
+	cout.flush();
+      }
     }
     cout<<files[i].numberPoints()<<" points, "<<pointBufferSize()<<" points in buffer\n";
     cout<<octStore.getNumBuffers()<<" buffers, "<<octStore.getNumBlocks()<<" blocks\n";
