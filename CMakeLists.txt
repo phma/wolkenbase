@@ -27,14 +27,15 @@ endif ()
 find_package(Boost COMPONENTS program_options)
 find_package(Threads)
 
+# point.cpp must be before las.cpp for noPoint to be initialized to nanxyz.
 add_executable(wolkenbase angle.cpp binio.cpp boundrect.cpp eisenstein.cpp
-               flowsnake.cpp freeram.cpp las.cpp ldecimal.cpp
-               octree.cpp point.cpp ps.cpp quaternion.cpp
+               flowsnake.cpp freeram.cpp point.cpp las.cpp ldecimal.cpp
+               octree.cpp ps.cpp quaternion.cpp
                random.cpp relprime.cpp shape.cpp testpattern.cpp threads.cpp wolkenbase.cpp)
 
 add_executable(wolkentest angle.cpp binio.cpp boundrect.cpp eisenstein.cpp
-               flowsnake.cpp freeram.cpp las.cpp ldecimal.cpp
-               octree.cpp point.cpp ps.cpp quaternion.cpp
+               flowsnake.cpp freeram.cpp point.cpp las.cpp ldecimal.cpp
+               octree.cpp ps.cpp quaternion.cpp
                random.cpp relprime.cpp shape.cpp testpattern.cpp threads.cpp wolkentest.cpp)
 
 if (${Boost_FOUND})
