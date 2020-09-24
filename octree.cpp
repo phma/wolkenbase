@@ -793,14 +793,20 @@ OctBuffer *OctStore::getBlock(xyz key,bool writing)
 {
   OctBuffer *ret;
   long long blknum;
+  Cube cube;
   bool gotCubeLock=false;
   while (!gotCubeLock)
   {
-    setBlockMutex.lock();
-    gotCubeLock=lockCube(octRoot.findCube(key));
+    setBlockMutex.lock_shared();
+    cube=octRoot.findCube(key);
+    setBlockMutex.unlock_shared();
+    gotCubeLock=lockCube(cube);
     if (gotCubeLock)
+    {
+      setBlockMutex.lock_shared();
       blknum=octRoot.findBlock(key);
-    setBlockMutex.unlock();
+      setBlockMutex.unlock_shared();
+    }
   }
   if (blknum>=0)
   {
@@ -831,9 +837,9 @@ void OctStore::split(long long block,xyz camelStraw)
   bool gotCubeLock=false;
   while (!gotCubeLock)
   {
-    setBlockMutex.lock();
+    setBlockMutex.lock_shared();
     gotCubeLock=lockCube(thisCube=octRoot.findCube(camelStraw));
-    setBlockMutex.unlock();
+    setBlockMutex.unlock_shared();
     if (!gotCubeLock)
     {
       unlockCube();
