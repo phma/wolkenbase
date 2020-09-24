@@ -90,7 +90,7 @@ ThreadAction dequeueResult();
 bool actionQueueEmpty();
 bool resultQueueEmpty();
 void embufferPoint(LasPoint point,bool fromFile);
-LasPoint debufferPoint();
+LasPoint debufferPoint(int thread);
 size_t pointBufferSize();
 bool pointBufferEmpty();
 void sleepDead(int thread);

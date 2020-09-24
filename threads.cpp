@@ -50,7 +50,7 @@ vector<vector<int> > heldTriangles; // one list of triangles per thread
 double stageTolerance;
 double minArea;
 queue<ThreadAction> actQueue,resQueue;
-vector<LasPoint> pointBuffer;
+map<int,vector<LasPoint> > pointBuffer;
 int bufferPos=0;
 int currentAction;
 map<thread::id,int> threadNums;
@@ -158,27 +158,31 @@ bool resultQueueEmpty()
 
 void embufferPoint(LasPoint point,bool fromFile)
 {
-  int sz;
+  int sz,thread;
+  thread=octRoot.findBlock(point.location);
+  if (thread<0)
+    thread+=threadStatus.size();
+  thread%=threadStatus.size();
   bufferMutex.lock();
-  pointBuffer.push_back(point);
-  sz=pointBuffer.size();
+  pointBuffer[thread].push_back(point);
+  sz=pointBuffer[thread].size();
   bufferPos=(bufferPos+relprime(sz))%sz;
-  swap(pointBuffer.back(),pointBuffer[bufferPos]);
+  swap(pointBuffer[thread].back(),pointBuffer[thread][bufferPos]);
   bufferMutex.unlock();
   while (fromFile && pointBufferSize()*sizeof(point)>lowRam)
     this_thread::sleep_for(chrono::milliseconds(1));
 }
 
-LasPoint debufferPoint()
+LasPoint debufferPoint(int thread)
 {
   LasPoint ret;
   bufferMutex.lock();
-  if (pointBuffer.size())
+  if (pointBuffer[thread].size())
   {
-    ret=pointBuffer.back();
-    pointBuffer.pop_back();
-    if (pointBuffer.capacity()>2*pointBuffer.size())
-      pointBuffer.shrink_to_fit();
+    ret=pointBuffer[thread].back();
+    pointBuffer[thread].pop_back();
+    if (pointBuffer[thread].capacity()>2*pointBuffer[thread].size())
+      pointBuffer[thread].shrink_to_fit();
   }
   bufferMutex.unlock();
   return ret;
@@ -186,20 +190,20 @@ LasPoint debufferPoint()
 
 size_t pointBufferSize()
 {
-  size_t sz;
+  size_t sz,sum=0,i;
   bufferMutex.lock();
-  sz=pointBuffer.size();
+  for (i=0;i<pointBuffer.size();i++)
+  {
+    sz=pointBuffer[i].size();
+    sum+=sz;
+  }
   bufferMutex.unlock();
-  return sz;
+  return sum;
 }
 
 bool pointBufferEmpty()
 {
-  size_t sz;
-  bufferMutex.lock();
-  sz=pointBuffer.size();
-  bufferMutex.unlock();
-  return sz==0;
+  return pointBufferSize()==0;
 }
 
 void sleep(int thread)
@@ -317,7 +321,7 @@ void waitForQueueEmpty()
   int i,n;
   do
   {
-    n=actQueue.size()+pointBuffer.size();
+    n=actQueue.size()+pointBufferSize();
     threadStatusMutex.lock_shared();
     for (i=0;i<threadStatus.size();i++)
       if (threadStatus[i]<256)
@@ -348,6 +352,7 @@ void WolkenThread::operator()(int thread)
   }
   threadStatus.push_back(0);
   threadNums[this_thread::get_id()]=thread;
+  pointBuffer[thread];
   startMutex.unlock();
   while (threadCommand!=TH_STOP)
   {
@@ -356,7 +361,7 @@ void WolkenThread::operator()(int thread)
       threadStatusMutex.lock();
       threadStatus[thread]=TH_RUN;
       threadStatusMutex.unlock();
-      point=debufferPoint();
+      point=debufferPoint(thread);
       if (point.isEmpty())
 	sleep(thread);
       else
