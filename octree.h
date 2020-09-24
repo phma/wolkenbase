@@ -123,10 +123,10 @@ public:
   void put(LasPoint pnt,bool splitting=false);
   void dump(std::ofstream &file);
   bool isConsistent();
+  std::shared_mutex setBlockMutex; // lock when adding new blocks to file
 private:
   std::map<int,std::fstream> file;
   std::map<int,std::mutex> fileMutex; // lock when read/writing file
-  std::shared_mutex setBlockMutex; // lock when adding new blocks to file
   std::shared_mutex nowUsedMutex; // lock when updating nowUsed
   std::recursive_mutex splitMutex; // lock when splitting
   std::shared_mutex revMutex; // lock when changing revBlocks

@@ -159,7 +159,9 @@ bool resultQueueEmpty()
 void embufferPoint(LasPoint point,bool fromFile)
 {
   int sz,thread;
+  octStore.setBlockMutex.lock();
   thread=octRoot.findBlock(point.location);
+  octStore.setBlockMutex.unlock();
   if (thread<0)
     thread+=threadStatus.size();
   thread%=threadStatus.size();
