@@ -421,21 +421,32 @@ LasPoint OctBuffer::get(xyz key)
 bool OctBuffer::put(LasPoint pnt)
 // Returns true if put, false if no room.
 {
-  int i,inx=-1;
+  int i,inx=-1,emptyinx=-1;
   xyz key=pnt.location;
   blockMutex.lock();
-  for (i=0;i<2*RECORDS;i++)
-    if (points[i%RECORDS].location==key || (i>=RECORDS && points[i%RECORDS].isEmpty()))
+  for (i=0;i<points.size();i++)
+  {
+    if (points[i].location==key)
     {
-      inx=i%RECORDS;
+      inx=i;
       break;
     }
+    if (points[i].isEmpty())
+      emptyinx=i;
+  }
+  if (inx<0 && emptyinx>=0)
+    inx=emptyinx;
   if (inx>=0)
   {
     if (points[inx].location==key)
       cout<<"point already in octree at "<<key.getx()<<','<<key.gety()<<','<<key.getz()<<endl;
     markDirty();
     points[inx]=pnt;
+  }
+  else if (points.size()<RECORDS)
+  {
+    inx=points.size();
+    points.push_back(pnt);
   }
   blockMutex.unlock();
   return inx>=0;
