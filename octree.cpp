@@ -37,6 +37,7 @@ set<int> watchedBuffers;
 mutex msgMutex;
 shared_mutex cubeMutex;
 map<int,Cube> lockedCubes,readLockedCubes;
+vector<xyz> alreadyInOctree;
 
 #if defined(_WIN32) || defined(__CYGWIN__)
 // Linux and BSD have this function in the library; Windows doesn't.
@@ -445,7 +446,7 @@ bool OctBuffer::put(LasPoint pnt)
   if (inx>=0)
   {
     if (points[inx].location==key)
-      cout<<"point already in octree at "<<key.getx()<<','<<key.gety()<<','<<key.getz()<<endl;
+      alreadyInOctree.push_back(key);
     markDirty();
     points[inx]=pnt;
   }

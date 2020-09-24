@@ -69,6 +69,7 @@ private:
 extern Octree octRoot;
 extern OctStore octStore;
 extern double lowRam;
+extern std::vector<xyz> alreadyInOctree;
 
 class OctBuffer
 {

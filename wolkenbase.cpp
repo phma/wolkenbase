@@ -111,6 +111,7 @@ int main(int argc,char **argv)
   }
   waitForQueueEmpty();
   cout<<"All points in octree\n";
+  cout<<alreadyInOctree.size()<<" duplicate points\n";
   cout<<octStore.getNumBuffers()<<" buffers, "<<octStore.getNumBlocks()<<" blocks\n";
   waitForThreads(TH_STOP);
   cout<<"Dumping octree\n";
