@@ -113,6 +113,8 @@ void LasPoint::write(ostream &file)
   writelefloat(file,zDir);
 }
 
+const LasPoint noPoint;
+
 string read16(istream &file)
 {
   char buf[24];

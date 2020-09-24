@@ -3,7 +3,7 @@
 /* las.h - laser point cloud files                    */
 /*                                                    */
 /******************************************************/
-/* Copyright 2019 Pierre Abbat.
+/* Copyright 2019,2020 Pierre Abbat.
  * This file is part of Wolkenbase.
  * 
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -53,6 +53,8 @@ public:
   void write(std::ostream &file);
   friend class OctBlock;
 };
+
+extern const LasPoint noPoint;
 
 class VariableLengthRecord
 // Used for extended variable length records as well.
