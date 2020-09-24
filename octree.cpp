@@ -458,7 +458,7 @@ int OctBuffer::dump(ofstream &file,Cube cube)
   xyz ctr=cube.getCenter();
   file<<'('<<ldecimal(ctr.getx())<<','<<ldecimal(ctr.gety())<<','<<ldecimal(ctr.getz())<<")±";
   file<<ldecimal(cube.getSide()/2)<<' ';
-  for (i=0;i<RECORDS;i++)
+  for (i=0;i<points.size();i++)
   {
     nPoints+=points[i].location.isfinite();
     nIn+=cube.in(points[i].location);
