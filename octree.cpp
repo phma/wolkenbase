@@ -453,6 +453,11 @@ bool OctBuffer::put(LasPoint pnt)
   {
     inx=points.size();
     points.push_back(pnt);
+    if (points.capacity()>RECORDS)
+    {
+      points.shrink_to_fit();
+      points.reserve(RECORDS);
+    }
   }
   blockMutex.unlock();
   return inx>=0;
