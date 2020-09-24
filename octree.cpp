@@ -838,20 +838,20 @@ void OctStore::split(long long block,xyz camelStraw)
     currentBlock->blockMutex.lock();
     tempPoints=currentBlock->points;
     currentBlock->markDirty();
-    for (i=0;i<RECORDS;i++)
+    for (i=0;i<currentBlock->points.size();i++)
     {
       if (currentBlock->points[i].location.isfinite())
 	++fullth;
-      currentBlock->points[i].location=nanxyz;
     }
+    currentBlock->points.clear();
     currentBlock->blockMutex.unlock();
     if (fullth<RECORDS)
       break;
     octRoot.split(camelStraw);
-    for (i=0;i<RECORDS;i++)
+    for (i=0;i<tempPoints.size();i++)
       put(tempPoints[i],true);
   }
-  for (i=0;i<RECORDS;i++)
+  for (i=0;i<tempPoints.size();i++)
     put(tempPoints[i],true);
 #if DEBUG_STORE
   cout<<"Block "<<block<<" is split\n";
