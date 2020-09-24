@@ -397,15 +397,19 @@ void OctBuffer::flush()
 
 LasPoint OctBuffer::get(xyz key)
 {
-  int i,inx=-1;
+  int i,inx=-1,emptyinx=-1;
   LasPoint ret;
   blockMutex.lock_shared();
-  for (i=0;i<2*RECORDS;i++)
-    if (points[i%RECORDS].location==key || (i>=RECORDS && points[i%RECORDS].isEmpty()))
+  for (i=0;i<points.size();i++)
+  {
+    if (points[i].location==key)
     {
-      inx=i%RECORDS;
+      inx=i;
       break;
     }
+    if (points[i].isEmpty())
+      emptyinx=i;
+  }
   if (inx>=0)
   {
     ret=points[inx];
