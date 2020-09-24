@@ -283,10 +283,14 @@ void OctBuffer::write()
   store->file[f].seekp(BLOCKSIZE*b);
   //cout<<store->file.rdstate()<<' '<<ios::failbit<<endl;
   store->file[f].clear();
-  for (i=0;i<RECORDS;i++)
+  for (i=0;i<points.size() && i<RECORDS;i++)
   {
     points[i].write(store->file[f]);
     nPoints+=!points[i].isEmpty();
+  }
+  for (;i<RECORDS;i++)
+  {
+    noPoint.write(store->file[f]);
   }
   dirty=false;
   for (i=RECORDS*LASPOINT_SIZE;i<BLOCKSIZE;i++)

@@ -50,7 +50,7 @@ public:
   bool isEmpty();
 //private:
   void read(std::istream &file);
-  void write(std::ostream &file);
+  void write(std::ostream &file) const;
   friend class OctBlock;
 };
 

@@ -84,7 +84,7 @@ void LasPoint::read(istream &file)
   zDir=readlefloat(file);
 }
 
-void LasPoint::write(ostream &file)
+void LasPoint::write(ostream &file) const
 {
   writeledouble(file,location.getx());
   writeledouble(file,location.gety());
