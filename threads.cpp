@@ -331,6 +331,8 @@ void waitForQueueEmpty()
     threadStatusMutex.unlock_shared();
     if (freeRam()<lowRam/4)
       cout<<"aoeu\n";
+    cout<<n<<"    \r";
+    cout.flush();
     this_thread::sleep_for(chrono::milliseconds(30));
   } while (n);
 }
