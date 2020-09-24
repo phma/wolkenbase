@@ -349,6 +349,7 @@ void OctBuffer::read(long long block)
 {
   int i,f=block%store->nFiles,b=block/store->nFiles;
   int nPoints=0;
+  LasPoint pnt;
   blockMutex.lock();
   store->fileMutex[f].lock();
 #if DEBUG_STORE
@@ -356,19 +357,24 @@ void OctBuffer::read(long long block)
 #endif
   blockNumber=block;
   store->file[f].seekg(BLOCKSIZE*b);
+  points.clear();
   for (i=0;i<RECORDS;i++)
   {
-    points[i].read(store->file[f]);
-    nPoints+=!points[i].isEmpty();
+    pnt.read(store->file[f]);
+    if (!pnt.isEmpty())
+    {
+      points.push_back(pnt);
+      nPoints++;
+    }
   }
   store->file[f].clear();
   /* If a new block is read in, all points will be at (0,0,0).
    * In any other case (including all points being at (NAN,NAN,NAN)),
    * points' locations will be unequal. (NAN is not equal to NAN.)
    */
-  if (points[0].location==points[1].location)
-    for (i=0;i<RECORDS;i++)
-      points[i].location=nanxyz;
+  if (points.size()>1 && points[0].location==points[1].location)
+    points.clear();
+  points.shrink_to_fit();
   if ((blockNumber>=WATCH_BLOCK_START && blockNumber<WATCH_BLOCK_END) || watchedBuffers.count(bufferNumber))
   {
     msgMutex.lock();
