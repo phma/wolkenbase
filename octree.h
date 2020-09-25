@@ -135,7 +135,7 @@ private:
   std::shared_mutex bufferMutex; // lock when adding new buffers to store
   long long nowUsed;
   int nFiles;
-  int leastRecentlyUsed();
+  int leastRecentlyUsed(int thread,int nthreads);
   long long nBlocks;
   int newBlock();
   OctBuffer *getBlock(long long block,bool mustExist=false);

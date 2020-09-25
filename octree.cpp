@@ -639,7 +639,7 @@ void OctStore::dump(ofstream &file)
   file<<octRoot.dump(file)<<" total points\n";
 }
 
-int OctStore::leastRecentlyUsed()
+int OctStore::leastRecentlyUsed(int thread,int nthreads)
 {
   int i,age,maxAge=-1,ret;
   map<long long,int>::iterator j;
@@ -712,7 +712,7 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
     {
       while (!gotBlock)
       {
-	lru=(leastRecentlyUsed()+i)%blocks.size();
+	lru=(leastRecentlyUsed(thisThread(),nThreads())+i)%blocks.size();
 	bufnum=lru;
 	bufferMutex.lock_shared();
 	assert(bufnum>=0);
