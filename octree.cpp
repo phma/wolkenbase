@@ -662,6 +662,7 @@ int OctStore::leastRecentlyUsed(int thread,int nthreads)
 	ret=i;
       }
     }
+  assert(ret>=0);
   nowUsedMutex.unlock_shared();
   return ret;
 }
