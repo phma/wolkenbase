@@ -663,7 +663,7 @@ int OctStore::leastRecentlyUsed(int thread,int nthreads)
     for (;ret<0 && j!=lastUsedMap.end();++j)
     {
       i=j->second;
-      if ((blocks[i].blockNumber<0 || blocks[i].blockNumber%nthreads==thread) && !blocks[i].inTransit)
+      if (!blocks[i].inTransit && blocks[i].owningThread.size()==0)
 	ret=i;
     }
   else
