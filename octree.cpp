@@ -639,6 +639,20 @@ void OctStore::dump(ofstream &file)
   file<<octRoot.dump(file)<<" total points\n";
 }
 
+void OctStore::dumpBuffers()
+{
+  int i;
+  for (i=0;i<blocks.size();i++)
+  {
+    cout<<"buf "<<i<<" blk "<<blocks[i].blockNumber<<" lastUsed "<<blocks[i].lastUsed;
+    if (blocks[i].dirty)
+      cout<<" dirty";
+    if (blocks[i].inTransit)
+      cout<<" inTransit";
+    cout<<' '<<blocks[i].points.size()<<" points\n";
+  }
+}
+
 int OctStore::leastRecentlyUsed(int thread,int nthreads)
 {
   int i,age,maxAge=-1,ret=-1;
@@ -662,6 +676,8 @@ int OctStore::leastRecentlyUsed(int thread,int nthreads)
 	ret=i;
       }
     }
+  if (ret<0)
+    dumpBuffers();
   assert(ret>=0);
   nowUsedMutex.unlock_shared();
   return ret;

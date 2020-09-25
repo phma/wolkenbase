@@ -122,6 +122,7 @@ public:
   LasPoint get(xyz key);
   void put(LasPoint pnt,bool splitting=false);
   void dump(std::ofstream &file);
+  void dumpBuffers();
   bool isConsistent();
   std::shared_mutex setBlockMutex; // lock when adding new blocks to file
 private:
