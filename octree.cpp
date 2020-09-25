@@ -667,6 +667,11 @@ int OctStore::leastRecentlyUsed(int thread,int nthreads)
 {
   int i,age,maxAge=-1,ret=-1;
   map<long long,int>::iterator j;
+  if (thread<0) // called by dump in the main thread after worker threads have finished
+  {
+    thread=0;
+    nthreads=1;
+  }
   nowUsedMutex.lock_shared();
   j=lastUsedMap.begin();
   if (lastUsedMap.size())
@@ -716,6 +721,7 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
   streampos fileSize;
   int lru=-1,bufnum=-1,i=0,f=block%nFiles,b=block/nFiles;
   bool found=false,transitResult,ownResult;
+  int t=thisThread();
   int gotBlock=0;
   OctBuffer *buf;
   double fram;
@@ -739,14 +745,15 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
     if (found)
     {
       bufnum=revBlocks[block];
-      blocks[bufnum].own();
+      if (t>=0)
+	blocks[bufnum].own();
     }
     revMutex.unlock_shared();
     if (!found)
     {
       while (!gotBlock)
       {
-	lru=leastRecentlyUsed(thisThread(),nThreads());
+	lru=leastRecentlyUsed(t,nThreads());
 	bufnum=lru;
 	bufferMutex.lock_shared();
 	assert(bufnum>=0);
@@ -763,7 +770,10 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
 	{
 	  transitResult=setTransit(bufnum,true);
 	  if (transitResult)
-	    ownResult=buf->ownAlone();
+	    if (t>=0)
+	      ownResult=buf->ownAlone();
+	    else
+	      ownResult=true;
 	  if (transitResult && ownResult)
 	    gotBlock=1; // reuse buffer
 	  else
