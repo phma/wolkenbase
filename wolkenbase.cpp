@@ -85,7 +85,7 @@ int main(int argc,char **argv)
     cout<<"Version "<<(ver>>8)<<'.'<<(ver&255)<<' ';
     cout<<files[i].numberPoints()<<" points, format "<<files[i].getPointFormat()<<endl;
   }
-  lowRam=freeRam()/7;
+  lowRam=freeRam();
   octRoot.sizeFit(limits);
   center=octRoot.getCenter();
   cout<<'('<<ldecimal(center.getx())<<','<<ldecimal(center.gety())<<','<<ldecimal(center.getz())<<")±";
