@@ -641,12 +641,17 @@ void OctStore::dump(ofstream &file)
 
 int OctStore::leastRecentlyUsed(int thread,int nthreads)
 {
-  int i,age,maxAge=-1,ret;
+  int i,age,maxAge=-1,ret=-1;
   map<long long,int>::iterator j;
   nowUsedMutex.lock_shared();
   j=lastUsedMap.begin();
   if (lastUsedMap.size())
-    ret=j->second;
+    for (;ret<0 && j!=lastUsedMap.end();++j)
+    {
+      i=j->second;
+      if ((blocks[i].blockNumber<0 || blocks[i].blockNumber%nthreads==thread) && !blocks[i].inTransit)
+	ret=i;
+    }
   else
     for (i=0;i<blocks.size();i++)
     {
@@ -712,7 +717,7 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
     {
       while (!gotBlock)
       {
-	lru=(leastRecentlyUsed(thisThread(),nThreads())+i)%blocks.size();
+	lru=leastRecentlyUsed(thisThread(),nThreads());
 	bufnum=lru;
 	bufferMutex.lock_shared();
 	assert(bufnum>=0);
@@ -724,14 +729,14 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
 	 * If fram<lowRam/2, wait until the LRU buffer can be used.
 	 */
 	if (fram>lowRam)
-	  gotBlock=2;
+	  gotBlock=2; // new buffer
 	else if (fram>lowRam/2)
 	{
 	  transitResult=setTransit(bufnum,true);
 	  if (transitResult)
 	    ownResult=buf->ownAlone();
 	  if (transitResult && ownResult)
-	    gotBlock=1;
+	    gotBlock=1; // reuse buffer
 	  else
 	  {
 	    if (transitResult)
@@ -753,7 +758,7 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
 	    ++i;
 	  }
 	}
-      }
+      } // while (!gotBlock)
       if (gotBlock==1)
       {
 	revMutex.lock();
