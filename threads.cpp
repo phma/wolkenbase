@@ -342,6 +342,12 @@ int thisThread()
   return threadNums[this_thread::get_id()];
 }
 
+int nThreads()
+// Returns number of worker threads, not counting main thread.
+{
+  return threadStatus.size();
+}
+
 void WolkenThread::operator()(int thread)
 {
   int i=0,nPoints=0;

@@ -99,6 +99,7 @@ int getThreadStatus();
 void waitForThreads(int newStatus);
 void waitForQueueEmpty();
 int thisThread();
+int nThreads();
 
 class WolkenThread
 {
