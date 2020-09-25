@@ -642,6 +642,7 @@ void OctStore::dump(ofstream &file)
 void OctStore::dumpBuffers()
 {
   int i;
+  set<int>::iterator j;
   for (i=0;i<blocks.size();i++)
   {
     cout<<"buf "<<i<<" blk "<<blocks[i].blockNumber<<" lastUsed "<<blocks[i].lastUsed;
@@ -649,7 +650,14 @@ void OctStore::dumpBuffers()
       cout<<" dirty";
     if (blocks[i].inTransit)
       cout<<" inTransit";
-    cout<<' '<<blocks[i].points.size()<<" points\n";
+    cout<<' '<<blocks[i].points.size()<<" points";
+    if (blocks[i].owningThread.size())
+    {
+      cout<<" owned by";
+      for (j=blocks[i].owningThread.begin();j!=blocks[i].owningThread.end();++j)
+	cout<<' '<<*j;
+    }
+    cout<<endl;
   }
 }
 
