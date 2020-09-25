@@ -315,6 +315,7 @@ void OctBuffer::markDirty()
 void OctBuffer::own()
 {
   int t=thisThread();
+  assert(t>=0);
   store->ownMutex.lock();
   owningThread.insert(t);
   store->ownMap[t].push_back(bufferNumber);
@@ -325,6 +326,7 @@ bool OctBuffer::ownAlone()
 {
   bool ret;
   int t=thisThread();
+  assert(t>=0);
   store->ownMutex.lock();
   ret=owningThread.size()==owningThread.count(t);
   if (ret)
@@ -694,15 +696,17 @@ int OctStore::leastRecentlyUsed(int thread,int nthreads)
 int OctStore::newBlock()
 // The new block is owned.
 {
+  int t=thisThread();
   bufferMutex.lock();
   int i=blocks.size();
   OctBuffer *buf=&blocks[i];
   bufferMutex.unlock();
+  assert(t>=0);
   ownMutex.lock();
   buf->store=this;
   buf->bufferNumber=i;
-  buf->owningThread.insert(thisThread());
-  ownMap[thisThread()].push_back(i);
+  buf->owningThread.insert(t);
+  ownMap[t].push_back(i);
   ownMutex.unlock();
   return i;
 }
