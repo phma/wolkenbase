@@ -37,7 +37,6 @@ namespace cr=std::chrono;
 
 mutex actMutex;
 mutex startMutex;
-mutex opTimeMutex;
 mutex bufferMutex;
 shared_mutex threadStatusMutex;
 mutex metaMutex;
@@ -46,8 +45,6 @@ atomic<int> threadCommand;
 vector<thread> threads;
 vector<int> threadStatus; // Bit 8 indicates whether the thread is sleeping.
 vector<double> sleepTime;
-vector<int> triangleHolders; // one per triangle
-vector<vector<int> > heldTriangles; // one list of triangles per thread
 double stageTolerance;
 double minArea;
 queue<ThreadAction> actQueue,resQueue;
@@ -57,15 +54,6 @@ int currentAction;
 map<thread::id,int> threadNums;
 
 cr::steady_clock clk;
-vector<int> cleanBuckets;
-/* Indicates whether the buckets used by areaDone are clean or dirty.
- * A bucket is clean if the last thing done was add it up; it is dirty
- * if a triangle whose area is added in the bucket has changed
- * since the bucket was added up.
- */
-vector<double> allBuckets,doneBuckets,doneq2Buckets;
-int opcount,trianglesToPaint;
-double opTime; // time for triop and edgeop, in milliseconds
 const char statusNames[][8]=
 {
   "None","Run","Pause","Wait","Stop"
@@ -88,9 +76,7 @@ void startThreads(int n)
   threadCommand=TH_WAIT;
   openThreadLog();
   logStartThread();
-  heldTriangles.resize(n);
   sleepTime.resize(n);
-  opTime=0;
   threadNums[this_thread::get_id()]=-1;
   for (i=0;i<n;i++)
   {
@@ -214,8 +200,6 @@ bool pointBufferEmpty()
 void sleep(int thread)
 {
   sleepTime[thread]+=1+sleepTime[thread]/1e3;
-  if (sleepTime[thread]>opTime*sleepTime.size()+1000)
-    sleepTime[thread]=opTime*sleepTime.size()+1000;
   threadStatusMutex.lock();
   threadStatus[thread]|=256;
   threadStatusMutex.unlock();
@@ -253,23 +237,6 @@ double maxSleepTime()
     if (sleepTime[i]>max)
       max=sleepTime[i];
   return max;
-}
-
-void randomizeSleep()
-{
-  int i;
-  for (i=0;i<sleepTime.size();i++)
-    sleepTime[i]=rng.usrandom()*opTime*sleepTime.size()/32768;
-}
-
-void updateOpTime(cr::nanoseconds duration)
-{
-  double time=duration.count()/1e6;
-  opTimeMutex.lock();
-  opTime*=0.999;
-  if (time>opTime)
-    opTime=time;
-  opTimeMutex.unlock();
 }
 
 void setThreadCommand(int newStatus)

@@ -66,19 +66,14 @@ struct ThreadAction
 {
   int opcode;
   int param0;
-  double param1; // measuring unit or tolerance
-  double param2; // density
+  double param1;
+  double param2;
   std::string filename;
   int flags;
-  /* Bit 0: write empty triangles when exporting TIN
-   */
   int result;
 };
 
 extern std::mutex adjLog;
-extern double stageTolerance,minArea;
-extern double opTime;
-extern int opcount,trianglesToPaint;
 extern int currentAction;
 extern std::chrono::steady_clock clk;
 
