@@ -23,6 +23,8 @@
 #cmakedefine HAVE_SYS_RESOURCE_H
 #cmakedefine HAVE_SYS_SYSINFO_H
 #cmakedefine HAVE_SYS_SYSCTL_H
+#cmakedefine Mitobrevno_FOUND
+#cmakedefine ENABLE_MITOBREVNO
 #define SYSTEM_NAME @CMAKE_SYSTEM_NAME@
 #define SYSTEM_VERSION @CMAKE_SYSTEM_VERSION@
 #define VERSION "@WOLKENBASE_VERSION@"

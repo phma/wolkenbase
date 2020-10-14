@@ -24,7 +24,11 @@ if (${FORCE_COLORED_OUTPUT})
   endif ()
 endif ()
 
+option(ENABLE_MITOBREVNO "Enable debugging with Mitobrevno if found." FALSE)
+
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 find_package(Boost COMPONENTS program_options)
+find_package(Mitobrevno)
 find_package(Threads)
 
 # point.cpp must be before las.cpp for noPoint to be initialized to nanxyz.
@@ -42,6 +46,9 @@ if (${Boost_FOUND})
 target_link_libraries(wolkenbase ${Boost_LIBRARIES})
 include_directories(${Boost_INCLUDE_DIR})
 endif (${Boost_FOUND})
+if (${Mitobrevno_FOUND})
+target_link_libraries(wolkenbase ${Mitobrevno_LIBRARY})
+endif (${Mitobrevno_FOUND})
 target_link_libraries(wolkentest ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(wolkenbase ${CMAKE_THREAD_LIBS_INIT})
 target_compile_definitions(wolkenbase PUBLIC _USE_MATH_DEFINES)
@@ -63,6 +70,9 @@ set(WOLKENBASE_PATCH_VERSION 0)
 set(WOLKENBASE_VERSION ${WOLKENBASE_MAJOR_VERSION}.${WOLKENBASE_MINOR_VERSION}.${WOLKENBASE_PATCH_VERSION})
 
 include_directories(${PROJECT_BINARY_DIR})
+if (${Mitobrevno_FOUND})
+include_directories(${Mitobrevno_INCLUDE_DIR})
+endif (${Mitobrevno_FOUND})
 configure_file (config.h.in config.h)
 
 set(CPACK_PACKAGE_VERSION_MAJOR ${WOLKENBASE_MAJOR_VERSION})
