@@ -34,6 +34,7 @@
 #include "threads.h"
 #include "relprime.h"
 #include "ldecimal.h"
+#include "brevno.h"
 #include "octree.h"
 #include "freeram.h"
 using namespace std;
@@ -109,6 +110,7 @@ int main(int argc,char **argv)
       {
 	cout<<j<<"    \r";
 	cout.flush();
+	writeBufLog();
       }
     }
     cout<<files[i].numberPoints()<<" points, "<<pointBufferSize()<<" points in buffer\n";
@@ -122,5 +124,6 @@ int main(int argc,char **argv)
   cout<<"Dumping octree\n";
   octStore.dump(dumpFile);
   joinThreads();
+  writeBufLog();
   return 0;
 }

@@ -28,6 +28,7 @@
 #include "angle.h"
 #include "random.h"
 #include "relprime.h"
+#include "brevno.h"
 #include "las.h"
 #include "freeram.h"
 #include "octree.h"
@@ -85,6 +86,8 @@ void startThreads(int n)
 {
   int i;
   threadCommand=TH_WAIT;
+  openThreadLog();
+  logStartThread();
   heldTriangles.resize(n);
   sleepTime.resize(n);
   opTime=0;
@@ -333,6 +336,7 @@ void waitForQueueEmpty()
       //cout<<"aoeu\n";
     cout<<n<<"    \r";
     cout.flush();
+    writeBufLog();
     this_thread::sleep_for(chrono::milliseconds(30));
   } while (n);
 }
@@ -354,6 +358,7 @@ void WolkenThread::operator()(int thread)
   long long blknum;
   ThreadAction act;
   LasPoint point,gotPoint;
+  logStartThread();
   startMutex.lock();
   if (threadStatus.size()!=thread)
   {
