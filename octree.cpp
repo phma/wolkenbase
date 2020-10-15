@@ -23,6 +23,7 @@
 #include <cmath>
 #include "ldecimal.h"
 #include "octree.h"
+#include "brevno.h"
 #include "freeram.h"
 #define DEBUG_STORE 0
 #define DEBUG_LOCK 0
@@ -891,6 +892,7 @@ void OctStore::split(long long block,xyz camelStraw)
     }
   }
   currentBlock=getBlock(block);
+  logBeginSplit(currentBlock->bufferNumber,block);
 #if DEBUG_STORE
   cout<<"Splitting block "<<block<<endl;
 #endif
@@ -915,6 +917,7 @@ void OctStore::split(long long block,xyz camelStraw)
   }
   for (i=0;i<tempPoints.size();i++)
     put(tempPoints[i],true);
+  logEndSplit(currentBlock->bufferNumber,block);
 #if DEBUG_STORE
   cout<<"Block "<<block<<" is split\n";
 #endif

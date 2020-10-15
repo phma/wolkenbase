@@ -35,7 +35,7 @@ void openThreadLog()
   describeEvent(MB_BEGIN_SPLIT,"split block");
   describeParam(MB_BEGIN_SPLIT,0,"buffer");
   describeParam(MB_BEGIN_SPLIT,1,"block");
-  formatParam(MB_BEGIN_SPLIT,1,0);
+  formatParam(MB_BEGIN_SPLIT,2,0);
   describeEvent(MB_START_THREAD,"start thread");
   describeEvent(MB_THREAD_STATUS,"thread status");
   describeParam(MB_THREAD_STATUS,0,"status");
