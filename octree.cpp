@@ -279,6 +279,7 @@ void OctBuffer::write()
   int nPoints=0;
   blockMutex.lock_shared();
   store->fileMutex[f].lock();
+  logBeginWrite(bufferNumber,blockNumber);
 #if DEBUG_STORE
   cout<<"Writing block "<<blockNumber<<endl;
 #endif
@@ -304,6 +305,7 @@ void OctBuffer::write()
     watchedBuffers.insert(bufferNumber);
     msgMutex.unlock();
   }
+  logEndWrite(bufferNumber,blockNumber);
   store->fileMutex[f].unlock();
   blockMutex.unlock_shared();
 }
@@ -356,6 +358,7 @@ void OctBuffer::read(long long block)
   LasPoint pnt;
   blockMutex.lock();
   store->fileMutex[f].lock();
+  logBeginRead(bufferNumber,block);
 #if DEBUG_STORE
   cout<<"Reading block "<<block<<" into "<<this<<' '<<this_thread::get_id()<<endl;
 #endif
@@ -386,6 +389,7 @@ void OctBuffer::read(long long block)
     watchedBuffers.erase(bufferNumber);
     msgMutex.unlock();
   }
+  logEndRead(bufferNumber,block);
   store->fileMutex[f].unlock();
   blockMutex.unlock();
 }

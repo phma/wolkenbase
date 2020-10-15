@@ -26,6 +26,10 @@
 #define MB_THREAD_STATUS 0x1000
 #define MB_BEGIN_SPLIT 0x2000
 #define MB_END_SPLIT 0x3000
+#define MB_BEGIN_READ 0x2001
+#define MB_END_READ 0x3001
+#define MB_BEGIN_WRITE 0x2002
+#define MB_END_WRITE 0x3002
 using namespace std;
 using namespace mitobrevno;
 
@@ -36,6 +40,14 @@ void openThreadLog()
   describeParam(MB_BEGIN_SPLIT,0,"buffer");
   describeParam(MB_BEGIN_SPLIT,1,"block");
   formatParam(MB_BEGIN_SPLIT,2,0);
+  describeEvent(MB_BEGIN_READ,"read block");
+  describeParam(MB_BEGIN_READ,0,"buffer");
+  describeParam(MB_BEGIN_READ,1,"block");
+  formatParam(MB_BEGIN_READ,2,0);
+  describeEvent(MB_BEGIN_WRITE,"write block");
+  describeParam(MB_BEGIN_WRITE,0,"buffer");
+  describeParam(MB_BEGIN_WRITE,1,"block");
+  formatParam(MB_BEGIN_WRITE,2,0);
   describeEvent(MB_START_THREAD,"start thread");
   describeEvent(MB_THREAD_STATUS,"thread status");
   describeParam(MB_THREAD_STATUS,0,"status");
@@ -65,6 +77,42 @@ void logEndSplit(int buf,int blk)
   intParams.push_back(buf);
   intParams.push_back(blk);
   logEvent(MB_END_SPLIT,intParams,floatParams);
+}
+
+void logBeginRead(int buf,int blk)
+{
+  vector<int> intParams;
+  vector<float> floatParams;
+  intParams.push_back(buf);
+  intParams.push_back(blk);
+  logEvent(MB_BEGIN_READ,intParams,floatParams);
+}
+
+void logEndRead(int buf,int blk)
+{
+  vector<int> intParams;
+  vector<float> floatParams;
+  intParams.push_back(buf);
+  intParams.push_back(blk);
+  logEvent(MB_END_READ,intParams,floatParams);
+}
+
+void logBeginWrite(int buf,int blk)
+{
+  vector<int> intParams;
+  vector<float> floatParams;
+  intParams.push_back(buf);
+  intParams.push_back(blk);
+  logEvent(MB_BEGIN_WRITE,intParams,floatParams);
+}
+
+void logEndWrite(int buf,int blk)
+{
+  vector<int> intParams;
+  vector<float> floatParams;
+  intParams.push_back(buf);
+  intParams.push_back(blk);
+  logEvent(MB_END_WRITE,intParams,floatParams);
 }
 
 void logThreadStatus(int status)

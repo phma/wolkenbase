@@ -29,6 +29,10 @@ void openThreadLog();
 void logStartThread();
 void logBeginSplit(int buf,int blk);
 void logEndSplit(int buf,int blk);
+void logBeginRead(int buf,int blk);
+void logEndRead(int buf,int blk);
+void logBeginWrite(int buf,int blk);
+void logEndWrite(int buf,int blk);
 void logThreadStatus(int status);
 void writeBufLog();
 #else
@@ -36,6 +40,10 @@ void writeBufLog();
 #define logStartThread()
 #define logBeginSplit(buf,blk)
 #define logEndSplit(buf,blk)
+#define logBeginRead(buf,blk)
+#define logEndRead(buf,blk)
+#define logBeginWrite(buf,blk)
+#define logEndWrite(buf,blk)
 #define logThreadStatus(status)
 #define writeBufLog()
 #endif
