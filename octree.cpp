@@ -460,6 +460,7 @@ bool OctBuffer::put(LasPoint pnt)
   else if (points.size()<RECORDS)
   {
     inx=points.size();
+    markDirty();
     points.push_back(pnt);
     if (points.capacity()>RECORDS)
     {
