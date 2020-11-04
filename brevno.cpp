@@ -23,6 +23,7 @@
 
 #if defined(Mitobrevno_FOUND) && defined(ENABLE_MITOBREVNO)
 #define MB_START_THREAD 0
+#define MB_POINT_NOT_FOUND 1
 #define MB_THREAD_STATUS 0x1000
 #define MB_BEGIN_SPLIT 0x2000
 #define MB_END_SPLIT 0x3000
@@ -48,6 +49,13 @@ void openThreadLog()
   describeParam(MB_BEGIN_WRITE,0,"buffer");
   describeParam(MB_BEGIN_WRITE,1,"block");
   formatParam(MB_BEGIN_WRITE,2,0);
+  describeEvent(MB_POINT_NOT_FOUND,"point not found");
+  describeParam(MB_POINT_NOT_FOUND,0,"buffer");
+  describeParam(MB_POINT_NOT_FOUND,1,"block");
+  describeParam(MB_POINT_NOT_FOUND,2,"x");
+  describeParam(MB_POINT_NOT_FOUND,3,"y");
+  describeParam(MB_POINT_NOT_FOUND,4,"z");
+  formatParam(MB_POINT_NOT_FOUND,2,3);
   describeEvent(MB_START_THREAD,"start thread");
   describeEvent(MB_THREAD_STATUS,"thread status");
   describeParam(MB_THREAD_STATUS,0,"status");
@@ -59,6 +67,18 @@ void logStartThread()
   vector<int> intParams;
   vector<float> floatParams;
   logEvent(MB_START_THREAD,intParams,floatParams);
+}
+
+void logPointNotFound(int buf,int blk,float x,float y,float z)
+{
+  vector<int> intParams;
+  vector<float> floatParams;
+  intParams.push_back(buf);
+  intParams.push_back(blk);
+  floatParams.push_back(x);
+  floatParams.push_back(y);
+  floatParams.push_back(z);
+  logEvent(MB_POINT_NOT_FOUND,intParams,floatParams);
 }
 
 void logBeginSplit(int buf,int blk)

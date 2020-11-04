@@ -27,6 +27,7 @@
 #include "mitobrevno.h"
 void openThreadLog();
 void logStartThread();
+void logPointNotFound(int buf,int blk,float x,float y,float z);
 void logBeginSplit(int buf,int blk);
 void logEndSplit(int buf,int blk);
 void logBeginRead(int buf,int blk);
@@ -38,6 +39,7 @@ void writeBufLog();
 #else
 #define openThreadLog()
 #define logStartThread()
+#define logPointNotFound(buf,blk,x,y,z)
 #define logBeginSplit(buf,blk)
 #define logEndSplit(buf,blk)
 #define logBeginRead(buf,blk)

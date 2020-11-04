@@ -609,7 +609,10 @@ LasPoint OctStore::get(xyz key)
   assert(pBlock);
   ret=pBlock->get(key);
   if (ret.isEmpty())
+  {
     cout<<"Point not found\n";
+    logPointNotFound(pBlock->bufferNumber,pBlock->blockNumber,key.getx(),key.gety(),key.getz());
+  }
   unlockCube();
   return ret;
 }
