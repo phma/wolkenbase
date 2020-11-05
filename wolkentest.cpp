@@ -71,7 +71,9 @@ void testfreeram()
 
 void testflat()
 {
+  ofstream dumpFile("flat.dump");
   flatScene(10,100);
+  octStore.dump(dumpFile);
 }
 
 void testparaboloid()
