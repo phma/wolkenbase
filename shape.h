@@ -47,7 +47,7 @@ class Shape
 {
 public:
   virtual bool in(xyz pnt)=0;
-  virtual xyz closestPoint(Cube cube)=0;
+  virtual xyz closestPoint(Cube cube)=0; // closest point to the shape in the cube
   virtual bool intersect(Cube cube);
 };
 
@@ -83,5 +83,20 @@ public:
 private:
   xy center;
   double radius;
+};
+
+class Column: public Shape
+/* Represents a pixel in the GUI.
+ * An infinitely tall prism with a square cross section.
+ */
+{
+public:
+  Column();
+  Column(xy c,double s);
+  virtual bool in(xyz pnt);
+  virtual xyz closestPoint(Cube cube);
+private:
+  xy center;
+  double side;
 };
 #endif

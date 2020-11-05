@@ -128,3 +128,39 @@ xyz Cylinder::closestPoint(Cube cube)
   ret=xyz(x,y,z);
   return ret;
 }
+
+Column::Column()
+{
+  side=0;
+}
+
+Column::Column(xy c,double s)
+{
+  center=c;
+  side=s;
+}
+
+bool Column::in(xyz pnt)
+{
+  return fabs(center.getx()-pnt.getx())<=side/2 && fabs(center.gety()-pnt.gety())<=side/2;
+}
+
+xyz Column::closestPoint(Cube cube)
+{
+  xyz ret=cube.getCenter();
+  double x=ret.getx(),y=ret.gety(),z=ret.getz();
+  if (fabs(center.getx()-x)<cube.getSide()/2)
+    x=center.getx();
+  else if (center.getx()>x)
+    x+=cube.getSide()/2;
+  else
+    x-=cube.getSide()/2;
+  if (fabs(center.gety()-y)<cube.getSide()/2)
+    y=center.gety();
+  else if (center.gety()>y)
+    y+=cube.getSide()/2;
+  else
+    y-=cube.getSide()/2;
+  ret=xyz(x,y,z);
+  return ret;
+}
