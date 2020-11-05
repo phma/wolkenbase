@@ -42,7 +42,7 @@ bool Cube::in(xyz pnt)
       && fabs(pnt.getz()-center.getz())<=side/2;
 }
 
-bool Shape::intersect(Cube cube)
+bool Shape::intersect(Cube cube) const
 {
   return in(closestPoint(cube));
 }
@@ -58,7 +58,7 @@ Paraboloid::Paraboloid(xyz v,double r)
   radiusCurvature=r;
 }
 
-bool Paraboloid::in(xyz pnt)
+bool Paraboloid::in(xyz pnt) const
 {
   double xydist=dist(xy(vertex),xy(pnt));
   double zdist=vertex.getz()-pnt.getz(); // so because opens downward
@@ -68,7 +68,7 @@ bool Paraboloid::in(xyz pnt)
     return 2*zdist/radiusCurvature>=sqr(xydist/radiusCurvature);
 }
 
-xyz Paraboloid::closestPoint(Cube cube)
+xyz Paraboloid::closestPoint(Cube cube) const
 {
   xyz ret=cube.getCenter();
   double x=ret.getx(),y=ret.gety(),z=ret.getz();
@@ -103,13 +103,13 @@ Cylinder::Cylinder(xy c,double r)
   radius=r;
 }
 
-bool Cylinder::in(xyz pnt)
+bool Cylinder::in(xyz pnt) const
 {
   double xydist=dist(center,xy(pnt));
   return xydist<=radius;
 }
 
-xyz Cylinder::closestPoint(Cube cube)
+xyz Cylinder::closestPoint(Cube cube) const
 {
   xyz ret=cube.getCenter();
   double x=ret.getx(),y=ret.gety(),z=ret.getz();
@@ -140,12 +140,12 @@ Column::Column(xy c,double s)
   side=s;
 }
 
-bool Column::in(xyz pnt)
+bool Column::in(xyz pnt) const
 {
   return fabs(center.getx()-pnt.getx())<=side/2 && fabs(center.gety()-pnt.gety())<=side/2;
 }
 
-xyz Column::closestPoint(Cube cube)
+xyz Column::closestPoint(Cube cube) const
 {
   xyz ret=cube.getCenter();
   double x=ret.getx(),y=ret.gety(),z=ret.getz();

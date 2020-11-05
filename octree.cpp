@@ -141,6 +141,25 @@ Cube Octree::findCube(xyz pnt)
     return ((Octree *)subi)->findCube(pnt);
 }
 
+vector<long long> Octree::findBlocks(const Shape &sh)
+// Find all blocks that intersect the shape.
+{
+  vector<long long> ret,part;
+  int i,j;
+  if (sh.intersect(cube()))
+    for (i=0;i<8;i++)
+    {
+      part.clear();
+      if (sub[i]&1 && sh.intersect(cube(i)))
+	part.push_back(sub[i]>>1);
+      if (!(sub[i]&1) && sub[i])
+	part=((Octree *)sub[i])->findBlocks(sh);
+      for (j=0;j<part.size();j++)
+	ret.push_back(part[j]);
+    }
+  return ret;
+}
+
 void Octree::setBlock(xyz pnt,long long blk)
 {
   int xbit,ybit,zbit,i;

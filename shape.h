@@ -46,9 +46,9 @@ private:
 class Shape
 {
 public:
-  virtual bool in(xyz pnt)=0;
-  virtual xyz closestPoint(Cube cube)=0; // closest point to the shape in the cube
-  virtual bool intersect(Cube cube);
+  virtual bool in(xyz pnt) const=0;
+  virtual xyz closestPoint(Cube cube) const=0; // closest point to the shape in the cube
+  virtual bool intersect(Cube cube) const;
 };
 
 class Paraboloid: public Shape
@@ -60,8 +60,8 @@ class Paraboloid: public Shape
 public:
   Paraboloid();
   Paraboloid(xyz v,double r);
-  virtual bool in(xyz pnt);
-  virtual xyz closestPoint(Cube cube);
+  virtual bool in(xyz pnt) const;
+  virtual xyz closestPoint(Cube cube) const;
 private:
   xyz vertex;
   double radiusCurvature;
@@ -78,8 +78,8 @@ class Cylinder: public Shape
 public:
   Cylinder();
   Cylinder(xy c,double r);
-  virtual bool in(xyz pnt);
-  virtual xyz closestPoint(Cube cube);
+  virtual bool in(xyz pnt) const;
+  virtual xyz closestPoint(Cube cube) const;
 private:
   xy center;
   double radius;
@@ -93,8 +93,8 @@ class Column: public Shape
 public:
   Column();
   Column(xy c,double s);
-  virtual bool in(xyz pnt);
-  virtual xyz closestPoint(Cube cube);
+  virtual bool in(xyz pnt) const;
+  virtual xyz closestPoint(Cube cube) const;
 private:
   xy center;
   double side;

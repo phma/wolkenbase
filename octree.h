@@ -47,6 +47,7 @@ class Octree
 public:
   long long findBlock(xyz pnt);
   Cube findCube(xyz pnt);
+  std::vector<long long> findBlocks(const Shape &sh);
   void setBlock(xyz pnt,long long blk);
   void sizeFit(std::vector<xyz> pnts);
   void split(xyz pnt);
