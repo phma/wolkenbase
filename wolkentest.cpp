@@ -30,6 +30,7 @@
 #include <cstring>
 #include <vector>
 #include <string>
+#include "angle.h"
 #include "octree.h"
 #include "shape.h"
 #include "testpattern.h"
@@ -48,6 +49,13 @@ using namespace std;
 
 bool testfail=false;
 vector<string> args;
+
+xy randomInCircle()
+{
+  int n=rng.usrandom();
+  double r=sqrt(n+0.5)/256;
+  return cossin((int)(n*PHITURN))*r;
+}
 
 void outsizeof(string typeName,int size)
 {
@@ -72,7 +80,16 @@ void testfreeram()
 void testflat()
 {
   ofstream dumpFile("flat.dump");
+  xy center=9*randomInCircle();
+  vector<long long> blocks;
+  int i;
+  Cylinder cyl(center,1);
   flatScene(10,100);
+  blocks=octRoot.findBlocks(cyl);
+  cout<<"Blocks:";
+  for (i=0;i<blocks.size();i++)
+    cout<<' '<<blocks[i];
+  cout<<endl;
   octStore.dump(dumpFile);
 }
 
