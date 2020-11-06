@@ -900,6 +900,22 @@ OctBuffer *OctStore::getBlock(xyz key,bool writing)
   return ret;
 }
 
+vector<LasPoint> OctStore::pointsIn(const Shape &sh)
+{
+  vector<long long> blockList=octRoot.findBlocks(sh);
+  OctBuffer *buf;
+  vector<LasPoint> ret;
+  int i,j;
+  for (i=0;i<blockList.size();i++)
+  {
+    buf=getBlock(blockList[i]);
+    for (j=0;j<buf->points.size();j++)
+      if (sh.in(buf->points[j].location))
+	ret.push_back(buf->points[j]);
+  }
+  return ret;
+}
+
 void OctStore::split(long long block,xyz camelStraw)
 {
   vector<LasPoint> tempPoints;

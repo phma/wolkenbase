@@ -82,6 +82,7 @@ void testflat()
   ofstream dumpFile("flat.dump");
   xy center=9*randomInCircle();
   vector<long long> blocks;
+  vector<LasPoint> points;
   int i;
   Cylinder cyl(center,1);
   flatScene(10,100);
@@ -90,6 +91,9 @@ void testflat()
   for (i=0;i<blocks.size();i++)
     cout<<' '<<blocks[i];
   cout<<endl;
+  points=octStore.pointsIn(cyl);
+  cout<<points.size()<<" points in cylinder\n";
+  tassert(abs((int)points.size()-314)<8);
   octStore.dump(dumpFile);
 }
 
