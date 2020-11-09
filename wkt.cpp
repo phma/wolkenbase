@@ -22,3 +22,6 @@
 
 #include "wkt.h"
 
+WellKnownTree::WellKnownTree()
+{
+}
