@@ -164,6 +164,20 @@ void embufferPoint(LasPoint point,bool fromFile)
     this_thread::sleep_for(chrono::milliseconds(1));
 }
 
+void embufferPoints(vector<LasPoint> points,int thread)
+/* Puts a whole block of points from a split block at the end of the thread's
+ * buffer, without shuffling. Usually, most of them will be reembuffered to
+ * other threads' buffers.
+ */
+{
+  int i;
+  bufferMutex.lock();
+  pointBuffer[thread].reserve(pointBuffer[thread].size()+points.size());
+  for (i=0;i<points.size();i++)
+    pointBuffer[thread].push_back(points[i]);
+  bufferMutex.unlock();
+}
+
 LasPoint debufferPoint(int thread)
 {
   LasPoint ret;

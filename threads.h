@@ -85,6 +85,7 @@ ThreadAction dequeueResult();
 bool actionQueueEmpty();
 bool resultQueueEmpty();
 void embufferPoint(LasPoint point,bool fromFile);
+void embufferPoints(std::vector<LasPoint> points,int thread);
 LasPoint debufferPoint(int thread);
 size_t pointBufferSize();
 bool pointBufferEmpty();
