@@ -939,7 +939,7 @@ void OctStore::split(long long block,xyz camelStraw)
 #if DEBUG_STORE
   cout<<"Splitting block "<<block<<endl;
 #endif
-  while (true)
+  //while (true)
   {
     fullth=0;
     currentBlock->blockMutex.lock();
@@ -952,14 +952,15 @@ void OctStore::split(long long block,xyz camelStraw)
     }
     currentBlock->points.clear();
     currentBlock->blockMutex.unlock();
-    if (fullth<RECORDS)
-      break;
+    //if (fullth<RECORDS)
+      //break;
     octRoot.split(camelStraw);
-    for (i=0;i<tempPoints.size();i++)
-      put(tempPoints[i],true);
+    //for (i=0;i<tempPoints.size();i++)
+      //put(tempPoints[i],true);
   }
-  for (i=0;i<tempPoints.size();i++)
-    put(tempPoints[i],true);
+  //for (i=0;i<tempPoints.size();i++)
+    //put(tempPoints[i],true);
+  embufferPoints(tempPoints,thisThread());
   logEndSplit(currentBlock->bufferNumber,block);
 #if DEBUG_STORE
   cout<<"Block "<<block<<" is split\n";

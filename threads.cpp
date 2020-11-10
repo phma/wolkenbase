@@ -171,6 +171,8 @@ void embufferPoints(vector<LasPoint> points,int thread)
  */
 {
   int i;
+  if (thread<0)
+    thread+=threadStatus.size();
   bufferMutex.lock();
   pointBuffer[thread].reserve(pointBuffer[thread].size()+points.size());
   for (i=0;i<points.size();i++)
