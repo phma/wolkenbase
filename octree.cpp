@@ -803,6 +803,8 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
 	      ownResult=buf->ownAlone();
 	    else
 	      ownResult=true;
+	  else
+	    ;
 	  if (transitResult && ownResult)
 	    gotBlock=1; // reuse buffer
 	  else
