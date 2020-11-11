@@ -275,7 +275,10 @@ int Octree::dump(ofstream &file)
   {
     subi=sub[i];
     if (subi&1)
+    {
       totalPoints+=octStore.getBlock(subi>>1)->dump(file,cube(i));
+      octStore.disown();
+    }
     else if (subi)
       totalPoints+=((Octree *)subi)->dump(file);
   }
@@ -337,7 +340,6 @@ void OctBuffer::markDirty()
 void OctBuffer::own()
 {
   int t=thisThread();
-  assert(t>=0);
   store->ownMutex.lock();
   owningThread.insert(t);
   store->ownMap[t].push_back(bufferNumber);
@@ -348,7 +350,6 @@ bool OctBuffer::ownAlone()
 {
   bool ret;
   int t=thisThread();
-  assert(t>=0);
   store->ownMutex.lock();
   ret=owningThread.size()==owningThread.count(t);
   if (ret)
