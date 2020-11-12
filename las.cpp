@@ -186,6 +186,7 @@ LasHeader::LasHeader()
 {
   lasfile=nullptr;
   versionMajor=versionMinor=0;
+  unit=1;
 }
 
 LasHeader::~LasHeader()
@@ -416,6 +417,7 @@ void LasHeader::setScale(xyz minCor,xyz maxCor,xyz scale)
  * sets (xScale,yScale,zScale) to scale. Sets (xOffset,yOffset,zOffset) to
  * the middle of the box. Does not set (minX,minY,minZ) or (maxX,maxY,maxZ);
  * those are computed as the points are written.
+ * TBD: are minCor and maxCor in meters or in unit?
  */
 {
   xOffset=(minCor.getx()+maxCor.getx())/2;
@@ -448,12 +450,12 @@ size_t LasHeader::numberPoints(int r)
 
 xyz LasHeader::minCorner()
 {
-  return xyz(minX,minY,minZ);
+  return xyz(minX*unit,minY*unit,minZ*unit);
 }
 
 xyz LasHeader::maxCorner()
 {
-  return xyz(maxX,maxY,maxZ);
+  return xyz(maxX*unit,maxY*unit,maxZ*unit);
 }
 
 int LasHeader::getVersion()
@@ -525,7 +527,7 @@ LasPoint LasHeader::readPoint(size_t num)
     ret.yDir=readlefloat(*lasfile);
     ret.zDir=readlefloat(*lasfile);
   }
-  ret.location=xyz(xOffset+xScale*xInt,yOffset+yScale*yInt,zOffset+zScale*zInt);
+  ret.location=xyz(xOffset+xScale*unit*xInt,yOffset+yScale*unit*yInt,zOffset+zScale*unit*zInt);
   if (!lasfile->good())
     throw -1;
   return ret;
@@ -536,9 +538,9 @@ void LasHeader::writePoint(const LasPoint &pnt)
   int xInt,yInt,zInt;
   double writtenX,writtenY,writtenZ;
   lasfile->seekp(writePos,ios::beg);
-  xInt=lrint((pnt.location.getx()-xOffset)/xScale);
-  yInt=lrint((pnt.location.gety()-yOffset)/yScale);
-  zInt=lrint((pnt.location.getz()-zOffset)/zScale);
+  xInt=lrint((pnt.location.getx()-xOffset)/xScale/unit);
+  yInt=lrint((pnt.location.gety()-yOffset)/yScale/unit);
+  zInt=lrint((pnt.location.getz()-zOffset)/zScale/unit);
   writeleint(*lasfile,xInt);
   writeleint(*lasfile,yInt);
   writeleint(*lasfile,zInt);

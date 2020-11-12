@@ -95,6 +95,7 @@ private:
   unsigned short pointFormat,pointLength;
   double xScale,yScale,zScale,xOffset,yOffset,zOffset;
   double maxX,minX,maxY,minY,maxZ,minZ;
+  double unit;
   size_t startWaveform,startExtendedVariableLength;
   unsigned int nExtendedVariableLength;
   size_t nPoints[16]; // [0] is total; [1]..[15] are each return
@@ -110,6 +111,14 @@ public:
   void setVersion(int major,int minor);
   void setPointFormat(int format);
   void setScale(xyz minCor,xyz maxCor,xyz scale);
+  void setUnit(double u)
+  {
+    unit=u;
+  }
+  double getUnit()
+  {
+    return unit;
+  }
   void close();
   size_t numberPoints(int r=0);
   xyz minCorner();
