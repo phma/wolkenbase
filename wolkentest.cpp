@@ -136,6 +136,8 @@ const int hiLim[]={0,2,30,128,1500,6302,73530};
 void testflowsnake()
 {
   PostScript ps;
+  Flowsnake fs;
+  Cube cube(xyz(314159,271828,0),512);
   int i,j,n;
   int sz=6;
   double squareSize=biggestSquare(sz);
@@ -230,6 +232,8 @@ void testflowsnake()
     ps.endpage();
     cout<<n<<"  "<<ldecimal(2*squareSize)<<endl;
   }
+  fs.setSize(cube,0.1);
+  cout<<' ';
 }
 
 /* Files for testing block splitting:
