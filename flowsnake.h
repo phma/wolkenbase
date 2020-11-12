@@ -65,8 +65,13 @@
  *
  */
 
+#ifndef FLOWSNAKE_H
+#define FLOWSNAKE_H
+
 #include <vector>
 #include "eisenstein.h"
+#include "threads.h"
+#include "shape.h"
 
 extern const Eisenstein flowBase;
 extern const std::complex<double> cFlowBase;;
@@ -76,3 +81,15 @@ Eisenstein baseFlow(int n);
 Eisenstein toFlowsnake(int n);
 std::vector<std::complex<double> > crinklyLine(std::complex<double> begin,std::complex<double> end,double precision);
 double biggestSquare(int size);
+
+class Flowsnake
+{
+public:
+  void setSize(Cube cube,double desiredSpacing);
+  //Cylinder next;
+private:
+  xy center;
+  double spacing;
+};
+
+#endif

@@ -20,6 +20,7 @@
  * along with Wolkenbase. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <cassert>
 #include "flowsnake.h"
 using namespace std;
 
@@ -198,4 +199,24 @@ double biggestSquare(int size)
       ret=seg;
   }
   return ret;
+}
+
+void Flowsnake::setSize(Cube cube,double desiredSpacing)
+{
+  int i,bestI;
+  double spacing1,diff,bestDiff=INFINITY;
+  assert(desiredSpacing>0);
+  assert(cube.getSide()>0);
+  for (i=0;i<12;i++)
+  {
+    spacing1=cube.getSide()/squareSides[i];
+    diff=fabs(log(spacing1/desiredSpacing));
+    if (diff<bestDiff)
+    {
+      bestDiff=diff;
+      bestI=i;
+    }
+  }
+  center=cube.getCenter();
+  spacing=cube.getSide()/squareSides[bestI];
 }
