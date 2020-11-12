@@ -735,7 +735,6 @@ int OctStore::newBlock()
   int i=blocks.size();
   OctBuffer *buf=&blocks[i];
   bufferMutex.unlock();
-  assert(t>=0);
   ownMutex.lock();
   buf->store=this;
   buf->bufferNumber=i;
