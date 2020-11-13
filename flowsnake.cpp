@@ -234,6 +234,7 @@ Cylinder Flowsnake::next()
   Cylinder ret;
   complex<double> z;
   Eisenstein e;
+  flowMutex.lock();
   if (counter<=stopnum)
   {
     e=toFlowsnake(counter++);
@@ -241,10 +242,15 @@ Cylinder Flowsnake::next()
     z*=spacing;
     ret=Cylinder(xy(z.real(),z.imag())+center,spacing*41/71);
   }
+  flowMutex.unlock();
   return ret;
 }
 
 double Flowsnake::progress()
 {
-  return double(counter-startnum)/double(stopnum-startnum);
+  double ret;
+  flowMutex.lock();
+  ret=double(counter-startnum)/double(stopnum-startnum);
+  flowMutex.unlock();
+  return ret;
 }

@@ -93,6 +93,7 @@ private:
   xy center;
   double spacing;
   int startnum,counter,stopnum;
+  std::mutex flowMutex;
 };
 
 #endif
