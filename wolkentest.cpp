@@ -136,6 +136,7 @@ void testflowsnake()
   PostScript ps;
   Flowsnake fs;
   Cube cube(xyz(314159,271828,0),512);
+  Cylinder cyl;
   int i,j,n;
   int sz=6;
   double squareSize=biggestSquare(sz);
@@ -230,7 +231,18 @@ void testflowsnake()
     ps.endpage();
     cout<<n<<"  "<<ldecimal(2*squareSize)<<endl;
   }
-  fs.setSize(cube,0.1);
+  fs.setSize(cube,10);
+  ps.startpage();
+  ps.setscale(cube.minX(),cube.minY(),cube.maxX(),cube.maxY());
+  ps.setcolor(1,1,0);
+  while (true)
+  {
+    cyl=fs.next();
+    if (cyl.getRadius()==0)
+      break;
+    ps.circle(cyl.getCenter(),cyl.getRadius());
+  }
+  ps.endpage();
   cout<<' ';
 }
 

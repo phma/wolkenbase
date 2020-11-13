@@ -227,6 +227,9 @@ void Flowsnake::setSize(Cube cube,double desiredSpacing)
 }
 
 Cylinder Flowsnake::next()
+/* Returns the cylinder enclosing the next hexagon in the flowsnake sequence.
+ * When finished, returns a cylinder with radius 0.
+ */
 {
   Cylinder ret;
   complex<double> z;
@@ -236,7 +239,7 @@ Cylinder Flowsnake::next()
     e=toFlowsnake(counter++);
     z=e;
     z*=spacing;
-    ret=Cylinder(xy(z.real(),z.imag()),spacing*41/71);
+    ret=Cylinder(xy(z.real(),z.imag())+center,spacing*41/71);
   }
   return ret;
 }

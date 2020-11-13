@@ -38,6 +38,30 @@ public:
   {
     return side;
   }
+  double minX()
+  {
+    return center.getx()-side/2;
+  }
+  double maxX()
+  {
+    return center.getx()+side/2;
+  }
+  double minY()
+  {
+    return center.gety()-side/2;
+  }
+  double maxY()
+  {
+    return center.gety()+side/2;
+  }
+  double minZ()
+  {
+    return center.getz()-side/2;
+  }
+  double maxZ()
+  {
+    return center.getz()+side/2;
+  }
 private:
   xyz center;
   double side;
@@ -78,6 +102,14 @@ class Cylinder: public Shape
 public:
   Cylinder();
   Cylinder(xy c,double r);
+  double getRadius()
+  {
+    return radius;
+  }
+  xy getCenter()
+  {
+    return center;
+  }
   virtual bool in(xyz pnt) const;
   virtual xyz closestPoint(Cube cube) const;
 private:
