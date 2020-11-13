@@ -91,6 +91,7 @@ public:
 private:
   xy center;
   double spacing;
+  int counter,stopnum;
 };
 
 #endif

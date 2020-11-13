@@ -222,4 +222,6 @@ void Flowsnake::setSize(Cube cube,double desiredSpacing)
   }
   center=cube.getCenter();
   spacing=cube.getSide()/squareSides[bestI];
+  counter=loLim[bestI];
+  stopnum=hiLim[bestI];
 }
