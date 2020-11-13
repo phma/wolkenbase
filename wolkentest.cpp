@@ -135,6 +135,7 @@ void testflowsnake()
 {
   PostScript ps;
   Flowsnake fs;
+  double prog;
   Cube cube(xyz(314159,271828,0),512);
   Cylinder cyl;
   int i,j,n;
@@ -234,12 +235,13 @@ void testflowsnake()
   fs.setSize(cube,10);
   ps.startpage();
   ps.setscale(cube.minX(),cube.minY(),cube.maxX(),cube.maxY());
-  ps.setcolor(1,1,0);
   while (true)
   {
+    prog=fs.progress();
     cyl=fs.next();
     if (cyl.getRadius()==0)
       break;
+    ps.setcolor(prog,prog,1-prog);
     ps.circle(cyl.getCenter(),cyl.getRadius());
   }
   ps.endpage();

@@ -88,10 +88,11 @@ class Flowsnake
 public:
   void setSize(Cube cube,double desiredSpacing);
   Cylinder next();
+  double progress();
 private:
   xy center;
   double spacing;
-  int counter,stopnum;
+  int startnum,counter,stopnum;
 };
 
 #endif

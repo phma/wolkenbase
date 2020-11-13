@@ -222,7 +222,7 @@ void Flowsnake::setSize(Cube cube,double desiredSpacing)
   }
   center=cube.getCenter();
   spacing=cube.getSide()/squareSides[bestI];
-  counter=loLim[bestI];
+  startnum=counter=loLim[bestI];
   stopnum=hiLim[bestI];
 }
 
@@ -242,4 +242,9 @@ Cylinder Flowsnake::next()
     ret=Cylinder(xy(z.real(),z.imag())+center,spacing*41/71);
   }
   return ret;
+}
+
+double Flowsnake::progress()
+{
+  return double(counter-startnum)/double(stopnum-startnum);
 }
