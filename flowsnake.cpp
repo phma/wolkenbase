@@ -225,3 +225,18 @@ void Flowsnake::setSize(Cube cube,double desiredSpacing)
   counter=loLim[bestI];
   stopnum=hiLim[bestI];
 }
+
+Cylinder Flowsnake::next()
+{
+  Cylinder ret;
+  complex<double> z;
+  Eisenstein e;
+  if (counter<=stopnum)
+  {
+    e=toFlowsnake(counter++);
+    z=e;
+    z*=spacing;
+    ret=Cylinder(xy(z.real(),z.imag()),spacing*41/71);
+  }
+  return ret;
+}
