@@ -74,7 +74,8 @@
 #include "shape.h"
 
 extern const Eisenstein flowBase;
-extern const std::complex<double> cFlowBase;;
+extern const std::complex<double> cFlowBase;
+extern const int hiLim[],loLim[];
 
 int baseSeven(Eisenstein e);
 Eisenstein baseFlow(int n);
