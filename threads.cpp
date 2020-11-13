@@ -393,14 +393,6 @@ void WolkenThread::operator()(int thread)
 	  cerr<<"Can't load a file in pause state\n";
 	  unsleep(thread);
 	  break;
-	case ACT_READ_PTIN:
-	  cerr<<"Can't open file in pause state\n";
-	  unsleep(thread);
-	  break;
-	case ACT_OCTAGON:
-	  cerr<<"Can't make octagon in pause state\n";
-	  unsleep(thread);
-	  break;
 	default:
 	  sleep(thread);
       }

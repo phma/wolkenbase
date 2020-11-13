@@ -48,19 +48,6 @@
 // These are used to tell thread 0 to do things while threads are in wait state,
 // or any thread to do things while threads are in pause state.
 #define ACT_LOAD 1
-#define ACT_OCTAGON 2
-#define ACT_WRITE_DXF 3
-#define ACT_WRITE_TIN 4
-#define ACT_WRITE_PTIN 5
-#define ACT_READ_PTIN 6
-#define ACT_WRITE_CARLSON_TIN 7
-#define ACT_DELETE_FILE 8
-#define ACT_WRITE_LANDXML 9
-#define ACT_QINDEX 10
-#define ACT_WRITE_PLY 11
-
-#define RES_LOAD_PLY 1
-#define RES_LOAD_LAS 2
 
 struct ThreadAction
 {
@@ -73,7 +60,6 @@ struct ThreadAction
   int result;
 };
 
-extern std::mutex adjLog;
 extern int currentAction;
 extern std::chrono::steady_clock clk;
 
