@@ -32,11 +32,11 @@ find_package(Mitobrevno)
 find_package(Threads)
 
 # point.cpp must be before las.cpp for noPoint to be initialized to nanxyz.
-add_executable(wolkenbase angle.cpp binio.cpp boundrect.cpp brevno.cpp eisenstein.cpp
+add_executable(wolkencli angle.cpp binio.cpp boundrect.cpp brevno.cpp eisenstein.cpp
                flowsnake.cpp freeram.cpp point.cpp las.cpp ldecimal.cpp
                octree.cpp ps.cpp quaternion.cpp
                random.cpp relprime.cpp shape.cpp testpattern.cpp
-               threads.cpp wkt.cpp wolkenbase.cpp)
+               threads.cpp wkt.cpp wolkencli.cpp)
 
 add_executable(wolkentest angle.cpp binio.cpp boundrect.cpp brevno.cpp eisenstein.cpp
                flowsnake.cpp freeram.cpp point.cpp las.cpp ldecimal.cpp
@@ -45,18 +45,18 @@ add_executable(wolkentest angle.cpp binio.cpp boundrect.cpp brevno.cpp eisenstei
                threads.cpp wkt.cpp wolkentest.cpp)
 
 if (${Boost_FOUND})
-target_link_libraries(wolkenbase ${Boost_LIBRARIES})
+target_link_libraries(wolkencli ${Boost_LIBRARIES})
 include_directories(${Boost_INCLUDE_DIR})
 endif (${Boost_FOUND})
 if (${Mitobrevno_FOUND})
-target_link_libraries(wolkenbase ${Mitobrevno_LIBRARY})
+target_link_libraries(wolkencli ${Mitobrevno_LIBRARY})
 target_link_libraries(wolkentest ${Mitobrevno_LIBRARY})
 endif (${Mitobrevno_FOUND})
 target_link_libraries(wolkentest ${CMAKE_THREAD_LIBS_INIT})
-target_link_libraries(wolkenbase ${CMAKE_THREAD_LIBS_INIT})
-target_compile_definitions(wolkenbase PUBLIC _USE_MATH_DEFINES)
+target_link_libraries(wolkencli ${CMAKE_THREAD_LIBS_INIT})
+target_compile_definitions(wolkencli PUBLIC _USE_MATH_DEFINES)
 target_compile_definitions(wolkentest PUBLIC _USE_MATH_DEFINES)
-install(TARGETS wolkenbase DESTINATION bin)
+#install(TARGETS wolkenbase DESTINATION bin)
 
 include(CheckIncludeFiles)
 check_include_files(time.h HAVE_TIME_H)
