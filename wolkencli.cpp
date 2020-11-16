@@ -1,6 +1,6 @@
 /******************************************************/
 /*                                                    */
-/* wolkenbase.cpp - main program                      */
+/* wolkencli.cpp - main program for command-line      */
 /*                                                    */
 /******************************************************/
 /* Copyright 2019,2020 Pierre Abbat.
