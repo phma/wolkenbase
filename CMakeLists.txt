@@ -5,9 +5,11 @@ include(TestBigEndian)
 include(CheckTypeSize)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_AUTOMOC ON)
 set(CMAKE_CXX_STANDARD 17) # appeared in CMake 3.8
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS ON)
+set(SHARE_DIR ${CMAKE_INSTALL_PREFIX}/share/perfecttin)
 add_definitions(-DBOOST_ALL_NO_LIB)
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 set(Boost_USE_STATIC_LIBS ON)
@@ -27,11 +29,18 @@ endif ()
 option(ENABLE_MITOBREVNO "Enable debugging with Mitobrevno if found." FALSE)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
+find_package(Qt5 COMPONENTS Core Widgets Gui LinguistTools REQUIRED)
 find_package(Boost COMPONENTS program_options)
 find_package(Mitobrevno)
 find_package(Threads)
 
 # point.cpp must be before las.cpp for noPoint to be initialized to nanxyz.
+add_executable(wolkenbase angle.cpp binio.cpp boundrect.cpp brevno.cpp eisenstein.cpp
+               fileio.cpp flowsnake.cpp freeram.cpp point.cpp las.cpp ldecimal.cpp
+               mainwindow.cpp octree.cpp ps.cpp quaternion.cpp
+               random.cpp relprime.cpp shape.cpp testpattern.cpp
+               threads.cpp wkt.cpp wolkenbase.cpp)
+
 add_executable(wolkencli angle.cpp binio.cpp boundrect.cpp brevno.cpp eisenstein.cpp
                flowsnake.cpp freeram.cpp point.cpp las.cpp ldecimal.cpp
                octree.cpp ps.cpp quaternion.cpp
@@ -50,13 +59,16 @@ include_directories(${Boost_INCLUDE_DIR})
 endif (${Boost_FOUND})
 if (${Mitobrevno_FOUND})
 target_link_libraries(wolkencli ${Mitobrevno_LIBRARY})
+target_link_libraries(wolkenbase ${Mitobrevno_LIBRARY})
 target_link_libraries(wolkentest ${Mitobrevno_LIBRARY})
 endif (${Mitobrevno_FOUND})
 target_link_libraries(wolkentest ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(wolkencli ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(wolkenbase ${CMAKE_THREAD_LIBS_INIT} Qt5::Widgets Qt5::Core)
 target_compile_definitions(wolkencli PUBLIC _USE_MATH_DEFINES)
+target_compile_definitions(wolkenbase PUBLIC _USE_MATH_DEFINES)
 target_compile_definitions(wolkentest PUBLIC _USE_MATH_DEFINES)
-#install(TARGETS wolkenbase DESTINATION bin)
+install(TARGETS wolkenbase DESTINATION bin)
 
 include(CheckIncludeFiles)
 check_include_files(time.h HAVE_TIME_H)
@@ -71,6 +83,7 @@ set(WOLKENBASE_MAJOR_VERSION 0)
 set(WOLKENBASE_MINOR_VERSION 1)
 set(WOLKENBASE_PATCH_VERSION 0)
 set(WOLKENBASE_VERSION ${WOLKENBASE_MAJOR_VERSION}.${WOLKENBASE_MINOR_VERSION}.${WOLKENBASE_PATCH_VERSION})
+set(COPY_YEAR 2020)
 
 include_directories(${PROJECT_BINARY_DIR})
 if (${Mitobrevno_FOUND})

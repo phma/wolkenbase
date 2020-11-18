@@ -1,6 +1,11 @@
-/* Copyright 2019,2020 Pierre Abbat.
+/******************************************************/
+/*                                                    */
+/* fileio.h - file I/O                                */
+/*                                                    */
+/******************************************************/
+/* Copyright 2020 Pierre Abbat.
  * This file is part of Wolkenbase.
- * 
+ *
  * Wolkenbase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,20 +19,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Wolkenbase. If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef CONFIG_H
-#define CONFIG_H
-#cmakedefine BIGENDIAN
-#cmakedefine HAVE_TIME_H
-#cmakedefine HAVE_WINDOWS_H
-#cmakedefine HAVE_SYS_TIME_H
-#cmakedefine HAVE_SYS_RESOURCE_H
-#cmakedefine HAVE_SYS_SYSINFO_H
-#cmakedefine HAVE_SYS_SYSCTL_H
-#cmakedefine Mitobrevno_FOUND
-#cmakedefine ENABLE_MITOBREVNO
-#define SYSTEM_NAME @CMAKE_SYSTEM_NAME@
-#define SYSTEM_VERSION @CMAKE_SYSTEM_VERSION@
-#define VERSION "@WOLKENBASE_VERSION@"
-#define COPY_YEAR @COPY_YEAR@
-#define SHARE_DIR "@SHARE_DIR@"
+#ifndef FILEIO_H
+#define FILEIO_H
+#include <string>
+
+std::string noExt(std::string fileName);
+std::string extension(std::string fileName);
+std::string baseName(std::string fileName);
 #endif
