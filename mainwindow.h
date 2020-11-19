@@ -28,7 +28,7 @@
 #include <array>
 //#include "configdialog.h"
 //#include "unitbutton.h"
-//#include "tincanvas.h"
+#include "wolkencanvas.h"
 
 class MainWindow: public QMainWindow
 {
@@ -93,5 +93,5 @@ private:
   QAction *configureAction;
   QAction *aboutProgramAction,*aboutQtAction;
   //UnitButton *unitButtons[4];
-  //TinCanvas *canvas;
+  WolkenCanvas *canvas;
 };

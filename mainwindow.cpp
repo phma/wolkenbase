@@ -40,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent)
   dotTriangleMsg=new QLabel(this);
   toleranceMsg=new QLabel(this);
   densityMsg=new QLabel(this);
-  //canvas=new TinCanvas(this);
+  canvas=new WolkenCanvas(this);
   //configDialog=new ConfigurationDialog(this);
   msgBox=new QMessageBox(this);
   /*connect(configDialog,SIGNAL(settingsChanged(double,double,int,bool,Printer3dSize)),
@@ -60,13 +60,13 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent)
   toolbar->setIconSize(QSize(32,32));
   makeActions();
   makeStatusBar();
-  //setCentralWidget(canvas);
+  setCentralWidget(canvas);
   readSettings();
-  //canvas->show();
+  canvas->show();
   show();
   timer=new QTimer(this);
   connect(timer,SIGNAL(timeout()),this,SLOT(tick()));
-  //connect(timer,SIGNAL(timeout()),canvas,SLOT(tick()));
+  connect(timer,SIGNAL(timeout()),canvas,SLOT(tick()));
   timer->start(50);
 }
 
