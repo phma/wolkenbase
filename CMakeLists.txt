@@ -39,7 +39,7 @@ add_executable(wolkenbase angle.cpp binio.cpp boundrect.cpp brevno.cpp eisenstei
                fileio.cpp flowsnake.cpp freeram.cpp point.cpp las.cpp ldecimal.cpp
                lissajous.cpp mainwindow.cpp octree.cpp ps.cpp quaternion.cpp
                random.cpp relprime.cpp shape.cpp testpattern.cpp
-               threads.cpp wkt.cpp wolkenbase.cpp)
+               threads.cpp wkt.cpp wolkenbase.cpp wolkencanvas.cpp)
 
 add_executable(wolkencli angle.cpp binio.cpp boundrect.cpp brevno.cpp eisenstein.cpp
                flowsnake.cpp freeram.cpp point.cpp las.cpp ldecimal.cpp
