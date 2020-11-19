@@ -63,6 +63,11 @@ void WolkenCanvas::sizeToFit()
   int i;
   double xscale,yscale;
   BoundRect br;
+  for (i=0;i<fileHeaders.size();i++)
+  {
+    br.include(fileHeaders[i].minCorner());
+    br.include(fileHeaders[i].maxCorner());
+  }
   if (br.left()>=br.right() && br.bottom()>=br.top())
   {
     worldCenter=xy(0,0);
