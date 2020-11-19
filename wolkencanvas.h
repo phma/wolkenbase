@@ -24,6 +24,7 @@
 #include <QWidget>
 #include "lissajous.h"
 #include "point.h"
+#include "las.h"
 
 #define SPLASH_TIME 60
 
@@ -54,6 +55,7 @@ private:
   double scale;
   double lengthUnit;
   double maxScaleSize,scaleSize;
+  std::vector<LasHeader> fileHeaders;
   xy ballPos;
   xy leftScaleEnd,rightScaleEnd,scaleEnd;
   int penPos;
