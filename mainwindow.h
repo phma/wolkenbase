@@ -81,15 +81,11 @@ private:
   QMessageBox *msgBox;
   QToolBar *toolbar;
   //ConfigurationDialog *configDialog;
-  QMenu *fileMenu,*viewMenu,*settingsMenu,*helpMenu,*exportMenu,*colorMenu;
+  QMenu *fileMenu,*viewMenu,*settingsMenu,*helpMenu,*colorMenu;
   QLabel *fileMsg,*dotTriangleMsg,*toleranceMsg,*densityMsg;
   QProgressBar *doneBar,*busyBar;
   QAction *openAction,*loadAction,*convertAction,*clearAction;
   QAction *exportAction,*stopAction,*resumeAction,*exitAction;
-  QAction *exportDxfTxtAction,*exportDxfBinAction,*exportTinTxtAction;
-  QAction *exportCarlsonTinAction,*exportLandXmlAction;
-  QAction *exportPlyTxtAction,*exportPlyBinAction;
-  QAction *exportStlTxtAction,*exportStlBinAction;
   QAction *configureAction;
   QAction *aboutProgramAction,*aboutQtAction;
   //UnitButton *unitButtons[4];

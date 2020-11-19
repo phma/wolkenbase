@@ -175,7 +175,6 @@ void MainWindow::disableMenuSplash()
   openAction->setEnabled(false);
   loadAction->setEnabled(false);
   convertAction->setEnabled(false);
-  exportMenu->setEnabled(false);
   clearAction->setEnabled(false);
   stopAction->setEnabled(false);
 }
@@ -185,7 +184,6 @@ void MainWindow::enableMenuSplash()
   openAction->setEnabled(true);
   loadAction->setEnabled(true);
   convertAction->setEnabled(false);
-  exportMenu->setEnabled(false);
   clearAction->setEnabled(false);
   stopAction->setEnabled(false);
 }
@@ -315,7 +313,6 @@ void MainWindow::makeActions()
   convertAction->setText(tr("Convert"));
   fileMenu->addAction(convertAction);
   connect(convertAction,SIGNAL(triggered(bool)),this,SLOT(startConversion()));
-  exportMenu=fileMenu->addMenu(tr("Export"));
   clearAction=new QAction(this);
   clearAction->setIcon(QIcon::fromTheme("edit-clear"));
   clearAction->setText(tr("Clear"));
@@ -338,45 +335,6 @@ void MainWindow::makeActions()
   exitAction->setText(tr("Exit"));
   fileMenu->addAction(exitAction);
   connect(exitAction,SIGNAL(triggered(bool)),this,SLOT(close()));
-  // Export menu
-  exportDxfTxtAction=new QAction(this);
-  exportDxfTxtAction->setText(tr("DXF Text"));
-  exportMenu->addAction(exportDxfTxtAction);
-  connect(exportDxfTxtAction,SIGNAL(triggered(bool)),this,SLOT(exportDxfTxt()));
-  exportDxfBinAction=new QAction(this);
-  exportDxfBinAction->setText(tr("DXF Binary"));
-  exportMenu->addAction(exportDxfBinAction);
-  connect(exportDxfBinAction,SIGNAL(triggered(bool)),this,SLOT(exportDxfBin()));
-#ifdef Plytapus_FOUND
-  exportPlyTxtAction=new QAction(this);
-  exportPlyTxtAction->setText(tr("PLY Text"));
-  exportMenu->addAction(exportPlyTxtAction);
-  connect(exportPlyTxtAction,SIGNAL(triggered(bool)),this,SLOT(exportPlyTxt()));
-  exportPlyBinAction=new QAction(this);
-  exportPlyBinAction->setText(tr("PLY Binary"));
-  exportMenu->addAction(exportPlyBinAction);
-  connect(exportPlyBinAction,SIGNAL(triggered(bool)),this,SLOT(exportPlyBin()));
-#endif
-  exportStlTxtAction=new QAction(this);
-  exportStlTxtAction->setText(tr("STL Text"));
-  exportMenu->addAction(exportStlTxtAction);
-  connect(exportStlTxtAction,SIGNAL(triggered(bool)),this,SLOT(exportStlTxt()));
-  exportStlBinAction=new QAction(this);
-  exportStlBinAction->setText(tr("STL Binary"));
-  exportMenu->addAction(exportStlBinAction);
-  connect(exportStlBinAction,SIGNAL(triggered(bool)),this,SLOT(exportStlBin()));
-  exportTinTxtAction=new QAction(this);
-  exportTinTxtAction->setText(tr("TIN Text"));
-  exportMenu->addAction(exportTinTxtAction);
-  connect(exportTinTxtAction,SIGNAL(triggered(bool)),this,SLOT(exportTinTxt()));
-  exportCarlsonTinAction=new QAction(this);
-  exportCarlsonTinAction->setText(tr("Carlson TIN"));
-  exportMenu->addAction(exportCarlsonTinAction);
-  connect(exportCarlsonTinAction,SIGNAL(triggered(bool)),this,SLOT(exportCarlsonTin()));
-  exportLandXmlAction=new QAction(this);
-  exportLandXmlAction->setText(tr("LandXML"));
-  exportMenu->addAction(exportLandXmlAction);
-  connect(exportLandXmlAction,SIGNAL(triggered(bool)),this,SLOT(exportLandXml()));
   // View menu
   // Settings menu
   configureAction=new QAction(this);
