@@ -51,6 +51,7 @@ signals:
   void colorSchemeChanged(int scheme);
   void noCloudArea();
   void gotResult(ThreadAction ta);
+  void fileOpened(std::string name);
 public slots:
   void tick();
   void setSettings();

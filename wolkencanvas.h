@@ -55,6 +55,7 @@ private:
   double scale;
   double lengthUnit;
   double maxScaleSize,scaleSize;
+  std::vector<std::string> fileNames;
   std::vector<LasHeader> fileHeaders;
   xy ballPos;
   xy leftScaleEnd,rightScaleEnd,scaleEnd;

@@ -111,17 +111,28 @@ void MainWindow::openFile()
 {
   int dialogResult;
   QStringList files;
+  int i;
   string fileName;
   ThreadAction ta;
   fileDialog=new QFileDialog(this);
-  fileDialog->setWindowTitle(tr("Open PerfectTIN File"));
-  fileDialog->setFileMode(QFileDialog::ExistingFile);
+  fileDialog->setWindowTitle(tr("Open LAS File"));
+  fileDialog->setFileMode(QFileDialog::ExistingFiles);
   fileDialog->setAcceptMode(QFileDialog::AcceptOpen);
   fileDialog->selectFile("");
-  fileDialog->setNameFilter(tr("(*.ptin);;(*)"));
+  fileDialog->setNameFilter(tr("(*.las);;(*)"));
   dialogResult=fileDialog->exec();
   if (dialogResult)
   {
+    files=fileDialog->selectedFiles();
+    for (i=0;i<files.size();i++)
+    {
+      fileName=files[i].toStdString();
+      if (fileNames.length())
+	fileNames+=';';
+      fileNames+=baseName(fileName);
+      lastFileName=fileName;
+      fileOpened(fileName);
+    }
   }
   delete fileDialog;
   fileDialog=nullptr;
