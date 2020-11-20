@@ -287,7 +287,7 @@ void WolkenCanvas::paintEvent(QPaintEvent *event)
   painter.drawPixmap(this->rect(),frameBuffer,this->rect());
   switch (state)
   {
-    case TH_RUN:
+    case TH_SPLIT:
       painter.setBrush(Qt::yellow);
       painter.setPen(Qt::NoPen);
       painter.drawChord(square,lrint(bintodeg(ballAngle)*16),2880);

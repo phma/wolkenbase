@@ -39,10 +39,12 @@
 #include "las.h"
 
 // These are used as both commands to the threads and status from the threads.
-#define TH_RUN 1
-#define TH_PAUSE 2
-#define TH_WAIT 3
-#define TH_STOP 4
+#define TH_WAIT 1
+#define TH_READ 2
+#define TH_SCAN 3
+#define TH_SPLIT 4
+#define TH_PAUSE 5
+#define TH_STOP 6
 #define TH_ASLEEP 256
 
 // These are used to tell thread 0 to do things while threads are in wait state,

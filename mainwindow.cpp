@@ -170,7 +170,7 @@ void MainWindow::resumeConversion()
 {
   if (conversionStopped)
   {
-    setThreadCommand(TH_RUN);
+    setThreadCommand(TH_SPLIT);
     conversionStopped=false;
   }
 }

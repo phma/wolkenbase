@@ -99,7 +99,7 @@ int main(int argc,char **argv)
   octStore.open("store.oct",nthreads+relprime(nthreads));
   octStore.resize(8*nthreads+1);
   startThreads(nthreads);
-  waitForThreads(TH_RUN);
+  waitForThreads(TH_READ);
   for (i=0;i<files.size();i++)
   {
     for (j=0;j<files[i].numberPoints();j++)

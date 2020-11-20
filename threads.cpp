@@ -354,10 +354,10 @@ void WolkenThread::operator()(int thread)
   startMutex.unlock();
   while (threadCommand!=TH_STOP)
   {
-    if (threadCommand==TH_RUN)
-    {
+    if (threadCommand==TH_READ)
+    { // The threads are reading the input files.
       threadStatusMutex.lock();
-      threadStatus[thread]=TH_RUN;
+      threadStatus[thread]=TH_READ;
       threadStatusMutex.unlock();
       point=debufferPoint(thread);
       if (point.isEmpty())
