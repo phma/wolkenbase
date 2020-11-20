@@ -34,12 +34,16 @@ find_package(Boost COMPONENTS program_options)
 find_package(Mitobrevno)
 find_package(Threads)
 
+#qt5_add_resources(lib_resources wolkenbase.qrc)
+qt5_add_translation(qm_files wolkenbase_en.ts wolkenbase_es.ts)
+# To update translations, run "lupdate *.cpp -ts *.ts" in the source directory.
+
 # point.cpp must be before las.cpp for noPoint to be initialized to nanxyz.
 add_executable(wolkenbase angle.cpp binio.cpp boundrect.cpp brevno.cpp eisenstein.cpp
                fileio.cpp flowsnake.cpp freeram.cpp point.cpp las.cpp ldecimal.cpp
                lissajous.cpp mainwindow.cpp octree.cpp ps.cpp quaternion.cpp
                random.cpp relprime.cpp shape.cpp testpattern.cpp
-               threads.cpp wkt.cpp wolkenbase.cpp wolkencanvas.cpp)
+               threads.cpp wkt.cpp wolkenbase.cpp wolkencanvas.cpp ${qm_files})
 
 add_executable(wolkencli angle.cpp binio.cpp boundrect.cpp brevno.cpp eisenstein.cpp
                flowsnake.cpp freeram.cpp point.cpp las.cpp ldecimal.cpp
