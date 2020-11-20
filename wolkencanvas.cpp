@@ -98,7 +98,7 @@ void WolkenCanvas::tick()
   QPolygonF polygon;
   QPolygon swath;
   QPointF circleCenter;
-  QRectF circleBox,textBox;
+  QRectF circleBox,textBox,fileBound;
   string scaleText;
   cr::nanoseconds elapsed=cr::milliseconds(0);
   cr::time_point<cr::steady_clock> timeStart=clk.now();
@@ -145,6 +145,14 @@ void WolkenCanvas::tick()
       break;
   }
   update(QRegion(swath));
+  // Draw a rectangle for each open LAS file.
+  for (i=0;i<fileHeaders.size();i++)
+  {
+    fileBound=QRectF(worldToWindow(fileHeaders[i].minCorner()),
+		     worldToWindow(fileHeaders[i].maxCorner()));
+    painter.setBrush(Qt::blue);
+    painter.drawRect(fileBound);
+  }
   // Paint a circle white as a background for the scale.
   if (maxScaleSize>0)
   {
