@@ -47,13 +47,13 @@ int main(int argc, char *argv[])
   if (qtTranslator.load(QLocale(),QLatin1String("qt"),QLatin1String("_"),
                         QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
     app.installTranslator(&qtTranslator);
-  if (translator.load(QLocale(),QLatin1String("perfecttin"),
+  if (translator.load(QLocale(),QLatin1String("wolkenbase"),
                       QLatin1String("_"),QString::fromStdString(exeDir)))
   {
     //cout<<"Translations found in executable's directory"<<endl;
     app.installTranslator(&translator);
   }
-  else if (translator.load(QLocale(),QLatin1String("perfecttin"),
+  else if (translator.load(QLocale(),QLatin1String("wolkenbase"),
                       QLatin1String("_"),QLatin1String(SHARE_DIR)))
   {
     //cout<<"Translations found in share directory"<<endl;
