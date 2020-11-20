@@ -47,6 +47,7 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent)
 	  this,SLOT(setSettings(double,double,int,bool,Printer3dSize)));
   connect(this,SIGNAL(tinSizeChanged()),canvas,SLOT(setSize()));
   connect(this,SIGNAL(lengthUnitChanged(double)),canvas,SLOT(setLengthUnit(double)));*/
+  connect(this,SIGNAL(fileOpened(std::string)),canvas,SLOT(readFileHeader(std::string)));
   doneBar=new QProgressBar(this);
   busyBar=new QProgressBar(this);
   doneBar->setRange(0,16777216);
