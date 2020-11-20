@@ -203,7 +203,7 @@ void MainWindow::aboutProgram()
 
 void MainWindow::aboutQt()
 {
-  QMessageBox::aboutQt(this,tr("PerfectTIN"));
+  QMessageBox::aboutQt(this,tr("Wolkenbase"));
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
