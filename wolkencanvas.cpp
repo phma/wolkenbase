@@ -145,13 +145,6 @@ void WolkenCanvas::tick()
       break;
   }
   update(QRegion(swath));
-  // Paint a dart (concave quadrilateral) outside the TIN white.
-  dartAngle+=PHITURN;
-  dartCorners[0]=hypot(width(),height())*0.51/scale*cossin(dartAngle)+worldCenter;
-  for (i=0;i<4;i++)
-    polygon<<worldToWindow(dartCorners[i]);
-  painter.setBrush(Qt::white);
-  painter.drawPolygon(polygon);
   // Paint a circle white as a background for the scale.
   if (maxScaleSize>0)
   {
@@ -176,7 +169,6 @@ void WolkenCanvas::tick()
     painter.drawText(textBox,Qt::AlignCenter,QString::fromStdString(scaleText));
   }
   painter.setPen(Qt::NoPen);
-  // Paint some triangles in the TIN in colors depending on their gradient or elevation.
   if (state==TH_WAIT || state==TH_PAUSE)
     timeLimit=45;
   else
