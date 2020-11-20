@@ -203,6 +203,7 @@ void LasHeader::openRead(string fileName)
   int whichNPoints=15;
   if (lasfile)
     close();
+  filename=fileName;
   lasfile=new fstream(fileName,ios::binary|ios::in);
   reading=true;
   magicBytes=readbeint(*lasfile);
@@ -311,6 +312,7 @@ void LasHeader::openWrite(string fileName)
   int i;
   if (lasfile)
     close();
+  filename=fileName;
   lasfile=new fstream(fileName,ios::binary|ios::out);
   reading=false;
   versionMajor=1;

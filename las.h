@@ -82,6 +82,7 @@ class LasHeader
 {
 private:
   std::fstream *lasfile;
+  std::string filename;
   unsigned short sourceId,globalEncoding;
   unsigned int guid1;
   unsigned short guid2,guid3;
@@ -111,6 +112,10 @@ public:
   void setVersion(int major,int minor);
   void setPointFormat(int format);
   void setScale(xyz minCor,xyz maxCor,xyz scale);
+  std::string getFileName()
+  {
+    return filename;
+  }
   void setUnit(double u)
   {
     unit=u;
