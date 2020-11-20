@@ -22,6 +22,7 @@
 #ifndef WOLKENCANVAS_H
 #define WOLKENCANVAS_H
 #include <QWidget>
+#include <deque>
 #include "lissajous.h"
 #include "point.h"
 #include "las.h"
@@ -56,7 +57,7 @@ private:
   double scale;
   double lengthUnit;
   double maxScaleSize,scaleSize;
-  std::vector<LasHeader> fileHeaders;
+  std::deque<LasHeader> fileHeaders;
   xy ballPos;
   xy leftScaleEnd,rightScaleEnd,scaleEnd;
   int penPos;
