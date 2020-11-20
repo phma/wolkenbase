@@ -315,11 +315,6 @@ void MainWindow::makeActions()
   openAction->setText(tr("Open"));
   fileMenu->addAction(openAction);
   connect(openAction,SIGNAL(triggered(bool)),this,SLOT(openFile()));
-  loadAction=new QAction(this);
-  loadAction->setIcon(QIcon::fromTheme("document-open"));
-  loadAction->setText(tr("Load"));
-  fileMenu->addAction(loadAction);
-  connect(loadAction,SIGNAL(triggered(bool)),this,SLOT(loadFile()));
   convertAction=new QAction(this);
   convertAction->setIcon(QIcon::fromTheme("document-save-as"));
   convertAction->setText(tr("Convert"));
