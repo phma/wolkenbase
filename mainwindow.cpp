@@ -139,46 +139,6 @@ void MainWindow::openFile()
   fileDialog=nullptr;
 }
 
-void MainWindow::loadFile()
-{
-  int dialogResult;
-  QStringList files;
-  int i;
-  string fileName;
-  ThreadAction ta;
-  fileDialog=new QFileDialog(this);
-  fileDialog->setWindowTitle(tr("Load Point Cloud File"));
-  fileDialog->setFileMode(QFileDialog::ExistingFiles);
-  fileDialog->setAcceptMode(QFileDialog::AcceptOpen);
-  fileDialog->selectFile("");
-#ifdef Plytapus_FOUND
-  fileDialog->setNameFilter(tr("(*.las);;(*.ply);;(*)"));
-#else
-  fileDialog->setNameFilter(tr("(*.las);;(*)"));
-#endif
-  dialogResult=fileDialog->exec();
-  if (dialogResult)
-  {
-    files=fileDialog->selectedFiles();
-    tinSizeChanged();
-    for (i=0;i<files.size();i++)
-    {
-      fileName=files[i].toStdString();
-      ta.opcode=ACT_LOAD;
-      ta.filename=fileName;
-      ta.param1=lengthUnit;
-      enqueueAction(ta);
-      if (fileNames.length())
-	fileNames+=';';
-      fileNames+=baseName(fileName);
-      lastFileName=fileName;
-    }
-    fileMsg->setText(QString::fromStdString(fileNames));
-  }
-  delete fileDialog;
-  fileDialog=nullptr;
-}
-
 void MainWindow::disableMenuSplash()
 /* Disable menu during splash screen, so that the user can't mess up
  * the TIN that the splash screen shows.
@@ -198,34 +158,6 @@ void MainWindow::enableMenuSplash()
   convertAction->setEnabled(false);
   clearAction->setEnabled(false);
   stopAction->setEnabled(false);
-}
-
-void MainWindow::startConversion()
-{
-  int dialogResult;
-  QStringList files;
-  ThreadAction ta;
-  fileDialog=new QFileDialog(this);
-  fileDialog->setWindowTitle(tr("Convert to TIN"));
-  fileDialog->setFileMode(QFileDialog::AnyFile);
-  fileDialog->setAcceptMode(QFileDialog::AcceptSave);
-  fileDialog->selectFile(QString::fromStdString(noExt(lastFileName)+".ptin"));
-  fileDialog->setNameFilter(tr("(*.ptin)"));
-  dialogResult=fileDialog->exec();
-  if (dialogResult)
-  {
-    files=fileDialog->selectedFiles();
-    saveFileName=files[0].toStdString();
-    if (extension(saveFileName)==".ptin")
-      saveFileName=noExt(saveFileName);
-    //ta.opcode=ACT_OCTAGON;
-    enqueueAction(ta);
-    writtenTolerance=INFINITY;
-    fileNames=baseName(saveFileName)+".ptin";
-    fileMsg->setText(QString::fromStdString(fileNames));
-  }
-  delete fileDialog;
-  fileDialog=nullptr;
 }
 
 void MainWindow::stopConversion()
@@ -263,16 +195,10 @@ void MainWindow::handleResult(ThreadAction ta)
 
 void MainWindow::aboutProgram()
 {
-  QString progName=tr("PerfectTIN");
-#ifdef Plytapus_FOUND
-  QString rajotte=tr("\nPlytapus library version %1\nCopyright %2\nSimon Rajotte and Pierre Abbat\nMIT license")
-  .arg(QString::fromStdString(plytapusVersion())).arg(plytapusYear());
-#else
-  QString rajotte("");
-#endif
-  QMessageBox::about(this,tr("PerfectTIN"),
-		     tr("%1\nVersion %2\nCopyright %3 Pierre Abbat\nLicense LGPL 3 or later%4")
-		     .arg(progName).arg(QString(VERSION)).arg(COPY_YEAR).arg(rajotte));
+  QString progName=tr("Wolkenbase");
+  QMessageBox::about(this,tr("Wolkenbase"),
+		     tr("%1\nVersion %2\nCopyright %3 Pierre Abbat\nLicense GPL 3 or later")
+		     .arg(progName).arg(QString(VERSION)).arg(COPY_YEAR));
 }
 
 void MainWindow::aboutQt()
@@ -315,11 +241,6 @@ void MainWindow::makeActions()
   openAction->setText(tr("Open"));
   fileMenu->addAction(openAction);
   connect(openAction,SIGNAL(triggered(bool)),this,SLOT(openFile()));
-  convertAction=new QAction(this);
-  convertAction->setIcon(QIcon::fromTheme("document-save-as"));
-  convertAction->setText(tr("Convert"));
-  fileMenu->addAction(convertAction);
-  connect(convertAction,SIGNAL(triggered(bool)),this,SLOT(startConversion()));
   clearAction=new QAction(this);
   clearAction->setIcon(QIcon::fromTheme("edit-clear"));
   clearAction->setText(tr("Clear"));
@@ -351,7 +272,7 @@ void MainWindow::makeActions()
   connect(configureAction,SIGNAL(triggered(bool)),this,SLOT(configure()));
   // Help menu
   aboutProgramAction=new QAction(this);
-  aboutProgramAction->setText(tr("About PerfectTIN"));
+  aboutProgramAction->setText(tr("About Wolkenbase"));
   helpMenu->addAction(aboutProgramAction);
   connect(aboutProgramAction,SIGNAL(triggered(bool)),this,SLOT(aboutProgram()));
   aboutQtAction=new QAction(this);

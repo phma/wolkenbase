@@ -57,10 +57,8 @@ public slots:
   void setSettings();
   void setUnit(double lu);
   void openFile();
-  void loadFile();
   void disableMenuSplash();
   void enableMenuSplash();
-  void startConversion();
   void stopConversion();
   void resumeConversion();
   void handleResult(ThreadAction ta);
