@@ -42,6 +42,7 @@ signals:
 public slots:
   void sizeToFit();
   void setSize();
+  void readFileHeader(std::string name);
   void setLengthUnit(double unit);
   void setScalePos();
   void tick(); // 50 ms
@@ -55,7 +56,6 @@ private:
   double scale;
   double lengthUnit;
   double maxScaleSize,scaleSize;
-  std::vector<std::string> fileNames;
   std::vector<LasHeader> fileHeaders;
   xy ballPos;
   xy leftScaleEnd,rightScaleEnd,scaleEnd;

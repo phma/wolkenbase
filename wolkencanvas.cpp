@@ -216,6 +216,13 @@ void WolkenCanvas::setSize()
   setScalePos();
 }
 
+void WolkenCanvas::readFileHeader(string name)
+{
+  fileHeaders.resize(fileHeaders.size()+1);
+  cout<<"Opening "<<name<<endl;
+  fileHeaders.back().openRead(name);
+}
+
 void WolkenCanvas::setScalePos()
 // Set the position of the scale at the lower left or right corner.
 {
