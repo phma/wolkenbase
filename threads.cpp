@@ -389,8 +389,8 @@ void WolkenThread::operator()(int thread)
       act=dequeueAction();
       switch (act.opcode)
       {
-	case ACT_LOAD:
-	  cerr<<"Can't load a file in pause state\n";
+	case ACT_READ:
+	  cerr<<"Can't read a file in pause state\n";
 	  unsleep(thread);
 	  break;
 	default:

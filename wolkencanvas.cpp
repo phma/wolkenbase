@@ -311,7 +311,7 @@ void WolkenCanvas::paintEvent(QPaintEvent *event)
 	  painter.drawLine(QPointF(x0,y),QPointF(x1,y));
       }
       break;
-     case -ACT_LOAD:
+     case -ACT_READ:
       painter.setPen(Qt::NoPen);
       painter.setBrush(Qt::lightGray);
       painter.drawEllipse(sclera);

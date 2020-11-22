@@ -47,9 +47,8 @@
 #define TH_STOP 6
 #define TH_ASLEEP 256
 
-// These are used to tell thread 0 to do things while threads are in wait state,
-// or any thread to do things while threads are in pause state.
-#define ACT_LOAD 1
+// These are used to tell threads to do things, mostly file-related.
+#define ACT_READ 1
 
 struct ThreadAction
 {

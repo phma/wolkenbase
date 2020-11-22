@@ -185,7 +185,7 @@ void MainWindow::handleResult(ThreadAction ta)
   tinSizeChanged();
   switch (ta.opcode)
   {
-    case ACT_LOAD:
+    case ACT_READ:
       convertAction->setEnabled(true);
       break;
   }
