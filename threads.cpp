@@ -359,6 +359,41 @@ void WolkenThread::operator()(int thread)
       threadStatusMutex.lock();
       threadStatus[thread]=TH_READ;
       threadStatusMutex.unlock();
+      act=dequeueAction();
+      switch (act.opcode)
+      {
+	case ACT_READ:
+	  i=0;
+	  while (i<act.hdr->numberPoints())
+	  {
+	    if (pointBufferSize()*sizeof(point)<lowRam)
+	    {
+	      point=act.hdr->readPoint(i++);
+	      embufferPoint(point,true);
+	    }
+	    point=debufferPoint(thread);
+	    if (point.isEmpty() && pointBufferSize()*sizeof(point)>lowRam)
+	      sleep(thread);
+	    else
+	    {
+	      blknum=octRoot.findBlock(point.location);
+	      if (blknum<0)
+		blknum+=threadStatus.size();
+	      if (blknum%threadStatus.size()==thread)
+	      {
+		nPoints++;
+		octStore.put(point);
+		octStore.disown();
+		unsleep(thread);
+	      }
+	      else
+		embufferPoint(point,false);
+	    }
+	  }
+	  break;
+	default:
+	  sleep(thread);
+      }
       point=debufferPoint(thread);
       if (point.isEmpty())
 	sleep(thread);

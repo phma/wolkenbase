@@ -56,6 +56,7 @@ struct ThreadAction
   int param0;
   double param1;
   double param2;
+  LasHeader *hdr;
   std::string filename;
   int flags;
   int result;
