@@ -117,6 +117,18 @@ void testparaboloid()
   tassert(!p1.intersect(m));
 }
 
+void testsphere()
+{
+  Sphere s1(xyz(100,200,300),89);
+  /* 89²=7921 is the smallest square that can be expressed as the sum of three
+   * squares in more than one way.
+   * 89²=15²+36²+80²=39²+48²+64²
+   */
+  xyz cen(100,200,300),a(115,164,220);
+  tassert(s1.in(cen));
+  tassert(s1.in(a));
+}
+
 void testcylinder()
 {
   Cylinder c1(xy(0,0),13);
@@ -348,6 +360,8 @@ int main(int argc, char *argv[])
     testpageinx();
   if (shoulddo("paraboloid"))
     testparaboloid();
+  if (shoulddo("sphere"))
+    testsphere();
   if (shoulddo("cylinder"))
     testcylinder();
   if (shoulddo("flat"))
