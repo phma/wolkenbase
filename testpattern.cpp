@@ -30,6 +30,19 @@ using namespace std;
 unsigned int areaPhase;
 int anglePhase;
 
+void reputPoints()
+// When splitting a block, points are put in the buffer, and must be reput.
+{
+  LasPoint pnt;
+  while (true)
+  {
+    pnt=debufferPoint(0);
+    if (pnt.isEmpty())
+      break;
+    octStore.put(pnt);
+  }
+}
+
 /* Terrain with street intersection:
  * 100 m diameter, with two 15 m wide streets intersecting at right angles.
  * Power poles with wires between them. Eventually, forbs and trees.
@@ -158,4 +171,5 @@ void flatScene(double rad,double den)
     lPoint=laserize(dots[i]);
     octStore.put(lPoint);
   }
+  reputPoints();
 }
