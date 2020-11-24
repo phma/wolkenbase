@@ -91,6 +91,22 @@ private:
   double radiusCurvature;
 };
 
+class Sphere: public Shape
+/* Points down if radiusCurvature is positive.
+ * radiusCurvature is the radius of curvature at the vertex,
+ * which is twice the focal length and half the latus rectum.
+ */
+{
+public:
+  Sphere();
+  Sphere(xyz c,double r);
+  virtual bool in(xyz pnt) const;
+  virtual xyz closestPoint(Cube cube) const;
+private:
+  xyz center;
+  double radius;
+};
+
 class Cylinder: public Shape
 /* Used for traversing the point cloud in flowsnake order.
  * A hexagon in the lattice has a diapothem, which is also the distance to
