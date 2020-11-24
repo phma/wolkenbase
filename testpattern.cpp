@@ -161,8 +161,8 @@ void flatScene(double rad,double den)
   vector<xyz> limits,dots;
   int i;
   LasPoint lPoint;
-  limits.push_back(xyz(-50,-50,-1));
-  limits.push_back(xyz(50,50,1));
+  limits.push_back(xyz(-rad,-rad,-1));
+  limits.push_back(xyz(rad,rad,1));
   octRoot.sizeFit(limits);
   dots=diskSpatter(xyz(0,0,0),xyz(0,0,1),rad,den);
   cout<<dots.size()<<" points\n";
