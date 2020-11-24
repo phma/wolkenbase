@@ -124,9 +124,17 @@ void testsphere()
    * squares in more than one way.
    * 89²=15²+36²+80²=39²+48²+64²
    */
-  xyz cen(100,200,300),a(115,164,220);
+  xyz cen(100,200,300),a(115,164,220),b(115,163,220),c(36,239,252),d(36,240,252);
+  xyz e(64,120,315),f(63,120,315),g(164,248,339),h(164,248,340);
   tassert(s1.in(cen));
   tassert(s1.in(a));
+  tassert(!s1.in(b));
+  tassert(s1.in(c));
+  tassert(!s1.in(d));
+  tassert(s1.in(e));
+  tassert(!s1.in(f));
+  tassert(s1.in(g));
+  tassert(!s1.in(h));
 }
 
 void testcylinder()
