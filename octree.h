@@ -28,6 +28,7 @@
 #include "shape.h"
 #include "las.h"
 #include "threads.h"
+#include "ps.h"
 #define LASPOINT_SIZE 91
 #define RECORDS 720
 #define BLOCKSIZE 65536
@@ -61,6 +62,7 @@ public:
   }
   Cube cube(int n=-1);
   int dump(std::ofstream &file);
+  void plot(PostScript &ps);
 private:
   xyz center;
   double side;
@@ -87,6 +89,7 @@ public:
   LasPoint get(xyz key);
   bool put(LasPoint pnt);
   int dump(std::ofstream &file,Cube cube);
+  void plot(PostScript &ps,Cube cube);
   //bool isConsistent();
 private:
   int bufferNumber;
@@ -123,6 +126,7 @@ public:
   LasPoint get(xyz key);
   void put(LasPoint pnt,bool splitting=false);
   void dump(std::ofstream &file);
+  void plot(PostScript &ps);
   void dumpBuffers();
   bool isConsistent();
   std::vector<LasPoint> pointsIn(const Shape &sh);

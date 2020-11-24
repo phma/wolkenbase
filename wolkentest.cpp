@@ -80,6 +80,7 @@ void testfreeram()
 void testflat()
 {
   ofstream dumpFile("flat.dump");
+  PostScript ps;
   xy center=9*randomInCircle();
   vector<long long> blocks;
   vector<LasPoint> points;
@@ -94,6 +95,10 @@ void testflat()
   points=octStore.pointsIn(cyl);
   cout<<points.size()<<" points in cylinder\n";
   tassert(abs((int)points.size()-314)<8);
+  ps.open("flat.ps");
+  ps.setpaper(papersizes["A4 landscape"],0);
+  ps.prolog();
+  octStore.plot(ps);
   octStore.dump(dumpFile);
 }
 

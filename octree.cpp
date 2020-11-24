@@ -285,6 +285,23 @@ int Octree::dump(ofstream &file)
   return totalPoints;
 }
 
+void Octree::plot(PostScript &ps)
+{
+  int i;
+  uintptr_t subi;
+  for (i=0;i<8;i++)
+  {
+    subi=sub[i];
+    if (subi&1)
+    {
+      octStore.getBlock(subi>>1)->plot(ps,cube(i));
+      octStore.disown();
+    }
+    else if (subi)
+      ((Octree *)subi)->plot(ps);
+  }
+}
+
 OctBuffer::OctBuffer()
 {
   int i;
@@ -510,6 +527,14 @@ int OctBuffer::dump(ofstream &file,Cube cube)
   return nPoints;
 }
 
+void OctBuffer::plot(PostScript &ps,Cube cube)
+{
+  int i;
+  xyz ctr=cube.getCenter();
+  for (i=0;i<points.size();i++)
+    ps.dot(points[i].location);
+}
+
 OctStore::OctStore()
 {
   int i;
@@ -668,6 +693,15 @@ void OctStore::put(LasPoint pnt,bool splitting)
 void OctStore::dump(ofstream &file)
 {
   file<<octRoot.dump(file)<<" total points\n";
+}
+
+void OctStore::plot(PostScript &ps)
+{
+  ps.startpage();
+  ps.setscale(octRoot.cube().minX(),octRoot.cube().minY(),
+	      octRoot.cube().maxX(),octRoot.cube().maxY());
+  octRoot.plot(ps);
+  ps.endpage();
 }
 
 void OctStore::dumpBuffers()
