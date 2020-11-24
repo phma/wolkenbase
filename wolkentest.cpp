@@ -336,6 +336,7 @@ int main(int argc, char *argv[])
   int i;
   for (i=1;i<argc;i++)
     args.push_back(argv[i]);
+  initPhases();
   octStore.open("store.oct");
   if (shoulddo("sizeof"))
     testsizeof();

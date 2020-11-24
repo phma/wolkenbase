@@ -23,6 +23,7 @@
 #include <cassert>
 #include "testpattern.h"
 #include "angle.h"
+#include "random.h"
 #include "octree.h"
 
 using namespace std;
@@ -41,6 +42,12 @@ void reputPoints()
       break;
     octStore.put(pnt);
   }
+}
+
+void initPhases()
+{
+  areaPhase=rng.uirandom();
+  anglePhase=rng.uirandom();
 }
 
 /* Terrain with street intersection:
