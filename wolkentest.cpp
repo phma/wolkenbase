@@ -120,8 +120,8 @@ void testparaboloid()
 void testsphere()
 {
   Sphere s1(xyz(100,200,300),89);
-  /* 89²=7921 is the smallest square that can be expressed as the sum of three
-   * squares in more than one way.
+  /* 89²=7921 is a square that can be expressed as the sum of three different
+   * positive squares in more than one way.
    * 89²=15²+36²+80²=39²+48²+64²
    */
   xyz cen(100,200,300),a(115,164,220),b(115,163,220),c(36,239,252),d(36,240,252);
