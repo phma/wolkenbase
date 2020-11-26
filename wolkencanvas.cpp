@@ -385,7 +385,7 @@ void WolkenCanvas::mouseMoveEvent(QMouseEvent *event)
   {
     if (i)
       tipString+=' ';
-    tipString+=baseName(fileHeaders[i].getFileName());
+    tipString+=baseName(fileHeaders[filenums[i]].getFileName());
   }
   QToolTip::showText(event->globalPos(),QString::fromStdString(tipString),this);
 }

@@ -26,8 +26,8 @@
 #include <QPixmap>
 #include <string>
 #include <array>
-//#include "configdialog.h"
-//#include "unitbutton.h"
+#include "configdialog.h"
+#include "unitbutton.h"
 #include "wolkencanvas.h"
 
 class MainWindow: public QMainWindow
@@ -87,6 +87,6 @@ private:
   QAction *exportAction,*stopAction,*resumeAction,*exitAction;
   QAction *configureAction;
   QAction *aboutProgramAction,*aboutQtAction;
-  //UnitButton *unitButtons[4];
+  UnitButton *unitButtons[4];
   WolkenCanvas *canvas;
 };
