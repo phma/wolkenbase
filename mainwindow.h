@@ -79,7 +79,7 @@ private:
   QFileDialog *fileDialog;
   QMessageBox *msgBox;
   QToolBar *toolbar;
-  //ConfigurationDialog *configDialog;
+  ConfigurationDialog *configDialog;
   QMenu *fileMenu,*viewMenu,*settingsMenu,*helpMenu,*colorMenu;
   QLabel *fileMsg,*dotTriangleMsg,*toleranceMsg,*densityMsg;
   QProgressBar *doneBar,*busyBar;
