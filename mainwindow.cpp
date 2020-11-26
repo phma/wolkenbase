@@ -245,7 +245,7 @@ void MainWindow::makeActions()
   clearAction->setIcon(QIcon::fromTheme("edit-clear"));
   clearAction->setText(tr("Clear"));
   fileMenu->addAction(clearAction);
-  connect(clearAction,SIGNAL(triggered(bool)),this,SLOT(clearCloud()));
+  connect(clearAction,SIGNAL(triggered(bool)),canvas,SLOT(clearCloud()));
   stopAction=new QAction(this);
   stopAction->setIcon(QIcon::fromTheme("process-stop"));
   stopAction->setText(tr("Stop"));

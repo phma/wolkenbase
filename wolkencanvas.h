@@ -44,6 +44,7 @@ public slots:
   void sizeToFit();
   void setSize();
   void readFileHeader(std::string name);
+  void clearCloud();
   void setLengthUnit(double unit);
   void setScalePos();
   void tick(); // 50 ms
