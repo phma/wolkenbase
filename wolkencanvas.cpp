@@ -151,9 +151,13 @@ void WolkenCanvas::tick()
     frameBuffer.fill();
   if (fileCountdown>=0 && fileCountdown<fileHeaders.size())
   {
+    QLinearGradient grad(worldToWindow(fileHeaders[fileCountdown].minCorner()),
+			 worldToWindow(fileHeaders[fileCountdown].maxCorner()));
     fileBound=QRectF(worldToWindow(fileHeaders[fileCountdown].minCorner()),
 		     worldToWindow(fileHeaders[fileCountdown].maxCorner()));
-    painter.setBrush(Qt::blue);
+    grad.setColorAt(0,Qt::cyan);
+    grad.setColorAt(1,Qt::magenta);
+    painter.setBrush(grad);
     painter.drawRect(fileBound);
   }
   if (fileCountdown==0)
