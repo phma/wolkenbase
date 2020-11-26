@@ -256,6 +256,7 @@ void WolkenCanvas::readFileHeader(string name)
   fileHeaders.resize(fileHeaders.size()+1);
   cout<<"Opening "<<name<<endl;
   fileHeaders.back().openRead(name);
+  fileHeaders.back().setUnit(lengthUnit);
   setSize();
 }
 
