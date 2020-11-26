@@ -61,7 +61,7 @@ private:
   xy ballPos;
   xy leftScaleEnd,rightScaleEnd,scaleEnd;
   int penPos;
-  int triangleNum;
+  int fileCountdown;
   int lastOpcount;
   int ballAngle,dartAngle;
   int lastntri;

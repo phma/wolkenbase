@@ -41,7 +41,7 @@ WolkenCanvas::WolkenCanvas(QWidget *parent):QWidget(parent)
   setAutoFillBackground(true);
   setBackgroundRole(QPalette::Base);
   setMinimumSize(40,30);
-  triangleNum=splashScreenTime=dartAngle=ballAngle=0;
+  fileCountdown=splashScreenTime=dartAngle=ballAngle=0;
 }
 
 QPointF WolkenCanvas::worldToWindow(xy pnt)
@@ -83,6 +83,7 @@ void WolkenCanvas::sizeToFit()
     else
       scale=yscale;
   }
+  fileCountdown=fileHeaders.size()+10;
   if (splashScreenTime)
     scale=scale*2/3;
 }
@@ -146,13 +147,19 @@ void WolkenCanvas::tick()
   }
   update(QRegion(swath));
   // Draw a rectangle for each open LAS file.
-  for (i=0;i<fileHeaders.size();i++)
+  if (fileCountdown==fileHeaders.size())
+    frameBuffer.fill();
+  if (fileCountdown>=0 && fileCountdown<fileHeaders.size())
   {
-    fileBound=QRectF(worldToWindow(fileHeaders[i].minCorner()),
-		     worldToWindow(fileHeaders[i].maxCorner()));
+    fileBound=QRectF(worldToWindow(fileHeaders[fileCountdown].minCorner()),
+		     worldToWindow(fileHeaders[fileCountdown].maxCorner()));
     painter.setBrush(Qt::blue);
     painter.drawRect(fileBound);
   }
+  if (fileCountdown==0)
+    update();
+  if (fileCountdown>=0)
+    fileCountdown--;
   // Paint a circle white as a background for the scale.
   if (maxScaleSize>0)
   {
