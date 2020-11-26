@@ -20,8 +20,10 @@
  * along with Wolkenbase. If not, see <http://www.gnu.org/licenses/>.
  */
 #include <QPainter>
+#include <QtWidgets>
 #include <cmath>
 #include "wolkencanvas.h"
+#include "fileio.h"
 #include "boundrect.h"
 #include "relprime.h"
 #include "angle.h"
@@ -41,6 +43,7 @@ WolkenCanvas::WolkenCanvas(QWidget *parent):QWidget(parent)
   setAutoFillBackground(true);
   setBackgroundRole(QPalette::Base);
   setMinimumSize(40,30);
+  setMouseTracking(true);
   fileCountdown=splashScreenTime=dartAngle=ballAngle=0;
 }
 
@@ -354,4 +357,19 @@ void WolkenCanvas::resizeEvent(QResizeEvent *event)
 {
   setSize();
   QWidget::resizeEvent(event);
+}
+
+void WolkenCanvas::mouseMoveEvent(QMouseEvent *event)
+{
+  xy eventLoc=windowToWorld(event->pos());
+  string tipString;
+  vector<int> filenums=fileHitTest(eventLoc);
+  int i;
+  for (i=0;i<filenums.size();i++)
+  {
+    if (i)
+      tipString+=' ';
+    tipString+=baseName(fileHeaders[i].getFileName());
+  }
+  QToolTip::showText(event->globalPos(),QString::fromStdString(tipString),this);
 }

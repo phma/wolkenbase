@@ -50,6 +50,7 @@ public slots:
 protected:
   void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
   void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+  void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
 private:
   QPixmap frameBuffer;
   Lissajous lis;
