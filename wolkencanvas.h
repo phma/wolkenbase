@@ -66,5 +66,6 @@ private:
   int ballAngle,dartAngle;
   int lastntri;
   int splashScreenTime; // in ticks
+  std::vector<int> fileHitTest(xy pnt);
 };
 #endif

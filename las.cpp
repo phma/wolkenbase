@@ -460,6 +460,17 @@ xyz LasHeader::maxCorner()
   return xyz(maxX*unit,maxY*unit,maxZ*unit);
 }
 
+bool LasHeader::inBox(xyz pnt)
+{
+  xyz min=minCorner();
+  xyz max=maxCorner();
+  if (std::isnan(pnt.getz())) // Hit testing uses only xy
+    pnt=xyz(xy(pnt),(min.getz()+max.getz())/2);
+  return pnt.getx()>=min.getx() && pnt.getx()<=max.getx() &&
+	 pnt.gety()>=min.gety() && pnt.gety()<=max.gety() &&
+	 pnt.getz()>=min.getz() && pnt.getz()<=max.getz();
+}
+
 int LasHeader::getVersion()
 {
   return (versionMajor<<8)+versionMinor;

@@ -58,6 +58,17 @@ xy WolkenCanvas::windowToWorld(QPointF pnt)
   return ret;
 }
 
+vector<int> WolkenCanvas::fileHitTest(xy pnt)
+{
+  vector<int> ret;
+  xyz pntz(pnt,NAN);
+  int i;
+  for (i=0;i<fileHeaders.size();i++)
+    if (fileHeaders[i].inBox(pntz))
+      ret.push_back(i);
+  return ret;
+}
+
 void WolkenCanvas::sizeToFit()
 {
   int i;
