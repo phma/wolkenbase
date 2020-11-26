@@ -33,6 +33,16 @@
 using namespace std;
 namespace cr=std::chrono;
 
+Qt::GlobalColor lightColors[]=
+{
+  Qt::red,Qt::cyan,Qt::gray,Qt::blue,Qt::yellow,Qt::green,Qt::magenta
+};
+Qt::GlobalColor darkColors[]=
+{
+  Qt::black,Qt::darkCyan,Qt::darkGreen,Qt::darkYellow,
+  Qt::darkRed,Qt::darkMagenta,Qt::darkBlue,Qt::darkGray
+};
+
 QPoint qptrnd(xy pnt)
 {
   return QPoint(lrint(pnt.getx()),lrint(pnt.gety()));
@@ -169,8 +179,8 @@ void WolkenCanvas::tick()
 			 worldToWindow(fileHeaders[fileCountdown].maxCorner()));
     fileBound=QRectF(worldToWindow(fileHeaders[fileCountdown].minCorner()),
 		     worldToWindow(fileHeaders[fileCountdown].maxCorner()));
-    grad.setColorAt(0,Qt::cyan);
-    grad.setColorAt(1,Qt::magenta);
+    grad.setColorAt(0,lightColors[fileCountdown%7]);
+    grad.setColorAt(1,darkColors[fileCountdown%8]);
     painter.setBrush(grad);
     painter.drawRect(fileBound);
   }
