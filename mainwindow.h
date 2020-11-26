@@ -54,7 +54,7 @@ signals:
   void fileOpened(std::string name);
 public slots:
   void tick();
-  void setSettings();
+  void setSettings(double lu,int thr);
   void setUnit(double lu);
   void openFile();
   void disableMenuSplash();

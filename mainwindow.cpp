@@ -326,15 +326,12 @@ void MainWindow::writeSettings()
   settings.setValue("exportEmpty",exportEmpty);
 }
 
-void MainWindow::setSettings()
+void MainWindow::setSettings(double lu,int thr)
 {
-  /*lengthUnit=lu;
-  tolerance=tol;
+  lengthUnit=lu;
   numberThreads=thr;
-  exportEmpty=ee;
-  printer3d=pri;
   writeSettings();
-  lengthUnitChanged(lengthUnit);*/
+  lengthUnitChanged(lengthUnit);
 }
 
 void MainWindow::setUnit(double lu)
