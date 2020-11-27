@@ -27,6 +27,8 @@
 #include "boundrect.h"
 #include "relprime.h"
 #include "angle.h"
+#include "octree.h"
+#include "freeram.h"
 #include "threads.h"
 #include "ldecimal.h"
 
@@ -55,6 +57,7 @@ WolkenCanvas::WolkenCanvas(QWidget *parent):QWidget(parent)
   setMinimumSize(40,30);
   setMouseTracking(true);
   fileCountdown=splashScreenTime=dartAngle=ballAngle=0;
+  lowRam=freeRam()/7;
 }
 
 QPointF WolkenCanvas::worldToWindow(xy pnt)
@@ -263,8 +266,15 @@ void WolkenCanvas::readFileHeader(string name)
 void WolkenCanvas::startProcess()
 {
   int i;
+  vector<xyz> limits;
   ThreadAction ta;
   waitForThreads(TH_READ);
+  for (i=0;i<fileHeaders.size();i++)
+  {
+    limits.push_back(fileHeaders[i].minCorner());
+    limits.push_back(fileHeaders[i].maxCorner());
+  }
+  octRoot.sizeFit(limits);
   for (i=0;i<fileHeaders.size();i++)
   {
     cout<<"Read file "<<baseName(fileHeaders[i].getFileName())<<endl;

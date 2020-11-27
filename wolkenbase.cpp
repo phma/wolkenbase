@@ -26,6 +26,8 @@
 #include <iostream>
 #include "point.h"
 #include "config.h"
+#include "octree.h"
+#include "relprime.h"
 #include "mainwindow.h"
 #include "brevno.h"
 
@@ -65,6 +67,8 @@ int main(int argc, char *argv[])
     nthreads=thread::hardware_concurrency();
   if (nthreads<1)
     nthreads=2;
+  octStore.open("store.oct",nthreads+relprime(nthreads));
+  octStore.resize(8*nthreads+1);
   startThreads(nthreads);
   window.show();
   exitStatus=app.exec();
