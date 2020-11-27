@@ -262,7 +262,16 @@ void WolkenCanvas::readFileHeader(string name)
 
 void WolkenCanvas::startProcess()
 {
-  cout<<"Start process\n";
+  int i;
+  ThreadAction ta;
+  waitForThreads(TH_READ);
+  for (i=0;i<fileHeaders.size();i++)
+  {
+    cout<<"Read file "<<baseName(fileHeaders[i].getFileName())<<endl;
+    ta.hdr=&fileHeaders[i];
+    ta.opcode=ACT_READ;
+    enqueueAction(ta);
+  }
 }
 
 void WolkenCanvas::clearCloud()
