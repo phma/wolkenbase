@@ -260,6 +260,11 @@ void WolkenCanvas::readFileHeader(string name)
   setSize();
 }
 
+void WolkenCanvas::startProcess()
+{
+  cout<<"Start process\n";
+}
+
 void WolkenCanvas::clearCloud()
 {
   fileHeaders.clear();

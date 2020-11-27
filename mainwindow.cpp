@@ -146,7 +146,6 @@ void MainWindow::disableMenuSplash()
 {
   openAction->setEnabled(false);
   loadAction->setEnabled(false);
-  convertAction->setEnabled(false);
   clearAction->setEnabled(false);
   stopAction->setEnabled(false);
 }
@@ -155,7 +154,6 @@ void MainWindow::enableMenuSplash()
 {
   openAction->setEnabled(true);
   loadAction->setEnabled(true);
-  convertAction->setEnabled(false);
   clearAction->setEnabled(false);
   stopAction->setEnabled(false);
 }
@@ -186,7 +184,6 @@ void MainWindow::handleResult(ThreadAction ta)
   switch (ta.opcode)
   {
     case ACT_READ:
-      convertAction->setEnabled(true);
       break;
   }
   fileMsg->setText(QString::fromStdString(fileNames));
@@ -246,6 +243,11 @@ void MainWindow::makeActions()
   clearAction->setText(tr("Clear"));
   fileMenu->addAction(clearAction);
   connect(clearAction,SIGNAL(triggered(bool)),canvas,SLOT(clearCloud()));
+  processAction=new QAction(this);
+  //procesAction->setIcon(QIcon::fromTheme("edit-clear"));
+  processAction->setText(tr("Process"));
+  fileMenu->addAction(processAction);
+  connect(processAction,SIGNAL(triggered(bool)),canvas,SLOT(startProcess()));
   stopAction=new QAction(this);
   stopAction->setIcon(QIcon::fromTheme("process-stop"));
   stopAction->setText(tr("Stop"));
