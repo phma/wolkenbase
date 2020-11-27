@@ -156,12 +156,15 @@ void embufferPoint(LasPoint point,bool fromFile)
   if (thread<0)
     thread+=threadStatus.size();
   thread%=threadStatus.size();
-  bufferMutex.lock();
-  pointBuffer[thread].push_back(point);
-  sz=pointBuffer[thread].size();
-  bufferPos=(bufferPos+relprime(sz))%sz;
-  swap(pointBuffer[thread].back(),pointBuffer[thread][bufferPos]);
-  bufferMutex.unlock();
+  if (!point.isEmpty())
+  {
+    bufferMutex.lock();
+    pointBuffer[thread].push_back(point);
+    sz=pointBuffer[thread].size();
+    bufferPos=(bufferPos+relprime(sz))%sz;
+    swap(pointBuffer[thread].back(),pointBuffer[thread][bufferPos]);
+    bufferMutex.unlock();
+  }
   while (fromFile && pointBufferSize()*sizeof(point)>lowRam)
     this_thread::sleep_for(chrono::milliseconds(1));
 }
