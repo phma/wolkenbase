@@ -190,6 +190,8 @@ LasPoint debufferPoint(int thread)
   {
     ret=pointBuffer[thread].back();
     pointBuffer[thread].pop_back();
+    if (ret.isEmpty())
+      cout<<"Debuffered empty point\n";
     if (pointBuffer[thread].capacity()>2*pointBuffer[thread].size())
       pointBuffer[thread].shrink_to_fit();
   }
