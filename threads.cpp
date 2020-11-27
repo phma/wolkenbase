@@ -418,7 +418,10 @@ void WolkenThread::operator()(int thread)
 	  unsleep(thread);
 	}
 	else
+	{
 	  embufferPoint(point,false);
+	  unsleep(thread);
+	}
       }
     }
     if (threadCommand==TH_PAUSE)
