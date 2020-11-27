@@ -81,6 +81,7 @@ void startThreads(int n)
   for (i=0;i<n;i++)
   {
     threads.push_back(thread(WolkenThread(),i));
+    sleepTime[i]=i+1;
     this_thread::sleep_for(chrono::milliseconds(10));
   }
 }
@@ -215,11 +216,13 @@ bool pointBufferEmpty()
 
 void sleep(int thread)
 {
-  sleepTime[thread]+=1+sleepTime[thread]/1e3;
+  sleepTime[thread]*=1.0625;
+  if (sleepTime[thread]>1e5)
+    sleepTime[thread]*=0.9375;
   threadStatusMutex.lock();
   threadStatus[thread]|=256;
   threadStatusMutex.unlock();
-  this_thread::sleep_for(chrono::milliseconds(lrint(sleepTime[thread])));
+  this_thread::sleep_for(chrono::microseconds(lrint(sleepTime[thread])));
   threadStatusMutex.lock();
   threadStatus[thread]&=255;
   threadStatusMutex.unlock();
@@ -240,9 +243,11 @@ void sleepDead(int thread)
 
 void unsleep(int thread)
 {
-  sleepTime[thread]-=1+sleepTime[thread]/1e3;
+  sleepTime[thread]*=0.9375;
+  if (sleepTime[thread]<1)
+    sleepTime[thread]*=1.0625;
   if (sleepTime[thread]<0 || std::isnan(sleepTime[thread]))
-    sleepTime[thread]=0;
+    sleepTime[thread]=1;
 }
 
 double maxSleepTime()
@@ -392,8 +397,6 @@ void WolkenThread::operator()(int thread)
 	    }
 	  }
 	  break;
-	default:
-	  sleep(thread);
       }
       point=debufferPoint(thread);
       if (point.isEmpty())
