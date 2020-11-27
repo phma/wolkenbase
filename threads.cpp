@@ -49,6 +49,7 @@ double stageTolerance;
 double minArea;
 queue<ThreadAction> actQueue,resQueue;
 map<int,vector<LasPoint> > pointBuffer;
+map<int,size_t> pbsz;
 int bufferPos=0;
 int currentAction;
 map<thread::id,int> threadNums;
@@ -198,12 +199,12 @@ LasPoint debufferPoint(int thread)
 
 size_t pointBufferSize()
 {
-  size_t sz,sum=0,i;
+  size_t sum=0,i;
   bufferMutex.lock();
   for (i=0;i<pointBuffer.size();i++)
   {
-    sz=pointBuffer[i].size();
-    sum+=sz;
+    pbsz[i]=pointBuffer[i].size();
+    sum+=pbsz[i];
   }
   bufferMutex.unlock();
   return sum;
