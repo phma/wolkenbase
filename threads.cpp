@@ -365,7 +365,7 @@ void WolkenThread::operator()(int thread)
 	case ACT_READ:
 	  i=0;
 	  cout<<"Thread "<<thread<<" reading "<<act.hdr->getFileName()<<endl;
-	  while (i<act.hdr->numberPoints())
+	  while (i<act.hdr->numberPoints() && threadCommand!=TH_STOP)
 	  {
 	    if (pointBufferSize()*sizeof(point)<lowRam)
 	    {
