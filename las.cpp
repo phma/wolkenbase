@@ -540,7 +540,7 @@ LasPoint LasHeader::readPoint(size_t num)
     ret.yDir=readlefloat(*lasfile);
     ret.zDir=readlefloat(*lasfile);
   }
-  ret.location=xyz(xOffset+xScale*unit*xInt,yOffset+yScale*unit*yInt,zOffset+zScale*unit*zInt);
+  ret.location=xyz(xOffset+xScale*xInt,yOffset+yScale*yInt,zOffset+zScale*zInt)*unit;
   if (!lasfile->good())
     throw -1;
   return ret;
