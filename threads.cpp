@@ -237,11 +237,13 @@ void sleep(int thread)
 void sleepDead(int thread)
 // Sleep to get out of deadlock.
 {
-  sleepTime[thread]*=1+thread/1e3;
+  sleepTime[thread]*=1.0625;
+  if (sleepTime[thread]>1e5)
+    sleepTime[thread]*=0.9375;
   threadStatusMutex.lock();
   threadStatus[thread]|=256;
   threadStatusMutex.unlock();
-  this_thread::sleep_for(chrono::milliseconds(lrint(sleepTime[thread])));
+  this_thread::sleep_for(chrono::microseconds(lrint(sleepTime[thread])));
   threadStatusMutex.lock();
   threadStatus[thread]&=255;
   threadStatusMutex.unlock();
@@ -251,7 +253,7 @@ void unsleep(int thread)
 {
   sleepTime[thread]*=0.9375;
   if (sleepTime[thread]<1)
-    sleepTime[thread]*=1.0625;
+    sleepTime[thread]*=1.125;
   if (sleepTime[thread]<0 || std::isnan(sleepTime[thread]))
     sleepTime[thread]=1;
 }
