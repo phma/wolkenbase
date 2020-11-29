@@ -116,6 +116,7 @@ long long Octree::findBlock(xyz pnt)
   ybit=pnt.gety()>=center.gety();
   zbit=pnt.getz()>=center.getz();
   i=zbit*4+ybit*2+xbit;
+  assert(side>0);
   subi=sub[i];
   if (subi==0)
     return -1;
