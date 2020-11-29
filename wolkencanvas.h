@@ -40,6 +40,7 @@ public:
 signals:
   void splashScreenStarted();
   void splashScreenFinished();
+  void readFileProgress(size_t sofar,size_t total);
 public slots:
   void sizeToFit();
   void setSize();

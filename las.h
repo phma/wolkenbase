@@ -100,6 +100,7 @@ private:
   size_t startWaveform,startExtendedVariableLength;
   unsigned int nExtendedVariableLength;
   size_t nPoints[16]; // [0] is total; [1]..[15] are each return
+  size_t nReadPoints; // for progress bar
   bool reading;
   size_t writePos;
 public:
@@ -126,6 +127,10 @@ public:
   }
   void close();
   size_t numberPoints(int r=0);
+  size_t numberReadPoints()
+  {
+    return nReadPoints;
+  }
   xyz minCorner();
   xyz maxCorner();
   bool inBox(xyz pnt);

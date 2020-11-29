@@ -206,6 +206,7 @@ void LasHeader::openRead(string fileName)
   filename=fileName;
   lasfile=new fstream(fileName,ios::binary|ios::in);
   reading=true;
+  nReadPoints=0;
   magicBytes=readbeint(*lasfile);
   if (magicBytes==0x4c415346)
   {
@@ -315,6 +316,7 @@ void LasHeader::openWrite(string fileName)
   filename=fileName;
   lasfile=new fstream(fileName,ios::binary|ios::out);
   reading=false;
+  nReadPoints=0;
   versionMajor=1;
   versionMinor=4;
   xScale=yScale=zScale=0;
@@ -543,6 +545,7 @@ LasPoint LasHeader::readPoint(size_t num)
   ret.location=xyz(xOffset+xScale*xInt,yOffset+yScale*yInt,zOffset+zScale*zInt)*unit;
   if (!lasfile->good())
     throw -1;
+  nReadPoints++;
   return ret;
 }
 

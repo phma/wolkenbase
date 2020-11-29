@@ -48,6 +48,7 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent)
   connect(this,SIGNAL(tinSizeChanged()),canvas,SLOT(setSize()));
   connect(this,SIGNAL(lengthUnitChanged(double)),canvas,SLOT(setLengthUnit(double)));
   connect(this,SIGNAL(fileOpened(std::string)),canvas,SLOT(readFileHeader(std::string)));
+  connect(canvas,SIGNAL(readFileProgress(size_t,size_t)),this,SLOT(readFileProgress(size_t,size_t)));
   doneBar=new QProgressBar(this);
   busyBar=new QProgressBar(this);
   doneBar->setRange(0,16777216);
@@ -103,6 +104,8 @@ void MainWindow::tick()
   }
   lpfBusyFraction=(16*lpfBusyFraction+busyFraction())/17;
   busyBar->setValue(lrint(lpfBusyFraction*16777216));
+  if (tstatus==1048577*TH_READ && readFileTotal>0)
+    doneBar->setValue(lrint((double)readFileSoFar/readFileTotal*16777216));
   if (tstatus==1048577*TH_WAIT+TH_ASLEEP && actionQueueEmpty())
     currentAction=0;
   writeBufLog();
@@ -171,6 +174,12 @@ void MainWindow::resumeConversion()
     setThreadCommand(TH_SPLIT);
     conversionStopped=false;
   }
+}
+
+void MainWindow::readFileProgress(size_t sofar,size_t total)
+{
+  readFileSoFar=sofar;
+  readFileTotal=total;
 }
 
 void MainWindow::handleResult(ThreadAction ta)

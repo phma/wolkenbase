@@ -61,6 +61,7 @@ public slots:
   void enableMenuSplash();
   void stopConversion();
   void resumeConversion();
+  void readFileProgress(size_t sofar,size_t total);
   void handleResult(ThreadAction ta);
   void aboutProgram();
   void aboutQt();
@@ -71,6 +72,7 @@ private:
   double lastTolerance,lastStageTolerance,writtenTolerance,lastDensity,rmsadj;
   int numberThreads;
   int lastState; // state is in TinCanvas
+  size_t readFileSoFar,readFileTotal;
   bool conversionStopped,showingResult,exportEmpty;
   double tolerance,density,lengthUnit;
   double lpfBusyFraction;

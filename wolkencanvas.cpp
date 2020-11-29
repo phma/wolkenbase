@@ -118,6 +118,7 @@ void WolkenCanvas::sizeToFit()
 void WolkenCanvas::tick()
 {
   int i,sz,timeLimit;
+  size_t sofar=0,total=0;
   int tstatus=getThreadStatus();
   double splashElev;
   xy gradient,A,B,C;
@@ -137,6 +138,12 @@ void WolkenCanvas::tick()
   painter.setRenderHint(QPainter::Antialiasing,true);
   painter.setPen(Qt::NoPen);
   brush.setStyle(Qt::SolidPattern);
+  for (i=0;i<fileHeaders.size();i++)
+  {
+    sofar+=fileHeaders[i].numberReadPoints();
+    total+=fileHeaders[i].numberPoints();
+  }
+  readFileProgress(sofar,total);
   if ((tstatus&0x3ffbfeff)%1048577==0)
     state=(tstatus&0x3ffbfeff)/1048577;
   else
