@@ -416,9 +416,9 @@ void WolkenThread::operator()(int thread)
 	{
 	  nPoints++;
 	  octStore.put(point);
-	  gotPoint=octStore.get(point.location);
+	  /*gotPoint=octStore.get(point.location);
 	  if (gotPoint.isEmpty())
-	    cout<<"Point missing\n";
+	    cout<<"Point missing\n";*/
 	  octStore.disown();
 	  unsleep(thread);
 	}
