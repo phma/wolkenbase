@@ -571,14 +571,16 @@ void OctStore::flush(int thread,int nthreads)
 void OctStore::disown()
 {
   int i,n,t=thisThread();
+  OctBuffer *buf;
   ownMutex.lock();
   for (i=0;i<ownMap[t].size();i++)
   {
-    bufferMutex.lock_shared();
     n=ownMap[t][i];
     assert(n>=0);
-    blocks[n].owningThread.erase(t);
+    bufferMutex.lock_shared();
+    buf=&blocks[n];
     bufferMutex.unlock_shared();
+    buf->owningThread.erase(t);
   }
   ownMap[t].clear();
   ownMutex.unlock();
