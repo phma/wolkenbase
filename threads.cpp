@@ -149,7 +149,7 @@ bool resultQueueEmpty()
 
 void embufferPoint(LasPoint point,bool fromFile)
 {
-  int sz,thread;
+  int thread;
   octStore.setBlockMutex.lock_shared();
   thread=octRoot.findBlock(point.location);
   octStore.setBlockMutex.unlock_shared();
@@ -160,8 +160,8 @@ void embufferPoint(LasPoint point,bool fromFile)
   {
     bufferMutex.lock();
     pointBuffer[thread].push_back(point);
-    sz=pointBuffer[thread].size();
-    bufferPos=(bufferPos+relprime(sz))%sz;
+    pbsz[thread]=pointBuffer[thread].size();
+    bufferPos=(bufferPos+relprime(pbsz[thread]))%pbsz[thread];
     swap(pointBuffer[thread].back(),pointBuffer[thread][bufferPos]);
     bufferMutex.unlock();
   }
@@ -182,6 +182,7 @@ void embufferPoints(vector<LasPoint> points,int thread)
   pointBuffer[thread].reserve(pointBuffer[thread].size()+points.size());
   for (i=0;i<points.size();i++)
     pointBuffer[thread].push_back(points[i]);
+  pbsz[thread]=pointBuffer[thread].size();
   bufferMutex.unlock();
 }
 
@@ -198,6 +199,7 @@ LasPoint debufferPoint(int thread)
     if (pointBuffer[thread].capacity()>2*pointBuffer[thread].size())
       pointBuffer[thread].shrink_to_fit();
   }
+  pbsz[thread]=pointBuffer[thread].size();
   bufferMutex.unlock();
   return ret;
 }
@@ -205,13 +207,10 @@ LasPoint debufferPoint(int thread)
 size_t pointBufferSize()
 {
   size_t sum=0,i;
-  bufferMutex.lock();
   for (i=0;i<pointBuffer.size();i++)
   {
-    pbsz[i]=pointBuffer[i].size();
     sum+=pbsz[i];
   }
-  bufferMutex.unlock();
   return sum;
 }
 
