@@ -278,6 +278,8 @@ void testpeano()
 {
   unsigned i;
   array<int,3> rec;
+  char histo[36];
+  memset(histo,0,36);
   for (i=0;i<THREE20;i+=rec[2])
   {
     rec=peanoPoint(2,2,i);
@@ -287,7 +289,14 @@ void testpeano()
   {
     rec=peanoPoint(5,7,i);
     cout<<setw(11)<<i<<' '<<rec[0]<<' '<<rec[1]<<endl;
+    if (rec[0]<0)
+      histo[35]++;
+    else
+      histo[rec[0]*7+rec[1]]++;
   }
+  for (i=0;i<35;i++)
+    tassert(histo[i]==1);
+  tassert(histo[i]==20);
 }
 
 /* Files for testing block splitting:
