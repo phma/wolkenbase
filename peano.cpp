@@ -72,7 +72,7 @@ array<int,3> peanoPoint(int width,int height,unsigned phase,int direction)
   else if (direction&4) // portrait
   {
     part1=(height+1)/3;
-    part2=(2*height+2)/3;
+    part2=(2*height+1)/3;
     switch (partphase)
     {
       case 0:
@@ -97,7 +97,7 @@ array<int,3> peanoPoint(int width,int height,unsigned phase,int direction)
   else // landscape
   {
     part1=(width+1)/3;
-    part2=(2*width+2)/3;
+    part2=(2*width+1)/3;
     switch (partphase)
     {
       case 0:
