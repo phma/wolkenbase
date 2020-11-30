@@ -47,7 +47,7 @@ array<int,3> peanoPoint(int width,int height,unsigned phase,int direction)
  */
 {
   int part1,part2,partbase=0,partsize;
-  unsigned partphase;
+  unsigned partphase=0;
   array<int,3> ret;
   if (width>height)
     direction&=3;
