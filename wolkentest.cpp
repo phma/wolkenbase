@@ -278,7 +278,10 @@ void testpeano()
 {
   unsigned i;
   array<int,3> rec;
+  array<int,2> pnt;
   char histo[36];
+  Peano pe;
+  PostScript ps;
   memset(histo,0,36);
   for (i=0;i<THREE20;i+=rec[2])
   {
@@ -297,6 +300,20 @@ void testpeano()
   for (i=0;i<35;i++)
     tassert(histo[i]==1);
   tassert(histo[i]==20);
+  ps.open("peano.ps");
+  ps.setpaper(papersizes["A4 landscape"],0);
+  ps.prolog();
+  ps.startpage();
+  ps.setscale(0,0,71,41);
+  ps.startline();
+  pe.resize(71,41);
+  for (i=0;i<71*41;i++)
+  {
+    pnt=pe.step();
+    ps.lineto(xy(pnt[0],pnt[1]));
+  }
+  ps.endline();
+  ps.endpage();
 }
 
 /* Files for testing block splitting:
