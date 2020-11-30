@@ -26,3 +26,14 @@
 #define THREE19 (unsigned)1162261467
 
 std::array<int,3> peanoPoint(int width,int height,unsigned phase,int direction=0);
+
+class Peano
+{
+public:
+  Peano();
+  void resize(int w,int h);
+  std::array<int,2> step();
+private:
+  int width,height;
+  unsigned phase;
+};
