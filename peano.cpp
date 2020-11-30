@@ -92,7 +92,7 @@ array<int,3> peanoPoint(int width,int height,unsigned phase,int direction)
     ret=peanoPoint(width,partsize,3*(phase-partphase),direction^4);
     if (ret[1]>=0)
       ret[1]+=partbase;
-    ret[2]/=3;
+    ret[2]=(unsigned)ret[2]/3;
   }
   else // landscape
   {
