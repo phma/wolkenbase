@@ -37,7 +37,7 @@ namespace cr=std::chrono;
 
 mutex actMutex;
 mutex startMutex;
-mutex bufferMutex;
+map<int,mutex> bufferMutex;
 shared_mutex threadStatusMutex;
 mutex metaMutex;
 
@@ -50,7 +50,7 @@ double minArea;
 queue<ThreadAction> actQueue,resQueue;
 map<int,vector<LasPoint> > pointBuffer;
 map<int,size_t> pbsz;
-int bufferPos=0;
+map<int,int> bufferPos;
 int currentAction;
 map<thread::id,int> threadNums;
 
@@ -158,12 +158,12 @@ void embufferPoint(LasPoint point,bool fromFile)
   thread%=threadStatus.size();
   if (!point.isEmpty())
   {
-    bufferMutex.lock();
+    bufferMutex[thread].lock();
     pointBuffer[thread].push_back(point);
     pbsz[thread]=pointBuffer[thread].size();
-    bufferPos=(bufferPos+relprime(pbsz[thread]))%pbsz[thread];
-    swap(pointBuffer[thread].back(),pointBuffer[thread][bufferPos]);
-    bufferMutex.unlock();
+    bufferPos[thread]=(bufferPos[thread]+relprime(pbsz[thread]))%pbsz[thread];
+    swap(pointBuffer[thread].back(),pointBuffer[thread][bufferPos[thread]]);
+    bufferMutex[thread].unlock();
   }
   while (fromFile && pointBufferSize()*sizeof(point)>lowRam)
     this_thread::sleep_for(chrono::milliseconds(1));
@@ -178,18 +178,18 @@ void embufferPoints(vector<LasPoint> points,int thread)
   int i;
   if (thread<0)
     thread+=threadStatus.size();
-  bufferMutex.lock();
+  bufferMutex[thread].lock();
   pointBuffer[thread].reserve(pointBuffer[thread].size()+points.size());
   for (i=0;i<points.size();i++)
     pointBuffer[thread].push_back(points[i]);
   pbsz[thread]=pointBuffer[thread].size();
-  bufferMutex.unlock();
+  bufferMutex[thread].unlock();
 }
 
 LasPoint debufferPoint(int thread)
 {
   LasPoint ret;
-  bufferMutex.lock();
+  bufferMutex[thread].lock();
   if (pointBuffer[thread].size())
   {
     ret=pointBuffer[thread].back();
@@ -200,7 +200,7 @@ LasPoint debufferPoint(int thread)
       pointBuffer[thread].shrink_to_fit();
   }
   pbsz[thread]=pointBuffer[thread].size();
-  bufferMutex.unlock();
+  bufferMutex[thread].unlock();
   return ret;
 }
 
