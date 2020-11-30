@@ -136,11 +136,15 @@ void Peano::resize(int w,int h)
 array<int,2> Peano::step()
 {
   array<int,2> ret;
-  array<int,3> pret=peanoPoint(width,height,phase);
-  ret[0]=pret[0];
-  ret[1]=pret[1];
-  phase+=pret[2];
-  if (phase>=THREE20)
-    phase=0;
+  array<int,3> pret;
+  do
+  {
+    pret=peanoPoint(width,height,phase);
+    ret[0]=pret[0];
+    ret[1]=pret[1];
+    phase+=pret[2];
+    if (phase>=THREE20)
+      phase=0;
+  } while (pret[0]<0);
   return ret;
 }
