@@ -36,7 +36,7 @@ OctStore octStore;
 double lowRam;
 set<int> watchedBuffers;
 mutex msgMutex;
-shared_mutex cubeMutex;
+mutex cubeMutex;
 map<int,Cube> lockedCubes,readLockedCubes;
 vector<xyz> alreadyInOctree;
 
