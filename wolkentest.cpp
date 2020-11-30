@@ -278,11 +278,10 @@ void testpeano()
 {
   unsigned i;
   array<int,3> rec;
-  for (i=0;i<THREE20;i++)
+  for (i=0;i<THREE20;i+=rec[2])
   {
     rec=peanoPoint(5,7,i);
     cout<<setw(11)<<i<<' '<<rec[0]<<' '<<rec[1]<<endl;
-    i+=rec[2];
   }
 }
 
