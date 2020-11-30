@@ -53,9 +53,9 @@ array<int,3> peanoPoint(int width,int height,unsigned phase,int direction)
     direction&=3;
   if (width<height)
     direction|=4;
-  if (phase>THREE19)
+  if (phase>=THREE19)
     partphase=THREE19;
-  if (phase>2*THREE19)
+  if (phase>=2*THREE19)
     partphase=2*THREE19;
   if (width==0 || height==0)
   {
