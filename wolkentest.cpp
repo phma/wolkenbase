@@ -40,6 +40,7 @@
 #include "ps.h"
 #include "freeram.h"
 #include "flowsnake.h"
+#include "peano.h"
 
 #define tassert(x) testfail|=(!(x))
 //#define tassert(x) if (!(x)) {testfail=true; sleep(10);}
@@ -273,6 +274,18 @@ void testflowsnake()
   cout<<' ';
 }
 
+void testpeano()
+{
+  unsigned i;
+  array<int,3> rec;
+  for (i=0;i<THREE20;i++)
+  {
+    rec=peanoPoint(5,7,i);
+    cout<<setw(11)<<i<<' '<<rec[0]<<' '<<rec[1]<<endl;
+    i+=rec[2];
+  }
+}
+
 /* Files for testing block splitting:
  * 719: 1, 710, 81
  * 727: 1, 10, 100
@@ -376,6 +389,8 @@ int main(int argc, char *argv[])
     testflat();
   if (shoulddo("flowsnake"))
     testflowsnake();
+  if (shoulddo("peano"))
+    testpeano();
   if (shoulddo("splitfile"))
     testsplitfile();
   if (shoulddo("wkt"))

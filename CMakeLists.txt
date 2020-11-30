@@ -55,7 +55,7 @@ add_executable(wolkencli angle.cpp binio.cpp boundrect.cpp brevno.cpp eisenstein
 
 add_executable(wolkentest angle.cpp binio.cpp boundrect.cpp brevno.cpp eisenstein.cpp
                flowsnake.cpp freeram.cpp point.cpp las.cpp ldecimal.cpp
-               octree.cpp ps.cpp quaternion.cpp
+               octree.cpp peano.cpp ps.cpp quaternion.cpp
                random.cpp relprime.cpp shape.cpp testpattern.cpp
                threads.cpp wkt.cpp wolkentest.cpp)
 
