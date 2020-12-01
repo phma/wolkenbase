@@ -24,6 +24,7 @@
 #include <QWidget>
 #include <deque>
 #include "lissajous.h"
+#include "peano.h"
 #include "point.h"
 #include "las.h"
 
@@ -57,6 +58,7 @@ protected:
 private:
   QPixmap frameBuffer;
   Lissajous lis;
+  Peano peano;
   xy windowCenter,worldCenter;
   double scale;
   double lengthUnit;

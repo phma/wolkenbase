@@ -236,6 +236,7 @@ void WolkenCanvas::setSize()
   QTransform tf;
   windowCenter=xy(width(),height())/2.;
   lis.resize(width()-20,height()-20);
+  peano.resize(width(),height());
   sizeToFit();
   if (frameBuffer.isNull())
   {
