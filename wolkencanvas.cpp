@@ -24,7 +24,6 @@
 #include <cmath>
 #include "wolkencanvas.h"
 #include "fileio.h"
-#include "boundrect.h"
 #include "relprime.h"
 #include "angle.h"
 #include "octree.h"
@@ -89,7 +88,6 @@ void WolkenCanvas::sizeToFit()
 {
   int i;
   double xscale,yscale;
-  BoundRect br;
   for (i=0;i<fileHeaders.size();i++)
   {
     br.include(fileHeaders[i].minCorner());

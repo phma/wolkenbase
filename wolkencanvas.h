@@ -23,6 +23,7 @@
 #define WOLKENCANVAS_H
 #include <QWidget>
 #include <deque>
+#include "boundrect.h"
 #include "lissajous.h"
 #include "peano.h"
 #include "point.h"
@@ -59,6 +60,7 @@ private:
   QPixmap frameBuffer;
   Lissajous lis;
   Peano peano;
+  BoundRect br;
   xy windowCenter,worldCenter;
   double scale;
   double lengthUnit;
