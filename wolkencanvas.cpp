@@ -84,6 +84,22 @@ vector<int> WolkenCanvas::fileHitTest(xy pnt)
   return ret;
 }
 
+array<double,3> WolkenCanvas::pixelColor(int x,int y)
+{
+  Column col(windowToWorld(QPoint(x,y)),1/scale);
+  array<double,2> hilo=octStore.hiLoPointsIn(col);
+  array<double,3> ret;
+  if (hilo[0]>hilo[1])
+    ret[0]=ret[1]=ret[2]=NAN;
+  else
+  {
+    ret[0]=(hilo[0]-br.low())/(br.high()-br.low());
+    ret[1]=(hilo[1]-hilo[0])/(br.high()-br.low());
+    ret[2]=(br.high()-hilo[1])/(br.high()-br.low());
+  }
+  return ret;
+}
+
 void WolkenCanvas::sizeToFit()
 {
   int i;
@@ -126,6 +142,8 @@ void WolkenCanvas::tick()
   QPolygon swath;
   QPointF circleCenter;
   QRectF circleBox,textBox,fileBound;
+  array<double,3> pcolor;
+  array<int,2> pixel;
   string scaleText;
   cr::nanoseconds elapsed=cr::milliseconds(0);
   cr::time_point<cr::steady_clock> timeStart=clk.now();
@@ -224,6 +242,17 @@ void WolkenCanvas::tick()
     timeLimit=45;
   else
     timeLimit=20;
+  while (elapsed<cr::milliseconds(timeLimit))
+  {
+    pixel=peano.step();
+    pcolor=pixelColor(pixel[0],pixel[1]);
+    if (std::isfinite(pcolor[0]))
+    {
+      painter.setPen(QColor(lrint(pcolor[0]*255),lrint(pcolor[1]*255),lrint(pcolor[2]*255)));
+      painter.drawPoint(pixel[0],pixel[1]);
+    }
+    elapsed=clk.now()-timeStart;
+  }
 }
 
 void WolkenCanvas::setSize()

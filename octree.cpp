@@ -962,7 +962,7 @@ array<double,2> OctStore::hiLoPointsIn(const Shape &sh)
 {
   vector<long long> blockList=octRoot.findBlocks(sh);
   OctBuffer *buf;
-  double hi=-INFINITY,lo=-INFINITY;
+  double hi=-INFINITY,lo=INFINITY;
   array<double,2> ret;
   int i,j;
   for (i=0;i<blockList.size();i++)

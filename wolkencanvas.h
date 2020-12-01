@@ -75,5 +75,6 @@ private:
   int lastntri;
   int splashScreenTime; // in ticks
   std::vector<int> fileHitTest(xy pnt);
+  std::array<double,3> pixelColor(int x,int y);
 };
 #endif
