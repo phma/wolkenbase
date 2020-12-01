@@ -89,6 +89,7 @@ array<double,3> WolkenCanvas::pixelColor(int x,int y)
   Column col(windowToWorld(QPoint(x,y)),1/scale);
   array<double,2> hilo=octStore.hiLoPointsIn(col);
   array<double,3> ret;
+  octStore.disown();
   if (hilo[0]>hilo[1])
     ret[0]=ret[1]=ret[2]=NAN;
   else

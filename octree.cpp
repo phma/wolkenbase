@@ -958,6 +958,7 @@ vector<LasPoint> OctStore::pointsIn(const Shape &sh)
 array<double,2> OctStore::hiLoPointsIn(const Shape &sh)
 /* Returns the highest and lowest elevations of the points in the shape.
  * Used to color pixels when painting the scene.
+ * Caller is responsible for disowning.
  */
 {
   vector<long long> blockList=octRoot.findBlocks(sh);
