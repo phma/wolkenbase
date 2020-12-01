@@ -932,8 +932,8 @@ OctBuffer *OctStore::getBlock(xyz key,bool writing)
       blknum=nBlocks++;
       octRoot.setBlock(key,blknum);
     }
-    ret=getBlock(blknum);
     setBlockMutex.unlock();
+    ret=getBlock(blknum);
   }
   assert(ret->blockNumber>=0);
   return ret;
