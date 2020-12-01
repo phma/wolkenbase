@@ -3,7 +3,7 @@
 /* boundrect.cpp - bounding rectangles                */
 /*                                                    */
 /******************************************************/
-/* Copyright 2019 Pierre Abbat.
+/* Copyright 2019,2020 Pierre Abbat.
  * This file is part of Wolkenbase.
  * 
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@
 BoundRect::BoundRect()
 {
   int i;
-  for (i=0;i<4;i++)
+  for (i=0;i<6;i++)
     bounds[i]=INFINITY;
   orientation=0;
 }
@@ -34,7 +34,7 @@ BoundRect::BoundRect()
 BoundRect::BoundRect(int ori)
 {
   int i;
-  for (i=0;i<4;i++)
+  for (i=0;i<6;i++)
     bounds[i]=INFINITY;
   orientation=ori;
 }
@@ -42,7 +42,7 @@ BoundRect::BoundRect(int ori)
 void BoundRect::clear()
 {
   int i;
-  for (i=0;i<4;i++)
+  for (i=0;i<6;i++)
     bounds[i]=INFINITY;
 }
 
@@ -56,14 +56,18 @@ int BoundRect::getOrientation()
   return orientation;
 }
 
-void BoundRect::include(xy obj)
+void BoundRect::include(xyz obj)
 {
   int i;
   double newbound;
   for (i=0;i<4;i++)
   {
-    newbound=obj.dirbound(i*DEG90-orientation);
+    newbound=xy(obj).dirbound(i*DEG90-orientation);
     if (newbound<bounds[i])
       bounds[i]=newbound;
   }
+  if (obj.elev()<bounds[4])
+    bounds[4]=obj.elev();
+  if (-obj.elev()<bounds[5])
+    bounds[5]=-obj.elev();
 }
