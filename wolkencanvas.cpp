@@ -314,17 +314,20 @@ void WolkenCanvas::startProcess()
   int i;
   vector<xyz> limits;
   ThreadAction ta;
+  multimap<int64_t,LasHeader *> sorter;
+  multimap<int64_t,LasHeader *>::iterator j;
   waitForThreads(TH_READ);
   for (i=0;i<fileHeaders.size();i++)
   {
     limits.push_back(fileHeaders[i].minCorner());
     limits.push_back(fileHeaders[i].maxCorner());
+    sorter.insert(pair<int64_t,LasHeader *>(-fileHeaders[i].numberPoints(),&fileHeaders[i]));
   }
   octRoot.sizeFit(limits);
-  for (i=0;i<fileHeaders.size();i++)
+  for (j=sorter.begin();j!=sorter.end();++j)
   {
-    cout<<"Read file "<<baseName(fileHeaders[i].getFileName())<<endl;
-    ta.hdr=&fileHeaders[i];
+    cout<<"Read file "<<baseName(j->second->getFileName())<<endl;
+    ta.hdr=j->second;
     ta.opcode=ACT_READ;
     enqueueAction(ta);
   }
