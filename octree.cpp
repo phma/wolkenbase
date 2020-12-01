@@ -955,6 +955,33 @@ vector<LasPoint> OctStore::pointsIn(const Shape &sh)
   return ret;
 }
 
+array<double,2> OctStore::hiLoPointsIn(const Shape &sh)
+/* Returns the highest and lowest elevations of the points in the shape.
+ * Used to color pixels when painting the scene.
+ */
+{
+  vector<long long> blockList=octRoot.findBlocks(sh);
+  OctBuffer *buf;
+  double hi=-INFINITY,lo=-INFINITY;
+  array<double,2> ret;
+  int i,j;
+  for (i=0;i<blockList.size();i++)
+  {
+    buf=getBlock(blockList[i]);
+    for (j=0;j<buf->points.size();j++)
+      if (sh.in(buf->points[j].location))
+      {
+	if (buf->points[j].location.elev()>hi)
+	  hi=buf->points[j].location.elev();
+	if (buf->points[j].location.elev()<lo)
+	  lo=buf->points[j].location.elev();
+      }
+  }
+  ret[0]=lo;
+  ret[1]=hi;
+  return ret;
+}
+
 void OctStore::split(long long block,xyz camelStraw)
 {
   vector<LasPoint> tempPoints;

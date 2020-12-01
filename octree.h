@@ -130,6 +130,7 @@ public:
   void dumpBuffers();
   bool isConsistent();
   std::vector<LasPoint> pointsIn(const Shape &sh);
+  std::array<double,2> hiLoPointsIn(const Shape &sh);
   std::shared_mutex setBlockMutex; // lock when adding new blocks to file
 private:
   std::map<int,std::fstream> file;
