@@ -145,6 +145,7 @@ void WolkenCanvas::tick()
   array<double,3> pcolor;
   array<int,2> pixel;
   string scaleText;
+  int pixminx=width(),pixminy=height(),pixmaxx=0,pixmaxy=0;
   cr::nanoseconds elapsed=cr::milliseconds(0);
   cr::time_point<cr::steady_clock> timeStart=clk.now();
   xy oldBallPos=ballPos;
@@ -250,7 +251,17 @@ void WolkenCanvas::tick()
     {
       painter.setPen(QColor(lrint(pcolor[0]*255),lrint(pcolor[1]*255),lrint(pcolor[2]*255)));
       painter.drawPoint(pixel[0],pixel[1]);
+      if (pixel[0]>pixmaxx)
+	pixmaxx=pixel[0];
+      if (pixel[0]<pixminx)
+	pixminx=pixel[0];
+      if (pixel[1]>pixmaxy)
+	pixmaxy=pixel[1];
+      if (pixel[1]<pixminy)
+	pixminy=pixel[1];
     }
+    if (pixminx<=pixmaxx)
+      update(pixminx,pixminy,pixmaxx-pixminx+1,pixmaxy-pixminy+1);
     elapsed=clk.now()-timeStart;
   }
 }
