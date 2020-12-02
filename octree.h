@@ -92,11 +92,12 @@ public:
   void plot(PostScript &ps,Cube cube);
   //bool isConsistent();
 private:
-  int bufferNumber;
-  long long blockNumber;
   bool dirty; // The contents of the buffer may differ from the contents of the block.
   bool inTransit; // The correspondence between buffer and block is being changed.
+  int bufferNumber;
+  long long blockNumber;
   long long lastUsed;
+  double low,high;
   std::set<int> owningThread;
   std::vector<LasPoint> points;
   std::shared_mutex blockMutex;

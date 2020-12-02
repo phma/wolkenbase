@@ -308,6 +308,8 @@ OctBuffer::OctBuffer()
   int i;
   lastUsed=0;
   dirty=inTransit=false;
+  high=-INFINITY;
+  low=INFINITY;
   points.reserve(RECORDS);
   for (i=0;i<RECORDS;i++)
     points.emplace_back();
@@ -403,12 +405,18 @@ void OctBuffer::read(long long block)
   blockNumber=block;
   store->file[f].seekg(BLOCKSIZE*b);
   points.clear();
+  high=-INFINITY;
+  low=INFINITY;
   for (i=0;i<RECORDS;i++)
   {
     pnt.read(store->file[f]);
     if (!pnt.isEmpty())
     {
       points.push_back(pnt);
+      if (pnt.location.elev()>high)
+	high=pnt.location.elev();
+      if (pnt.location.elev()<low)
+	low=pnt.location.elev();
       nPoints++;
     }
   }
@@ -418,7 +426,11 @@ void OctBuffer::read(long long block)
    * points' locations will be unequal. (NAN is not equal to NAN.)
    */
   if (points.size()>1 && points[0].location==points[1].location)
+  {
     points.clear();
+    high=-INFINITY;
+    low=INFINITY;
+  }
   points.shrink_to_fit();
   if ((blockNumber>=WATCH_BLOCK_START && blockNumber<WATCH_BLOCK_END) || watchedBuffers.count(bufferNumber))
   {
@@ -500,6 +512,10 @@ bool OctBuffer::put(LasPoint pnt)
     inx=points.size();
     markDirty();
     points.push_back(pnt);
+    if (pnt.location.elev()>high)
+      high=pnt.location.elev();
+    if (pnt.location.elev()<low)
+      low=pnt.location.elev();
     if (points.capacity()>RECORDS)
     {
       points.shrink_to_fit();
@@ -1016,6 +1032,8 @@ void OctStore::split(long long block,xyz camelStraw)
       ++fullth;
   }
   currentBlock->points.clear();
+  currentBlock->high=-INFINITY;
+  currentBlock->low=INFINITY;
   currentBlock->blockMutex.unlock();
   octRoot.split(camelStraw);
   embufferPoints(tempPoints,thisThread());
