@@ -35,6 +35,8 @@
 using namespace std;
 namespace cr=std::chrono;
 
+#define CHUNKSIZE 137
+
 mutex actMutex;
 mutex startMutex;
 map<int,mutex> pointBufferMutex;
@@ -349,7 +351,7 @@ int nThreads()
 
 void WolkenThread::operator()(int thread)
 {
-  int i=0,nPoints=0;
+  long long h=0,i=0,j=0,n,nPoints=0,nChunks;
   long long blknum;
   ThreadAction act;
   LasPoint point,gotPoint;
@@ -375,14 +377,26 @@ void WolkenThread::operator()(int thread)
       switch (act.opcode)
       {
 	case ACT_READ:
-	  i=0;
+	  i=j=n=0;
 	  cout<<"Thread "<<thread<<" reading "<<act.hdr->getFileName()<<endl;
-	  while (i<act.hdr->numberPoints() && threadCommand!=TH_STOP)
+	  nChunks=(act.hdr->numberPoints()+CHUNKSIZE-1)/CHUNKSIZE;
+	  h=relprime(nChunks,thread);
+	  while (j<nChunks && threadCommand!=TH_STOP)
 	  {
 	    if (pointBufferSize()*sizeof(point)<lowRam)
 	    {
-	      point=act.hdr->readPoint(i++);
-	      embufferPoint(point,false); // It is from file, but sleeping is handled here.
+	      if (n*CHUNKSIZE+i<act.hdr->numberPoints())
+	      {
+		point=act.hdr->readPoint(n*CHUNKSIZE+i);
+		embufferPoint(point,false); // It is from file, but sleeping is handled here.
+	      }
+	      i++;
+	      if (i==CHUNKSIZE)
+	      {
+		i=0;
+		j++;
+		n=(n+h)%nChunks;
+	      }
 	    }
 	    point=debufferPoint(thread);
 	    if (point.isEmpty() && pointBufferSize()*sizeof(point)>lowRam)
