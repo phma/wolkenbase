@@ -985,14 +985,15 @@ array<double,2> OctStore::hiLoPointsIn(const Shape &sh)
   for (i=0;i<blockList.size();i++)
   {
     buf=getBlock(blockList[i]);
-    for (j=0;j<buf->points.size();j++)
-      if (sh.in(buf->points[j].location))
-      {
-	if (buf->points[j].location.elev()>hi)
-	  hi=buf->points[j].location.elev();
-	if (buf->points[j].location.elev()<lo)
-	  lo=buf->points[j].location.elev();
-      }
+    if (buf->getLow()<lo || buf->getHigh()>hi)
+      for (j=0;j<buf->points.size();j++)
+	if (sh.in(buf->points[j].location))
+	{
+	  if (buf->points[j].location.elev()>hi)
+	    hi=buf->points[j].location.elev();
+	  if (buf->points[j].location.elev()<lo)
+	    lo=buf->points[j].location.elev();
+	}
   }
   ret[0]=lo;
   ret[1]=hi;

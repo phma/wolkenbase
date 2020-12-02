@@ -90,6 +90,14 @@ public:
   bool put(LasPoint pnt);
   int dump(std::ofstream &file,Cube cube);
   void plot(PostScript &ps,Cube cube);
+  double getLow()
+  {
+    return low;
+  }
+  double getHigh()
+  {
+    return high;
+  }
   //bool isConsistent();
 private:
   bool dirty; // The contents of the buffer may differ from the contents of the block.
