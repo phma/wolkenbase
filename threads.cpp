@@ -152,11 +152,17 @@ bool resultQueueEmpty()
 void embufferPoint(LasPoint point,bool fromFile)
 {
   int thread;
+  static int anyThread=0;
   octStore.setBlockMutex.lock_shared();
   thread=octRoot.findBlock(point.location);
   octStore.setBlockMutex.unlock_shared();
   if (thread<0)
-    thread+=threadStatus.size();
+  {
+    thread=anyThread;
+    anyThread--;
+    if (anyThread<0)
+      anyThread+=threadStatus.size();
+  }
   thread%=threadStatus.size();
   if (!point.isEmpty())
   {
@@ -404,9 +410,7 @@ void WolkenThread::operator()(int thread)
 	    else
 	    {
 	      blknum=octRoot.findBlock(point.location);
-	      if (blknum<0)
-		blknum+=threadStatus.size();
-	      if (blknum%threadStatus.size()==thread)
+	      if (blknum<0 || blknum%threadStatus.size()==thread)
 	      {
 		nPoints++;
 		octStore.put(point);
@@ -425,9 +429,7 @@ void WolkenThread::operator()(int thread)
       else
       {
 	blknum=octRoot.findBlock(point.location);
-	if (blknum<0)
-	  blknum+=threadStatus.size();
-	if (blknum%threadStatus.size()==thread)
+	if (blknum<0 || blknum%threadStatus.size()==thread)
 	{
 	  nPoints++;
 	  octStore.put(point);
