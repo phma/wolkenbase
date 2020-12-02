@@ -382,8 +382,6 @@ void WolkenThread::operator()(int thread)
 	    if (pointBufferSize()*sizeof(point)<lowRam)
 	    {
 	      point=act.hdr->readPoint(i++);
-	      if (i==1)
-		cout<<'('<<point.location.getx()<<','<<point.location.gety()<<")\n";
 	      embufferPoint(point,false); // It is from file, but sleeping is handled here.
 	    }
 	    point=debufferPoint(thread);
