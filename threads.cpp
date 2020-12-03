@@ -387,39 +387,46 @@ void WolkenThread::operator()(int thread)
 	  cout<<"Thread "<<thread<<" reading "<<act.hdr->getFileName()<<endl;
 	  nChunks=(act.hdr->numberPoints()+CHUNKSIZE-1)/CHUNKSIZE;
 	  h=relprime(nChunks,thread);
-	  while (j<nChunks && threadCommand!=TH_STOP)
+	  try
 	  {
-	    if (pointBufferSize()*sizeof(point)<lowRam)
+	    while (j<nChunks && threadCommand!=TH_STOP)
 	    {
-	      if (n*CHUNKSIZE+i<act.hdr->numberPoints())
+	      if (pointBufferSize()*sizeof(point)<lowRam)
 	      {
-		point=act.hdr->readPoint(n*CHUNKSIZE+i);
-		embufferPoint(point,false); // It is from file, but sleeping is handled here.
+		if (n*CHUNKSIZE+i<act.hdr->numberPoints())
+		{
+		  point=act.hdr->readPoint(n*CHUNKSIZE+i);
+		  embufferPoint(point,false); // It is from file, but sleeping is handled here.
+		}
+		i++;
+		if (i==CHUNKSIZE)
+		{
+		  i=0;
+		  j++;
+		  n=(n+h)%nChunks;
+		}
 	      }
-	      i++;
-	      if (i==CHUNKSIZE)
-	      {
-		i=0;
-		j++;
-		n=(n+h)%nChunks;
-	      }
-	    }
-	    point=debufferPoint(thread);
-	    if (point.isEmpty() && pointBufferSize()*sizeof(point)>lowRam)
-	      sleep(thread);
-	    else
-	    {
-	      blknum=octRoot.findBlock(point.location);
-	      if (blknum<0 || blknum%threadStatus.size()==thread)
-	      {
-		nPoints++;
-		octStore.put(point);
-		octStore.disown();
-		unsleep(thread);
-	      }
+	      point=debufferPoint(thread);
+	      if (point.isEmpty() && pointBufferSize()*sizeof(point)>lowRam)
+		sleep(thread);
 	      else
-		embufferPoint(point,false);
+	      {
+		blknum=octRoot.findBlock(point.location);
+		if (blknum<0 || blknum%threadStatus.size()==thread)
+		{
+		  nPoints++;
+		  octStore.put(point);
+		  octStore.disown();
+		  unsleep(thread);
+		}
+		else
+		  embufferPoint(point,false);
+	      }
 	    }
+	  }
+	  catch (...)
+	  {
+	    cerr<<"Error reading file\n";
 	  }
 	  break;
       }
