@@ -21,6 +21,7 @@
  */
 
 #include <cassert>
+#include <climits>
 #include "flowsnake.h"
 using namespace std;
 
@@ -226,24 +227,28 @@ void Flowsnake::setSize(Cube cube,double desiredSpacing)
   stopnum=hiLim[bestI];
 }
 
-Cylinder Flowsnake::next()
+Eisenstein Flowsnake::next()
 /* Returns the cylinder enclosing the next hexagon in the flowsnake sequence.
  * When finished, returns a cylinder with radius 0.
  */
 {
-  Cylinder ret;
-  complex<double> z;
   Eisenstein e;
   flowMutex.lock();
   if (counter<=stopnum)
-  {
     e=toFlowsnake(counter++);
-    z=e;
-    z*=spacing;
-    ret=Cylinder(xy(z.real(),z.imag())+center,spacing*41/71);
-  }
+  else
+    e=Eisenstein(INT_MIN,INT_MIN);
   flowMutex.unlock();
-  return ret;
+  return e;
+}
+
+Cylinder Flowsnake::cyl(Eisenstein e)
+{
+  double rad=spacing*41/71;
+  complex<double> z=e;
+  if (e.getx()==INT_MIN)
+    rad=0;
+  return Cylinder(xy(z.real(),z.imag())+center,rad);
 }
 
 double Flowsnake::progress()

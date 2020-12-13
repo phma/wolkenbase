@@ -264,7 +264,7 @@ void testflowsnake()
   while (true)
   {
     prog=fs.progress();
-    cyl=fs.next();
+    cyl=fs.cyl(fs.next());
     if (cyl.getRadius()==0)
       break;
     ps.setcolor(prog,prog,1-prog);
