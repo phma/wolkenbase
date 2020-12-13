@@ -246,6 +246,7 @@ Cylinder Flowsnake::cyl(Eisenstein e)
 {
   double rad=spacing*41/71;
   complex<double> z=e;
+  z*=spacing;
   if (e.getx()==INT_MIN)
     rad=0;
   return Cylinder(xy(z.real(),z.imag())+center,rad);
