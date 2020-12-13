@@ -73,6 +73,7 @@ private:
   int lastOpcount;
   int ballAngle,dartAngle;
   int lastntri;
+  int pixelsToPaint;
   int splashScreenTime; // in ticks
   std::vector<int> fileHitTest(xy pnt);
   std::array<double,3> pixelColor(int x,int y);

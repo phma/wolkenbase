@@ -244,7 +244,7 @@ void WolkenCanvas::tick()
     timeLimit=45;
   else
     timeLimit=20;
-  while (elapsed<cr::milliseconds(timeLimit))
+  while (elapsed<cr::milliseconds(timeLimit) && pixelsToPaint)
   {
     pixel=peano.step();
     pcolor=pixelColor(pixel[0],pixel[1]);
@@ -264,7 +264,10 @@ void WolkenCanvas::tick()
     if (pixminx<=pixmaxx)
       update(pixminx,pixminy,pixmaxx-pixminx+1,pixmaxy-pixminy+1);
     elapsed=clk.now()-timeStart;
+    pixelsToPaint--;
   }
+  if (pointBufferSize())
+    pixelsToPaint=(width()*height()*7+3)/4;
 }
 
 void WolkenCanvas::setSize()
@@ -299,6 +302,7 @@ void WolkenCanvas::setSize()
     update();
   }
   setScalePos();
+  pixelsToPaint=(width()*height()*7+3)/4;
 }
 
 void WolkenCanvas::readFileHeader(string name)
