@@ -20,3 +20,5 @@
  * along with Wolkenbase. If not, see <http://www.gnu.org/licenses/>.
  */
 #include "tile.h"
+
+harray<Tile> tiles;

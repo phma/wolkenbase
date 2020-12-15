@@ -28,3 +28,5 @@ class Tile
   double density; // of bottom layer
   double paraboloidSize;
 };
+
+extern harray<Tile> tiles;
