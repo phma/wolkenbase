@@ -228,8 +228,9 @@ void Flowsnake::setSize(Cube cube,double desiredSpacing)
 }
 
 Eisenstein Flowsnake::next()
-/* Returns the cylinder enclosing the next hexagon in the flowsnake sequence.
- * When finished, returns a cylinder with radius 0.
+/* Returns the coordinates of the cylinder enclosing
+ * the next hexagon in the flowsnake sequence.
+ * When finished, returns INT_MIN.
  */
 {
   Eisenstein e;
