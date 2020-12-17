@@ -431,14 +431,17 @@ void WolkenCanvas::paintEvent(QPaintEvent *event)
 	  painter.drawLine(QPointF(x0,y),QPointF(x1,y));
       }
       break;
-     case -ACT_READ:
-      painter.setPen(Qt::NoPen);
-      painter.setBrush(Qt::lightGray);
-      painter.drawEllipse(sclera);
-      painter.setBrush(Qt::blue);
-      painter.drawEllipse(iris);
-      painter.setBrush(Qt::black);
-      painter.drawEllipse(pupil);
+    case TH_READ:
+      if (!(actionQueueEmpty() && pointBufferEmpty()))
+      {
+	painter.setPen(Qt::NoPen);
+	painter.setBrush(Qt::lightGray);
+	painter.drawEllipse(sclera);
+	painter.setBrush(Qt::blue);
+	painter.drawEllipse(iris);
+	painter.setBrush(Qt::black);
+	painter.drawEllipse(pupil);
+      }
       break;
     case 0:
       painter.setBrush(Qt::lightGray);
