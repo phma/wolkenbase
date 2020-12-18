@@ -39,8 +39,12 @@
 // The maximum is 147 because of the file format.
 #define PAGERAD 6
 #define PAGESIZE (PAGERAD*(PAGERAD+1)*3+1)
-#define sqr(a) ((a)*(a))
 extern const std::complex<double> omega,ZLETTERMOD;
+
+inline int sqr(int a)
+{
+  return a*a;
+}
 
 class Eisenstein
 {

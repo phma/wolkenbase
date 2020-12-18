@@ -32,6 +32,8 @@
 #include "las.h"
 #include "freeram.h"
 #include "octree.h"
+#include "tile.h"
+
 using namespace std;
 namespace cr=std::chrono;
 
@@ -55,6 +57,7 @@ map<int,size_t> pbsz;
 map<int,int> bufferPos;
 int currentAction;
 map<thread::id,int> threadNums;
+Flowsnake snake;
 
 cr::steady_clock clk;
 const char statusNames[][8]=

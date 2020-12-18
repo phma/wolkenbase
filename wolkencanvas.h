@@ -27,6 +27,7 @@
 #include "lissajous.h"
 #include "peano.h"
 #include "point.h"
+#include "shape.h"
 #include "las.h"
 
 #define SPLASH_TIME 60
@@ -61,10 +62,12 @@ private:
   Lissajous lis;
   Peano peano;
   BoundRect br;
+  Cube cube; // sized to files, not octree
   xy windowCenter,worldCenter;
   double scale;
   double lengthUnit;
   double maxScaleSize,scaleSize;
+  double tileSize;
   std::deque<LasHeader> fileHeaders;
   xy ballPos;
   xy leftScaleEnd,rightScaleEnd,scaleEnd;

@@ -23,6 +23,8 @@
 #ifndef THREADS_H
 #define THREADS_H
 
+class Flowsnake;
+
 #ifdef __MINGW64__
 #define MINGW_STDTHREAD_REDUNDANCY_WARNING
 #include <../mingw-std-threads/mingw.thread.h>
@@ -37,6 +39,8 @@
 #include <vector>
 #include <array>
 #include "las.h"
+#include "eisenstein.h"
+#include "flowsnake.h"
 
 // These are used as both commands to the threads and status from the threads.
 #define TH_WAIT 1
@@ -64,6 +68,7 @@ struct ThreadAction
 
 extern int currentAction;
 extern std::chrono::steady_clock clk;
+extern Flowsnake snake;
 
 double busyFraction();
 void startThreads(int n);

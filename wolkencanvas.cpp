@@ -56,6 +56,7 @@ WolkenCanvas::WolkenCanvas(QWidget *parent):QWidget(parent)
   setMinimumSize(40,30);
   setMouseTracking(true);
   fileCountdown=splashScreenTime=dartAngle=ballAngle=0;
+  tileSize=10;
   lowRam=freeRam()/7;
 }
 
@@ -319,6 +320,8 @@ void WolkenCanvas::startProcess()
   int i;
   vector<xyz> limits;
   ThreadAction ta;
+  BoundRect br;
+  double side;
   multimap<int64_t,LasHeader *> sorter;
   multimap<int64_t,LasHeader *>::iterator j;
   waitForThreads(TH_READ);
@@ -326,9 +329,19 @@ void WolkenCanvas::startProcess()
   {
     limits.push_back(fileHeaders[i].minCorner());
     limits.push_back(fileHeaders[i].maxCorner());
+    br.include(fileHeaders[i].minCorner());
+    br.include(fileHeaders[i].maxCorner());
     sorter.insert(pair<int64_t,LasHeader *>(-fileHeaders[i].numberPoints(),&fileHeaders[i]));
   }
   octRoot.sizeFit(limits);
+  side=br.right()-br.left();
+  if (br.top()-br.bottom()>side)
+    side=br.top()-br.bottom();
+  if (br.high()-br.low()>side)
+    side=br.high()-br.low();
+  cube=Cube(xyz((br.right()+br.left())/2,(br.top()+br.bottom())/2,
+		(br.high()+br.low())/2),side);
+  snake.setSize(cube,tileSize);
   for (j=sorter.begin();j!=sorter.end();++j)
   {
     cout<<"Read file "<<baseName(j->second->getFileName())<<endl;
