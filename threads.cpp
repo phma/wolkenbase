@@ -472,6 +472,12 @@ void WolkenThread::operator()(int thread)
 	  sleep(thread);
       }
     }
+    if (threadCommand==TH_SCAN)
+    {
+      threadStatusMutex.lock();
+      threadStatus[thread]=TH_SCAN;
+      threadStatusMutex.unlock();
+    }
     if (threadCommand==TH_WAIT)
     { // There is no job. The threads are waiting for a job.
       threadStatusMutex.lock();

@@ -269,6 +269,8 @@ void WolkenCanvas::tick()
   }
   if (pointBufferSize())
     pixelsToPaint=(width()*height()*7+3)/4;
+  if (state==TH_READ && actionQueueEmpty() && pointBufferEmpty() && sofar==total)
+    startScan();
 }
 
 void WolkenCanvas::setSize()
@@ -349,6 +351,12 @@ void WolkenCanvas::startProcess()
     ta.opcode=ACT_READ;
     enqueueAction(ta);
   }
+}
+
+void WolkenCanvas::startScan()
+{
+  waitForThreads(TH_SCAN);
+  cout<<"Starting scan\n";
 }
 
 void WolkenCanvas::clearCloud()
