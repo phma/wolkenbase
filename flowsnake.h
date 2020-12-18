@@ -87,6 +87,7 @@ class Flowsnake
 {
 public:
   void setSize(Cube cube,double desiredSpacing);
+  void restart();
   Eisenstein next();
   Cylinder cyl(Eisenstein e);
   double progress();

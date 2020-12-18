@@ -227,6 +227,11 @@ void Flowsnake::setSize(Cube cube,double desiredSpacing)
   stopnum=hiLim[bestI];
 }
 
+void Flowsnake::restart()
+{
+  counter=startnum;
+}
+
 Eisenstein Flowsnake::next()
 /* Returns the coordinates of the cylinder enclosing
  * the next hexagon in the flowsnake sequence.
