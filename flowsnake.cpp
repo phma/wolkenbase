@@ -229,7 +229,9 @@ void Flowsnake::setSize(Cube cube,double desiredSpacing)
 
 void Flowsnake::restart()
 {
+  flowMutex.lock();
   counter=startnum;
+  flowMutex.unlock();
 }
 
 Eisenstein Flowsnake::next()
