@@ -20,9 +20,11 @@
  * along with Wolkenbase. If not, see <http://www.gnu.org/licenses/>.
  */
 #include "flowsnake.h"
+#include "threads.h"
 
 class Tile
 {
+public:
   int nPoints;
   int roofFlags;
   double density; // of bottom layer
@@ -30,3 +32,5 @@ class Tile
 };
 
 extern harray<Tile> tiles;
+
+void scanCylinder(Eisenstein cylAddress);

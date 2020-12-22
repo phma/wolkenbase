@@ -51,13 +51,13 @@ add_executable(wolkencli angle.cpp binio.cpp boundrect.cpp brevno.cpp eisenstein
                flowsnake.cpp freeram.cpp point.cpp las.cpp ldecimal.cpp
                octree.cpp ps.cpp quaternion.cpp
                random.cpp relprime.cpp shape.cpp testpattern.cpp
-               threads.cpp wkt.cpp wolkencli.cpp)
+               threads.cpp tile.cpp wkt.cpp wolkencli.cpp)
 
 add_executable(wolkentest angle.cpp binio.cpp boundrect.cpp brevno.cpp eisenstein.cpp
                flowsnake.cpp freeram.cpp point.cpp las.cpp ldecimal.cpp
                octree.cpp peano.cpp ps.cpp quaternion.cpp
                random.cpp relprime.cpp shape.cpp testpattern.cpp
-               threads.cpp wkt.cpp wolkentest.cpp)
+               threads.cpp tile.cpp wkt.cpp wolkentest.cpp)
 
 if (${Boost_FOUND})
 target_link_libraries(wolkencli ${Boost_LIBRARIES})

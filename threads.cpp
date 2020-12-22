@@ -365,7 +365,6 @@ void WolkenThread::operator()(int thread)
   ThreadAction act;
   LasPoint point,gotPoint;
   Eisenstein cylAddress;
-  Cylinder cyl;
   logStartThread();
   startMutex.lock();
   if (threadStatus.size()!=thread)
@@ -480,9 +479,8 @@ void WolkenThread::operator()(int thread)
       threadStatus[thread]=TH_SCAN;
       threadStatusMutex.unlock();
       cylAddress=snake.next();
-      cyl=snake.cyl(cylAddress);
-      if (cyl.getRadius())
-	; // scan the cylinder
+      if (cylAddress.getx()!=INT_MIN)
+	scanCylinder(cylAddress);
       else
 	sleep(thread);
     }

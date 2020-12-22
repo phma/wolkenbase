@@ -20,5 +20,18 @@
  * along with Wolkenbase. If not, see <http://www.gnu.org/licenses/>.
  */
 #include "tile.h"
+#include "octree.h"
+using namespace std;
 
 harray<Tile> tiles;
+mutex tileMutex;
+
+void scanCylinder(Eisenstein cylAddress)
+{
+  Cylinder cyl=snake.cyl(cylAddress);
+  vector<LasPoint> cylPoints=octStore.pointsIn(cyl);
+  tileMutex.lock();
+  tiles[cylAddress].nPoints=cylPoints.size();
+  tileMutex.unlock();
+  octStore.disown();
+}
