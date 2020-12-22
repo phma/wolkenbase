@@ -32,5 +32,8 @@ public:
 };
 
 extern harray<Tile> tiles;
+extern std::mutex tileMutex;
+extern Tile minTile,maxTile;
 
+void initTiles();
 void scanCylinder(Eisenstein cylAddress);

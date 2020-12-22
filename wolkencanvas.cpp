@@ -22,6 +22,7 @@
 #include <QPainter>
 #include <QtWidgets>
 #include <cmath>
+#include <climits>
 #include "wolkencanvas.h"
 #include "fileio.h"
 #include "relprime.h"
@@ -30,6 +31,7 @@
 #include "freeram.h"
 #include "threads.h"
 #include "ldecimal.h"
+#include "tile.h"
 
 using namespace std;
 namespace cr=std::chrono;
@@ -85,7 +87,7 @@ vector<int> WolkenCanvas::fileHitTest(xy pnt)
   return ret;
 }
 
-array<double,3> WolkenCanvas::pixelColor(int x,int y)
+array<double,3> WolkenCanvas::pixelColorRead(int x,int y)
 {
   Column col(windowToWorld(QPoint(x,y)),1/scale);
   array<double,2> hilo=octStore.hiLoPointsIn(col);
@@ -98,6 +100,25 @@ array<double,3> WolkenCanvas::pixelColor(int x,int y)
     ret[0]=(hilo[0]-br.low())/(br.high()-br.low());
     ret[1]=(hilo[1]-hilo[0])/(br.high()-br.low());
     ret[2]=(br.high()-hilo[1])/(br.high()-br.low());
+  }
+  return ret;
+}
+
+array<double,3> WolkenCanvas::pixelColorTile(int x,int y)
+{
+  xy pnt=windowToWorld(QPoint(x,y));
+  Eisenstein tileAddr=snake.tileAddress(pnt);
+  tileMutex.lock();
+  Tile *thisTile=&tiles[tileAddr];
+  tileMutex.unlock();
+  array<double,3> ret;
+  if (thisTile->nPoints==0)
+    ret[0]=ret[1]=ret[2]=1;
+  else
+  {
+    ret[0]=0;
+    ret[1]=thisTile->nPoints/(double)maxTile.nPoints;
+    ret[2]=1-ret[1];
   }
   return ret;
 }
@@ -248,7 +269,10 @@ void WolkenCanvas::tick()
   while (elapsed<cr::milliseconds(timeLimit) && pixelsToPaint)
   {
     pixel=peano.step();
-    pcolor=pixelColor(pixel[0],pixel[1]);
+    if (state==TH_SCAN)
+      pcolor=pixelColorTile(pixel[0],pixel[1]);
+    else
+      pcolor=pixelColorRead(pixel[0],pixel[1]);
     if (std::isfinite(pcolor[0]))
     {
       painter.setPen(QColor(lrint(pcolor[0]*255),lrint(pcolor[1]*255),lrint(pcolor[2]*255)));
@@ -344,6 +368,7 @@ void WolkenCanvas::startProcess()
   cube=Cube(xyz((br.right()+br.left())/2,(br.top()+br.bottom())/2,
 		(br.high()+br.low())/2),side);
   snake.setSize(cube,tileSize);
+  initTiles();
   for (j=sorter.begin();j!=sorter.end();++j)
   {
     cout<<"Read file "<<baseName(j->second->getFileName())<<endl;

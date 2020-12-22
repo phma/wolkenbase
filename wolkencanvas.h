@@ -80,6 +80,7 @@ private:
   int pixelsToPaint;
   int splashScreenTime; // in ticks
   std::vector<int> fileHitTest(xy pnt);
-  std::array<double,3> pixelColor(int x,int y);
+  std::array<double,3> pixelColorRead(int x,int y);
+  std::array<double,3> pixelColorTile(int x,int y);
 };
 #endif
