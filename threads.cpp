@@ -364,6 +364,8 @@ void WolkenThread::operator()(int thread)
   long long blknum;
   ThreadAction act;
   LasPoint point,gotPoint;
+  Eisenstein cylAddress;
+  Cylinder cyl;
   logStartThread();
   startMutex.lock();
   if (threadStatus.size()!=thread)
@@ -477,6 +479,12 @@ void WolkenThread::operator()(int thread)
       threadStatusMutex.lock();
       threadStatus[thread]=TH_SCAN;
       threadStatusMutex.unlock();
+      cylAddress=snake.next();
+      cyl=snake.cyl(cylAddress);
+      if (cyl.getRadius())
+	; // scan the cylinder
+      else
+	sleep(thread);
     }
     if (threadCommand==TH_WAIT)
     { // There is no job. The threads are waiting for a job.
