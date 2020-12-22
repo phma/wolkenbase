@@ -90,6 +90,7 @@ public:
   void restart();
   Eisenstein next();
   Cylinder cyl(Eisenstein e);
+  Eisenstein tileAddress(xy pnt);
   double progress();
 private:
   xy center;

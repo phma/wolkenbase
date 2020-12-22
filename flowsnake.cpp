@@ -260,6 +260,13 @@ Cylinder Flowsnake::cyl(Eisenstein e)
   return Cylinder(xy(z.real(),z.imag())+center,rad);
 }
 
+Eisenstein Flowsnake::tileAddress(xy pnt)
+{
+  pnt=(pnt-center)/spacing;
+  complex<double> cpnt(pnt.getx(),pnt.gety());
+  return Eisenstein(cpnt);
+}
+
 double Flowsnake::progress()
 {
   double ret;
