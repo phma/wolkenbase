@@ -273,5 +273,7 @@ double Flowsnake::progress()
   flowMutex.lock();
   ret=double(counter-startnum)/double(stopnum-startnum);
   flowMutex.unlock();
+  if (ret>1)
+    ret=1;
   return ret;
 }
