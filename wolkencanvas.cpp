@@ -117,7 +117,8 @@ array<double,3> WolkenCanvas::pixelColorTile(int x,int y)
   else
   {
     ret[0]=0;
-    ret[1]=thisTile->nPoints/(double)maxTile.nPoints;
+    ret[1]=(log(thisTile->nPoints)-log(minTile.nPoints))/
+	   (log(maxTile.nPoints)-log(minTile.nPoints));
     ret[2]=1-ret[1];
   }
   return ret;

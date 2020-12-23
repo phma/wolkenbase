@@ -38,12 +38,15 @@ void scanCylinder(Eisenstein cylAddress)
 {
   Cylinder cyl=snake.cyl(cylAddress);
   vector<LasPoint> cylPoints=octStore.pointsIn(cyl);
-  tileMutex.lock();
-  tiles[cylAddress].nPoints=cylPoints.size();
-  if (tiles[cylAddress].nPoints>maxTile.nPoints)
-    maxTile.nPoints=tiles[cylAddress].nPoints;
-  if (tiles[cylAddress].nPoints<minTile.nPoints)
-    minTile.nPoints=tiles[cylAddress].nPoints;
-  tileMutex.unlock();
+  if (cylPoints.size())
+  {
+    tileMutex.lock();
+    tiles[cylAddress].nPoints=cylPoints.size();
+    if (tiles[cylAddress].nPoints>maxTile.nPoints)
+      maxTile.nPoints=tiles[cylAddress].nPoints;
+    if (tiles[cylAddress].nPoints<minTile.nPoints)
+      minTile.nPoints=tiles[cylAddress].nPoints;
+    tileMutex.unlock();
+  }
   octStore.disown();
 }
