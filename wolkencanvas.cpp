@@ -58,7 +58,7 @@ WolkenCanvas::WolkenCanvas(QWidget *parent):QWidget(parent)
   setMinimumSize(40,30);
   setMouseTracking(true);
   fileCountdown=splashScreenTime=dartAngle=ballAngle=0;
-  tileSize=10;
+  tileSize=1;
   lowRam=freeRam()/7;
 }
 
@@ -292,7 +292,7 @@ void WolkenCanvas::tick()
     elapsed=clk.now()-timeStart;
     pixelsToPaint--;
   }
-  if (pointBufferSize())
+  if (pointBufferSize() || (snake.progress()>0 && snake.progress()<1))
     pixelsToPaint=(width()*height()*7+3)/4;
   if (state==TH_READ && actionQueueEmpty() && pointBufferEmpty() && sofar==total)
     startScan();
