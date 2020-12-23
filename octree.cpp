@@ -798,7 +798,7 @@ int OctStore::newBlock()
 }
 
 OctBuffer *OctStore::getBlock(long long block,bool mustExist)
-{
+{ // FIXME crash bug seems to be in here
   streampos fileSize;
   int lru=-1,bufnum=-1,i=0,f=block%nFiles,b=block/nFiles;
   bool found=false,transitResult,ownResult;
