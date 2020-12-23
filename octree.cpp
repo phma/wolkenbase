@@ -828,7 +828,12 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
     {
       bufnum=revBlocks[block];
       if (t>=0)
-	blocks[bufnum].own();
+      {
+	bufferMutex.lock_shared();
+	buf=&blocks[bufnum];
+	bufferMutex.unlock_shared();
+	buf->own();
+      }
     }
     revMutex.unlock_shared();
     if (!found)
