@@ -894,15 +894,21 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
       {
 	bufnum=newBlock();
 	assert(bufnum>=0);
-	blocks[bufnum].read(block);
-	blocks[bufnum].blockNumber=block;
+	bufferMutex.lock_shared();
+	buf=&blocks[bufnum];
+	bufferMutex.unlock_shared();
+	buf->read(block);
+	buf->blockNumber=block;
       }
       revMutex.lock();
       revBlocks[block]=bufnum;
       revMutex.unlock();
     }
     assert(bufnum>=0);
-    blocks[bufnum].update();
+    bufferMutex.lock_shared();
+    buf=&blocks[bufnum];
+    bufferMutex.unlock_shared();
+    buf->update();
     assert(lru>=-1);
     if (lru>=0)
       setTransit(lru,false);
@@ -912,7 +918,10 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
       cout<<"Got block "<<block<<" in buffer "<<bufnum<<endl;
       msgMutex.unlock();
     }
-    return &blocks[bufnum];
+    bufferMutex.lock_shared();
+    buf=&blocks[bufnum];
+    bufferMutex.unlock_shared();
+    return buf;
   }
 }
 
