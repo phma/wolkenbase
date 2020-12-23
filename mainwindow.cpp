@@ -106,6 +106,8 @@ void MainWindow::tick()
   busyBar->setValue(lrint(lpfBusyFraction*16777216));
   if ((tstatus&0x3ffbfeff)==1048577*TH_READ && readFileTotal>0)
     doneBar->setValue(lrint((double)readFileSoFar/readFileTotal*16777216));
+  if ((tstatus&0x3ffbfeff)==1048577*TH_SCAN)
+    doneBar->setValue(lrint(snake.progress()*16777216));
   if (tstatus==1048577*TH_WAIT+TH_ASLEEP && actionQueueEmpty())
     currentAction=0;
   writeBufLog();
