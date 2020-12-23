@@ -42,20 +42,21 @@ qt5_add_translation(qm_files wolkenbase_en.ts wolkenbase_es.ts)
 add_executable(wolkenbase angle.cpp binio.cpp boundrect.cpp
 	       brevno.cpp configdialog.cpp eisenstein.cpp
                fileio.cpp flowsnake.cpp freeram.cpp point.cpp las.cpp ldecimal.cpp
-               lissajous.cpp mainwindow.cpp octree.cpp peano.cpp ps.cpp quaternion.cpp
+               lissajous.cpp mainwindow.cpp manysum.cpp matrix.cpp
+               octree.cpp peano.cpp ps.cpp quaternion.cpp
                random.cpp relprime.cpp scan.cpp shape.cpp testpattern.cpp
                threads.cpp tile.cpp unitbutton.cpp wkt.cpp wolkenbase.cpp wolkencanvas.cpp
                ${lib_resources} ${qm_files})
 
 add_executable(wolkencli angle.cpp binio.cpp boundrect.cpp brevno.cpp eisenstein.cpp
                flowsnake.cpp freeram.cpp point.cpp las.cpp ldecimal.cpp
-               octree.cpp ps.cpp quaternion.cpp
+               manysum.cpp matrix.cpp octree.cpp ps.cpp quaternion.cpp
                random.cpp relprime.cpp scan.cpp shape.cpp testpattern.cpp
                threads.cpp tile.cpp wkt.cpp wolkencli.cpp)
 
 add_executable(wolkentest angle.cpp binio.cpp boundrect.cpp brevno.cpp eisenstein.cpp
                flowsnake.cpp freeram.cpp point.cpp las.cpp ldecimal.cpp
-               octree.cpp peano.cpp ps.cpp quaternion.cpp
+               manysum.cpp matrix.cpp octree.cpp peano.cpp ps.cpp quaternion.cpp
                random.cpp relprime.cpp scan.cpp shape.cpp testpattern.cpp
                threads.cpp tile.cpp wkt.cpp wolkentest.cpp)
 
