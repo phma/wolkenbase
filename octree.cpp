@@ -690,6 +690,7 @@ void OctStore::put(LasPoint pnt,bool splitting)
     return;
   OctBuffer *pBlock=getBlock(key,true); // Leaves cube read-locked
   assert(pBlock);
+  assert(pBlock->store);
   assert(pBlock->iOwn());
   blkn0=pBlock->blockNumber;
   assert(blkn0>=0);
