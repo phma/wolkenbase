@@ -30,6 +30,18 @@ void scanCylinder(Eisenstein cylAddress)
   vector<LasPoint> cylPoints=octStore.pointsIn(cyl);
   if (cylPoints.size())
   {
+    /* Scanning a cylinder (which circumscribes a hexagonal tile) consists
+     * of two parts:
+     * • Find the density of points in the bottom layer.
+     * • Check if there's an edge of roof (see roof.cpp).
+     * To find the bottom density:
+     * 1. Using least squares, find a plane through the centroid of the points.
+     * 2. Clamp the slope of this plane to 1. (Steep slope can be caused by trees on the side.)
+     * 3. Subtract the plane from the points.
+     * 4. Discard all points more than 2r higher than the bottom point.
+     * 5. Split the cylinder into seven equal parts, a central cylinder and six 60° sectors.
+     * 6. Compute the RMS of the seven densities.
+     */
     tileMutex.lock();
     tiles[cylAddress].nPoints=cylPoints.size();
     if (tiles[cylAddress].nPoints>maxTile.nPoints)
