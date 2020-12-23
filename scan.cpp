@@ -1,6 +1,6 @@
 /******************************************************/
 /*                                                    */
-/* tile.h - tiles                                     */
+/* scan.cpp - scan the cloud                          */
 /*                                                    */
 /******************************************************/
 /* Copyright 2020 Pierre Abbat.
@@ -19,20 +19,24 @@
  * You should have received a copy of the GNU General Public License
  * along with Wolkenbase. If not, see <http://www.gnu.org/licenses/>.
  */
-#include "flowsnake.h"
-#include "threads.h"
 
-class Tile
+#include "scan.h"
+#include "octree.h"
+using namespace std;
+
+void scanCylinder(Eisenstein cylAddress)
 {
-public:
-  int nPoints;
-  int roofFlags;
-  double density; // of bottom layer
-  double paraboloidSize;
-};
-
-extern harray<Tile> tiles;
-extern std::mutex tileMutex;
-extern Tile minTile,maxTile;
-
-void initTiles();
+  Cylinder cyl=snake.cyl(cylAddress);
+  vector<LasPoint> cylPoints=octStore.pointsIn(cyl);
+  if (cylPoints.size())
+  {
+    tileMutex.lock();
+    tiles[cylAddress].nPoints=cylPoints.size();
+    if (tiles[cylAddress].nPoints>maxTile.nPoints)
+      maxTile.nPoints=tiles[cylAddress].nPoints;
+    if (tiles[cylAddress].nPoints<minTile.nPoints)
+      minTile.nPoints=tiles[cylAddress].nPoints;
+    tileMutex.unlock();
+  }
+  octStore.disown();
+}

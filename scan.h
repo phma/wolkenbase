@@ -1,6 +1,6 @@
 /******************************************************/
 /*                                                    */
-/* tile.h - tiles                                     */
+/* scan.h - scan the cloud                            */
 /*                                                    */
 /******************************************************/
 /* Copyright 2020 Pierre Abbat.
@@ -19,20 +19,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Wolkenbase. If not, see <http://www.gnu.org/licenses/>.
  */
-#include "flowsnake.h"
-#include "threads.h"
+#include "tile.h"
 
-class Tile
-{
-public:
-  int nPoints;
-  int roofFlags;
-  double density; // of bottom layer
-  double paraboloidSize;
-};
-
-extern harray<Tile> tiles;
-extern std::mutex tileMutex;
-extern Tile minTile,maxTile;
-
-void initTiles();
+void scanCylinder(Eisenstein cylAddress);

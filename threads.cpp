@@ -32,7 +32,7 @@
 #include "las.h"
 #include "freeram.h"
 #include "octree.h"
-#include "tile.h"
+#include "scan.h"
 
 using namespace std;
 namespace cr=std::chrono;
