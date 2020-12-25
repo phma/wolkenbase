@@ -506,7 +506,10 @@ void WolkenThread::operator()(int thread)
       threadStatusMutex.unlock();
       cylAddress=snake.next();
       if (cylAddress.getx()!=INT_MIN)
+      {
 	scanCylinder(cylAddress);
+	enqueueTileDone(cylAddress);
+      }
       else
 	sleep(thread);
     }

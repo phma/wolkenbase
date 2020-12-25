@@ -104,10 +104,8 @@ array<double,3> WolkenCanvas::pixelColorRead(int x,int y)
   return ret;
 }
 
-array<double,3> WolkenCanvas::pixelColorTile(int x,int y)
+array<double,3> WolkenCanvas::pixelColorTile(Eisenstein tileAddr)
 {
-  xy pnt=windowToWorld(QPoint(x,y));
-  Eisenstein tileAddr=snake.tileAddress(pnt);
   tileMutex.lock();
   Tile *thisTile=&tiles[tileAddr];
   tileMutex.unlock();
@@ -122,6 +120,13 @@ array<double,3> WolkenCanvas::pixelColorTile(int x,int y)
     ret[2]=1-ret[1];
   }
   return ret;
+}
+
+array<double,3> WolkenCanvas::pixelColorTile(int x,int y)
+{
+  xy pnt=windowToWorld(QPoint(x,y));
+  Eisenstein tileAddr=snake.tileAddress(pnt);
+  return pixelColorTile(tileAddr);
 }
 
 void WolkenCanvas::sizeToFit()
@@ -158,7 +163,7 @@ void WolkenCanvas::tick()
   int i,sz,timeLimit;
   size_t sofar=0,total=0;
   int tstatus=getThreadStatus();
-  double splashElev;
+  double splashElev,radius;
   xy gradient,A,B,C;
   xy dartCorners[4];
   xy leftTickmark,rightTickmark,tickmark;
@@ -267,6 +272,35 @@ void WolkenCanvas::tick()
     timeLimit=45;
   else
     timeLimit=20;
+  while (elapsed<cr::milliseconds(timeLimit))
+  {
+    Eisenstein tileAddress=dequeueTileDone();
+    Cylinder tileDone=snake.cyl(tileAddress);
+    if (tileDone.getRadius()==0)
+      break;
+    pcolor=pixelColorTile(tileAddress);
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(QColor(lrint(pcolor[0]*255),lrint(pcolor[1]*255),lrint(pcolor[2]*255)));
+    circleCenter=worldToWindow(tileDone.getCenter());
+    radius=tileDone.getRadius()*scale;
+    circleBox=QRectF(circleCenter.x()-radius,circleCenter.y()-radius,
+		     radius*2,radius*2);
+    painter.drawEllipse(circleBox);
+    if (ceil(circleCenter.x()+radius)>pixmaxx)
+      pixmaxx=ceil(circleCenter.x()+radius);
+    if (floor(circleCenter.x()+radius)<pixminx)
+      pixminx=floor(circleCenter.x()+radius);
+    if (ceil(circleCenter.y()+radius)>pixmaxy)
+      pixmaxy=ceil(circleCenter.y()+radius);
+    if (floor(circleCenter.y()+radius)<pixminy)
+      pixminy=floor(circleCenter.y()+radius);
+    elapsed=clk.now()-timeStart;
+  }
+  if (pixminx<=pixmaxx)
+    update(pixminx,pixminy,pixmaxx-pixminx,pixmaxy-pixminy);
+  pixminx=width();
+  pixminy=height();
+  pixmaxx=pixmaxy=0;
   while (elapsed<cr::milliseconds(timeLimit) && pixelsToPaint)
   {
     pixel=peano.step();
@@ -287,11 +321,11 @@ void WolkenCanvas::tick()
       if (pixel[1]<pixminy)
 	pixminy=pixel[1];
     }
-    if (pixminx<=pixmaxx)
-      update(pixminx,pixminy,pixmaxx-pixminx+1,pixmaxy-pixminy+1);
     elapsed=clk.now()-timeStart;
     pixelsToPaint--;
   }
+  if (pixminx<=pixmaxx)
+    update(pixminx,pixminy,pixmaxx-pixminx+1,pixmaxy-pixminy+1);
   if (pointBufferSize() || (snake.progress()>0 && snake.progress()<1))
     pixelsToPaint=(width()*height()*7+3)/4;
   if (state==TH_READ && actionQueueEmpty() && pointBufferEmpty() && sofar==total)

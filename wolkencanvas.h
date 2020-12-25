@@ -29,6 +29,7 @@
 #include "point.h"
 #include "shape.h"
 #include "las.h"
+#include "eisenstein.h"
 
 #define SPLASH_TIME 60
 
@@ -81,6 +82,7 @@ private:
   int splashScreenTime; // in ticks
   std::vector<int> fileHitTest(xy pnt);
   std::array<double,3> pixelColorRead(int x,int y);
+  std::array<double,3> pixelColorTile(Eisenstein tileAddr);
   std::array<double,3> pixelColorTile(int x,int y);
 };
 #endif
