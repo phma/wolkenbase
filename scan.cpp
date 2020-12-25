@@ -60,13 +60,13 @@ void scanCylinder(Eisenstein cylAddress)
     slope=xy(slopev[0],slopev[1]);
     if (slope.length()>1)
       slope/=slope.length();
+    if (slope.isnan())
+      slope=xy(0,0);
     for (i=0;i<pnts.size();i++)
     {
       double z=dot(slope,xy(pnts[i]));
       pntsUntilted.push_back(xyz(xy(pnts[i]),pnts[i].getz()-z));
     }
-    if (pnts.size()==20)
-      cout<<20<<endl;
     tileMutex.lock();
     tiles[cylAddress].nPoints=cylPoints.size();
     if (tiles[cylAddress].nPoints>maxTile.nPoints)
