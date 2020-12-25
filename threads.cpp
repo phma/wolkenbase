@@ -43,6 +43,7 @@ mutex actMutex;
 mutex startMutex;
 map<int,mutex> pointBufferMutex;
 shared_mutex threadStatusMutex;
+mutex tileDoneMutex;
 
 atomic<int> threadCommand;
 vector<thread> threads;
@@ -51,6 +52,7 @@ vector<double> sleepTime;
 double stageTolerance;
 double minArea;
 queue<ThreadAction> actQueue,resQueue;
+queue<Eisenstein> tileDoneQueue;
 map<int,vector<LasPoint> > pointBuffer;
 map<int,size_t> pbsz;
 map<int,int> bufferPos;
@@ -123,6 +125,31 @@ void enqueueAction(ThreadAction a)
 bool actionQueueEmpty()
 {
   return actQueue.size()==0;
+}
+
+Eisenstein dequeueTileDone()
+{
+  Eisenstein ret(INT_MIN,INT_MIN);
+  tileDoneMutex.lock();
+  if (tileDoneQueue.size())
+  {
+    ret=tileDoneQueue.front();
+    tileDoneQueue.pop();
+  }
+  tileDoneMutex.unlock();
+  return ret;
+}
+
+void enqueueTileDone(Eisenstein e)
+{
+  tileDoneMutex.lock();
+  tileDoneQueue.push(e);
+  tileDoneMutex.unlock();
+}
+
+bool tileDoneQueueEmpty()
+{
+  return tileDoneQueue.size()==0;
 }
 
 ThreadAction dequeueResult()

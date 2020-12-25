@@ -76,6 +76,8 @@ void joinThreads();
 void enqueueAction(ThreadAction a);
 ThreadAction dequeueResult();
 bool actionQueueEmpty();
+Eisenstein dequeueTileDone();
+bool tileDoneQueueEmpty();
 bool resultQueueEmpty();
 void embufferPoint(LasPoint point,bool fromFile);
 void embufferPoints(std::vector<LasPoint> points,int thread);
