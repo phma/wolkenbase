@@ -48,7 +48,9 @@ void scanCylinder(Eisenstein cylAddress)
     vector<xyz> pnts,pntsUntilted,pntsBottom;
     xy slope;
     double bottom=INFINITY;
-    int i;
+    double density=0;
+    int i,sector;
+    int histo[7];
     for (i=0;i<cylPoints.size();i++)
     {
       pnts.push_back(cylPoints[i].location-xyz(cyl.getCenter(),0));
@@ -73,12 +75,32 @@ void scanCylinder(Eisenstein cylAddress)
     for (i=0;i<pntsUntilted.size();i++)
       if (pntsUntilted[i].getz()<bottom+2*cyl.getRadius())
 	pntsBottom.push_back(pntsUntilted[i]);
+    for (i=0;i<7;i++)
+      histo[i]=0;
+    for (i=0;i<pntsBottom.size();i++)
+    {
+      sector=lrint(atan2(pntsBottom[i].gety(),pntsBottom[i].getx())*3/M_PI);
+      if (sector<0)
+	sector+=6;
+      sector=(sector%6)+1;
+      if (xy(pntsBottom[i]).length()<cyl.getRadius()/M_SQRT7)
+	sector=0;
+      histo[sector]++;
+    }
+    for (i=0;i<7;i++)
+      density+=sqr(histo[i]);
+    density=sqrt(density)*M_SQRT7/sqr(cyl.getRadius())/M_PI;
     tileMutex.lock();
     tiles[cylAddress].nPoints=cylPoints.size();
+    tiles[cylAddress].density=density;
     if (tiles[cylAddress].nPoints>maxTile.nPoints)
       maxTile.nPoints=tiles[cylAddress].nPoints;
     if (tiles[cylAddress].nPoints<minTile.nPoints)
       minTile.nPoints=tiles[cylAddress].nPoints;
+    if (tiles[cylAddress].density>maxTile.density)
+      maxTile.density=tiles[cylAddress].density;
+    if (tiles[cylAddress].density<minTile.density)
+      minTile.density=tiles[cylAddress].density;
     tileMutex.unlock();
   }
   octStore.disown();

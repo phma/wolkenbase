@@ -32,4 +32,6 @@ void initTiles()
 {
   minTile.nPoints=INT_MAX;
   maxTile.nPoints=0;
+  minTile.density=INFINITY;
+  maxTile.density=0;
 }

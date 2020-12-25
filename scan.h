@@ -20,5 +20,6 @@
  * along with Wolkenbase. If not, see <http://www.gnu.org/licenses/>.
  */
 #include "tile.h"
+#define M_SQRT7 2.6457513110645905905016
 
 void scanCylinder(Eisenstein cylAddress);
