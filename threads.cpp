@@ -43,7 +43,6 @@ mutex actMutex;
 mutex startMutex;
 map<int,mutex> pointBufferMutex;
 shared_mutex threadStatusMutex;
-mutex metaMutex;
 
 atomic<int> threadCommand;
 vector<thread> threads;
