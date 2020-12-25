@@ -46,6 +46,7 @@ void scanCylinder(Eisenstein cylAddress)
     matrix a(cylPoints.size(),2);
     vector<double> b,slopev;
     vector<xyz> pnts,pntsUntilted;
+    xy slope;
     int i;
     for (i=0;i<cylPoints.size();i++)
     {
@@ -55,6 +56,16 @@ void scanCylinder(Eisenstein cylAddress)
       b.push_back(pnts[i].getz());
     }
     slopev=linearLeastSquares(a,b);
+    slope=xy(slopev[0],slopev[1]);
+    if (slope.length()>1)
+      slope/=slope.length();
+    for (i=0;i<pnts.size();i++)
+    {
+      double z=dot(slope,xy(pnts[i]));
+      pntsUntilted.push_back(xyz(xy(pnts[i]),pnts[i].getz()-z));
+    }
+    if (pnts.size()==20)
+      cout<<20<<endl;
     tileMutex.lock();
     tiles[cylAddress].nPoints=cylPoints.size();
     if (tiles[cylAddress].nPoints>maxTile.nPoints)
