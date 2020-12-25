@@ -43,7 +43,7 @@ void scanCylinder(Eisenstein cylAddress)
      * 5. Split the cylinder into seven equal parts, a central cylinder and six 60° sectors.
      * 6. Compute the RMS of the seven densities.
      */
-    matrix a(cylPoints.size(),2);
+    matrix a(cylPoints.size(),3);
     vector<double> b,slopev;
     vector<xyz> pnts,pntsUntilted;
     xy slope;
@@ -53,6 +53,7 @@ void scanCylinder(Eisenstein cylAddress)
       pnts.push_back(cylPoints[i].location-xyz(cyl.getCenter(),0));
       a[i][0]=pnts[i].getx();
       a[i][1]=pnts[i].gety();
+      a[i][2]=1;
       b.push_back(pnts[i].getz());
     }
     slopev=linearLeastSquares(a,b);
