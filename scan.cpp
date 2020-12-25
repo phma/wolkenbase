@@ -22,6 +22,7 @@
 
 #include "scan.h"
 #include "octree.h"
+#include "angle.h"
 #include "leastsquares.h"
 using namespace std;
 
