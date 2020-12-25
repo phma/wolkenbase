@@ -117,7 +117,8 @@ array<double,3> WolkenCanvas::pixelColorTile(Eisenstein tileAddr)
     ret[0]=0;
     ret[1]=(log(thisTile->nPoints)-log(minTile.nPoints))/
 	   (log(maxTile.nPoints)-log(minTile.nPoints));
-    ret[2]=1-ret[1];
+    ret[2]=(log(thisTile->density)-log(minTile.density))/
+	   (log(maxTile.density)-log(minTile.density));
   }
   return ret;
 }
