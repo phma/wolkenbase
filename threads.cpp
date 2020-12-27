@@ -251,6 +251,17 @@ size_t pointBufferSize()
   return sum;
 }
 
+bool pointBuffersNonempty()
+{
+  bool ret=true;
+  int i;
+  for (i=0;ret && i<pointBuffer.size();i++)
+  {
+    ret=ret && pbsz[i];
+  }
+  return ret;
+}
+
 bool pointBufferEmpty()
 {
   return pointBufferSize()==0;
@@ -436,21 +447,24 @@ void WolkenThread::operator()(int thread)
 		  n=(n+h)%nChunks;
 		}
 	      }
-	      point=debufferPoint(thread);
-	      if (point.isEmpty() && pointBufferSize()*sizeof(point)>lowRam)
-		sleep(thread);
-	      else
+	      if (pointBuffersNonempty())
 	      {
-		blknum=octRoot.findBlock(point.location);
-		if (blknum<0 || blknum%threadStatus.size()==thread)
-		{
-		  nPoints++;
-		  octStore.put(point);
-		  octStore.disown();
-		  unsleep(thread);
-		}
+		point=debufferPoint(thread);
+		if (point.isEmpty() && pointBufferSize()*sizeof(point)>lowRam)
+		  sleep(thread);
 		else
-		  embufferPoint(point,false);
+		{
+		  blknum=octRoot.findBlock(point.location);
+		  if (blknum<0 || blknum%threadStatus.size()==thread)
+		  {
+		    nPoints++;
+		    octStore.put(point);
+		    octStore.disown();
+		    unsleep(thread);
+		  }
+		  else
+		    embufferPoint(point,false);
+		}
 	      }
 	    }
 	  }
