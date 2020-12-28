@@ -73,7 +73,7 @@ double freeRam()
 #include <unistd.h>
 
 double freeRam()
-{
+{ // https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/22072-real-free-memory-under-freebsd
   vmstats vms;
   size_t vms_size=sizeof(vms);
   double ret;
@@ -81,7 +81,7 @@ double freeRam()
   if (rval)
     ret=NAN;
   else
-    ret=vms.v_free_count*(double)getpagesize();
+    ret=(vms.v_cache_count+vms.v_inactive_count+vms.v_free_count)*(double)getpagesize();
   return ret;
 }
 
