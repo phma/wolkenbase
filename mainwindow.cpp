@@ -38,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent)
   setWindowIcon(QIcon(":/wolkenbase.png"));
   fileMsg=new QLabel(this);
   dotTriangleMsg=new QLabel(this);
-  toleranceMsg=new QLabel(this);
+  memoryMsg=new QLabel(this);
   densityMsg=new QLabel(this);
   canvas=new WolkenCanvas(this);
   //configDialog=new ConfigurationDialog(this);
@@ -309,7 +309,7 @@ void MainWindow::makeStatusBar()
 {
   statusBar()->addWidget(fileMsg);
   statusBar()->addWidget(dotTriangleMsg);
-  statusBar()->addWidget(toleranceMsg);
+  statusBar()->addWidget(memoryMsg);
   statusBar()->addWidget(densityMsg);
   statusBar()->addWidget(doneBar);
   statusBar()->addWidget(busyBar);

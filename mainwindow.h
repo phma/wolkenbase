@@ -83,7 +83,7 @@ private:
   QToolBar *toolbar;
   ConfigurationDialog *configDialog;
   QMenu *fileMenu,*viewMenu,*settingsMenu,*helpMenu,*colorMenu;
-  QLabel *fileMsg,*dotTriangleMsg,*toleranceMsg,*densityMsg;
+  QLabel *fileMsg,*dotTriangleMsg,*memoryMsg,*densityMsg;
   QProgressBar *doneBar,*busyBar;
   QAction *openAction,*loadAction,*processAction,*clearAction;
   QAction *exportAction,*stopAction,*resumeAction,*exitAction;
