@@ -25,6 +25,7 @@
 #include "angle.h"
 #include "fileio.h"
 #include "brevno.h"
+#include "freeram.h"
 using namespace std;
 
 const char unitIconNames[4][28]=
@@ -102,6 +103,7 @@ void MainWindow::tick()
     ta=dequeueResult();
     gotResult(ta);
   }
+  memoryMsg->setNum(freeRam());
   lpfBusyFraction=(16*lpfBusyFraction+busyFraction())/17;
   busyBar->setValue(lrint(lpfBusyFraction*16777216));
   if ((tstatus&0x3ffbfeff)==1048577*TH_READ && readFileTotal>0)
