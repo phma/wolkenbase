@@ -22,7 +22,35 @@
 #include <cmath>
 #include "config.h"
 #include "freeram.h"
+using namespace std;
 
+#ifdef HAVE_PROC_MEMINFO
+// Linux
+#include <fstream>
+#include <string>
+
+double freeRam()
+/* This returns the available RAM, which includes the cache and is
+ * much greater than the free RAM from sysinfo.
+ */
+{
+  ifstream meminfo("/proc/meminfo");
+  string line,numstr;
+  double available;
+  while (meminfo.good())
+  {
+    getline(meminfo,line);
+    if (line.find("MemAvailable:")==0)
+    {
+      numstr=line.substr(13);
+      available=stod(numstr);
+      break;
+    }
+  }
+  return available*1024;
+}
+
+#else
 #ifdef HAVE_SYS_SYSINFO_H
 // Linux
 #include <sys/sysinfo.h>
@@ -59,4 +87,4 @@ double freeRam()
 
 #endif
 #endif
-
+#endif
