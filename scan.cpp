@@ -91,6 +91,7 @@ void scanCylinder(Eisenstein cylAddress)
     for (i=0;i<7;i++)
       density+=sqr(histo[i]);
     density=sqrt(density)*M_SQRT7/sqr(cyl.getRadius())/M_PI;
+    snake.countNonempty();
     tileMutex.lock();
     tiles[cylAddress].nPoints=cylPoints.size();
     tiles[cylAddress].density=density;

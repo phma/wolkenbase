@@ -89,6 +89,7 @@ public:
   void setSize(Cube cube,double desiredSpacing);
   void restart();
   Eisenstein next();
+  void countNonempty();
   Cylinder cyl(Eisenstein e);
   Eisenstein tileAddress(xy pnt);
   double progress();
@@ -96,6 +97,7 @@ private:
   xy center;
   double spacing;
   int startnum,counter,stopnum;
+  int nonemptyCount,nonemptyTotal;
   std::mutex flowMutex;
 };
 

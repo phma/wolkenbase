@@ -225,12 +225,15 @@ void Flowsnake::setSize(Cube cube,double desiredSpacing)
   spacing=cube.getSide()/squareSides[bestI];
   startnum=counter=loLim[bestI];
   stopnum=hiLim[bestI];
+  nonemptyCount=nonemptyTotal=0;
 }
 
 void Flowsnake::restart()
 {
   flowMutex.lock();
   counter=startnum;
+  nonemptyTotal=nonemptyCount;
+  nonemptyCount=0;
   flowMutex.unlock();
 }
 
@@ -248,6 +251,13 @@ Eisenstein Flowsnake::next()
     e=Eisenstein(INT_MIN,INT_MIN);
   flowMutex.unlock();
   return e;
+}
+
+void Flowsnake::countNonempty()
+{
+  flowMutex.lock();
+  nonemptyCount++;
+  flowMutex.unlock();
 }
 
 Cylinder Flowsnake::cyl(Eisenstein e)
@@ -268,10 +278,18 @@ Eisenstein Flowsnake::tileAddress(xy pnt)
 }
 
 double Flowsnake::progress()
+/* In the classification phase, returns the fraction of nonempty tiles
+ * (counted during the scanning phase) which have been classified.
+ * In the scanning phase, returns the fraction of all tiles which
+ * have been scanned.
+ */
 {
   double ret;
   flowMutex.lock();
-  ret=double(counter-startnum)/double(stopnum-startnum);
+  if (nonemptyTotal)
+    ret=double(nonemptyCount)/nonemptyTotal;
+  else
+    ret=double(counter-startnum)/double(stopnum-startnum);
   flowMutex.unlock();
   if (ret>1)
     ret=1;
