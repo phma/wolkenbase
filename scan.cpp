@@ -40,16 +40,19 @@ void scanCylinder(Eisenstein cylAddress)
      * 1. Using least squares, find a plane through the centroid of the points.
      * 2. Clamp the slope of this plane to 1. (Steep slope can be caused by trees on the side.)
      * 3. Subtract the plane from the points.
-     * 4. Discard all points more than 2r higher than the bottom point.
+     * 4. Discard all points more than 2r higher than the second bottom point.
      * 5. Split the cylinder into seven equal parts, a central cylinder and six 60° sectors.
      * 6. Compute the RMS of the seven densities.
+     * The reason for using the second bottom point is that occasionally, there is
+     * a stray point below ground. If it's far enough below ground, it would result
+     * in the density being only one point in the tile.
      */
     matrix a(cylPoints.size(),3);
     vector<double> b,slopev;
     vector<xyz> pnts,pntsUntilted,pntsBottom;
     xy slope;
-    double bottom=INFINITY;
-    double density=0;
+    double bottom=INFINITY,bottom2=INFINITY;
+    double density=0,paraboloidSize=0;
     int i,sector;
     int histo[7];
     for (i=0;i<cylPoints.size();i++)
@@ -71,10 +74,15 @@ void scanCylinder(Eisenstein cylAddress)
       double z=dot(slope,xy(pnts[i]));
       pntsUntilted.push_back(xyz(xy(pnts[i]),pnts[i].getz()-z));
       if (pntsUntilted[i].getz()<bottom)
+      {
+	bottom2=bottom;
 	bottom=pntsUntilted[i].getz();
+      }
     }
+    if (isinf(bottom2))
+      bottom2=bottom;
     for (i=0;i<pntsUntilted.size();i++)
-      if (pntsUntilted[i].getz()<bottom+2*cyl.getRadius())
+      if (pntsUntilted[i].getz()<bottom2+2*cyl.getRadius())
 	pntsBottom.push_back(pntsUntilted[i]);
     for (i=0;i<7;i++)
       histo[i]=0;
@@ -91,10 +99,12 @@ void scanCylinder(Eisenstein cylAddress)
     for (i=0;i<7;i++)
       density+=sqr(histo[i]);
     density=sqrt(density)*M_SQRT7/sqr(cyl.getRadius())/M_PI;
+    paraboloidSize=1/sqrt(density); // this may need to be multiplied by something
     snake.countNonempty();
     tileMutex.lock();
     tiles[cylAddress].nPoints=cylPoints.size();
     tiles[cylAddress].density=density;
+    tiles[cylAddress].paraboloidSize=paraboloidSize;
     if (tiles[cylAddress].nPoints>maxTile.nPoints)
       maxTile.nPoints=tiles[cylAddress].nPoints;
     if (tiles[cylAddress].nPoints<minTile.nPoints)
@@ -103,6 +113,10 @@ void scanCylinder(Eisenstein cylAddress)
       maxTile.density=tiles[cylAddress].density;
     if (tiles[cylAddress].density<minTile.density)
       minTile.density=tiles[cylAddress].density;
+    if (tiles[cylAddress].paraboloidSize>maxTile.paraboloidSize)
+      maxTile.paraboloidSize=tiles[cylAddress].paraboloidSize;
+    if (tiles[cylAddress].paraboloidSize<minTile.paraboloidSize)
+      minTile.paraboloidSize=tiles[cylAddress].paraboloidSize;
     tileMutex.unlock();
   }
   octStore.disown();

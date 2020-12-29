@@ -28,7 +28,7 @@ public:
   int nPoints;
   int roofFlags;
   double density; // of bottom layer
-  double paraboloidSize;
+  double paraboloidSize; // radius of curvature
 };
 
 extern harray<Tile> tiles;
