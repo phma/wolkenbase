@@ -33,6 +33,53 @@ const char unitIconNames[4][28]=
   ":/meter.png",":/international-foot.png",":/us-foot.png",":/indian-foot.png"
 };
 
+const char prefixes[]="yzafpnum kMGTPEZY"; // u should be µ but that's two bytes
+
+string threePrefix(double x)
+// Converts x to three digits with a prefix.
+{
+  int e=0;
+  int sign=1;
+  char buf[8];
+  string ret;
+  if (x<0)
+  {
+    x=-x;
+    sign=-1;
+  }
+  while (x>0 && x<1)
+  {
+    x*=1000;
+    e--;
+  }
+  while (x>=1000 && x<INFINITY)
+  {
+    x/=1000;
+    e++;
+  }
+  if (x>=100)
+    sprintf(buf,"%3.0f",x);
+  else if (x>=10)
+    sprintf(buf,"%3.1f",x);
+  else
+    sprintf(buf,"%3.2f",x);
+  ret=buf;
+  if (sign<0)
+    ret='-'+ret;
+  switch (prefixes[e+8])
+  {
+    case 'u':
+      ret+=" µ";
+      break;
+    case ' ':
+      ret+=' ';
+      break;
+    default:
+      ret=ret+' '+prefixes[e+8];
+  }
+  return ret;
+}
+
 MainWindow::MainWindow(QWidget *parent):QMainWindow(parent)
 {
   setWindowTitle(QApplication::translate("main", "Wolkenbase"));
@@ -103,7 +150,7 @@ void MainWindow::tick()
     ta=dequeueResult();
     gotResult(ta);
   }
-  memoryMsg->setNum(freeRam());
+  memoryMsg->setText(QString::fromStdString(threePrefix(freeRam())+'B'));
   lpfBusyFraction=(16*lpfBusyFraction+busyFraction())/17;
   busyBar->setValue(lrint(lpfBusyFraction*16777216));
   if ((tstatus&0x3ffbfeff)==1048577*TH_READ && readFileTotal>0)
