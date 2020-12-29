@@ -527,6 +527,20 @@ void WolkenThread::operator()(int thread)
       else
 	sleep(thread);
     }
+    if (threadCommand==TH_SPLIT)
+    {
+      threadStatusMutex.lock();
+      threadStatus[thread]=TH_SPLIT;
+      threadStatusMutex.unlock();
+      cylAddress=snake.next();
+      if (cylAddress.getx()!=INT_MIN)
+      {
+	scanCylinder(cylAddress);
+	enqueueTileDone(cylAddress);
+      }
+      else
+	sleep(thread);
+    }
     if (threadCommand==TH_WAIT)
     { // There is no job. The threads are waiting for a job.
       threadStatusMutex.lock();
