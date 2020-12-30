@@ -503,6 +503,8 @@ LasPoint LasHeader::readPoint(size_t num)
     ret.scanDirection=(temp>>6)&1;
     ret.edgeLine=(temp>>7)&1;
     ret.classification=(unsigned char)lasfile->get();
+    ret.classificationFlags=(ret.classification>>5)&7;
+    ret.classification&=31;
     ret.scanAngle=degtobin((signed char)lasfile->get());
     ret.userData=(unsigned char)lasfile->get();
     ret.pointSource=readleshort(*lasfile);
@@ -580,7 +582,7 @@ void LasHeader::writePoint(const LasPoint &pnt)
   if (pointFormat<6)
   {
     lasfile->put((pnt.returnNum&7)+((pnt.nReturns&7)<<3)+((pnt.scanDirection&1)<<6)+((pnt.edgeLine&1)<<7));
-    lasfile->put(pnt.classification);
+    lasfile->put((pnt.classification&31)+((pnt.classificationFlags&7)<<5));
     lasfile->put(lrint(bintodeg(pnt.scanAngle)));
     lasfile->put(pnt.userData);
     writeleshort(*lasfile,pnt.pointSource);
