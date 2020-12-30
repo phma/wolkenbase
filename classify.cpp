@@ -57,22 +57,23 @@ void classifyCylinder(Eisenstein cylAddress)
 {
   Cylinder cyl=snake.cyl(cylAddress);
   vector<LasPoint> cylPoints=octStore.pointsIn(cyl);
+  Paraboloid downward,upward;
   if (cylPoints.size())
   {
-    /* Scanning a cylinder (which circumscribes a hexagonal tile) consists
-     * of two parts:
-     * • Find the density of points in the bottom layer.
-     * • Check if there's an edge of roof (see roof.cpp).
-     * To find the bottom density:
-     * 1. Using least squares, find a plane through the centroid of the points.
-     * 2. Clamp the slope of this plane to 1. (Steep slope can be caused by trees on the side.)
-     * 3. Subtract the plane from the points.
-     * 4. Discard all points more than 2r higher than the second bottom point.
-     * 5. Split the cylinder into seven equal parts, a central cylinder and six 60° sectors.
-     * 6. Compute the RMS of the seven densities.
-     * The reason for using the second bottom point is that occasionally, there is
-     * a stray point below ground. If it's far enough below ground, it would result
-     * in the density being only one point in the tile.
+    /* Classifying a cylinder (which circumscribes a hexagonal tile) is done
+     * like this:
+     * • For each point in the cylinder, construct a downward-facing paraboloid
+     *   with the point as vertex. Also construct an upward-facing paraboloid
+     *   and a sphere.
+     * • For each point in the downward paraboloid, if it's not on the axis,
+     *   compute its bearing from the axis.
+     * • If six of the points surround the axis, and the angles between them
+     *   are less than 72°, then the point is off ground.
+     * • If the point is not off ground, check for points, other than the point
+     *   itself, in the upward paraboloid and the sphere. If there is at least
+     *   one point in the upward paraboloid but none in the sphere, the point
+     *   is low noise.
+     * • Otherwise it is ground.
      */
     matrix a(cylPoints.size(),3);
     vector<double> b,slopev;
