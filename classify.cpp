@@ -26,6 +26,33 @@
 #include "leastsquares.h"
 using namespace std;
 
+/* Point classes:
+ * 0	Created, never classified
+ * 1	Unclassified (here: not ground, but could be tree, power line, whatever)
+ * 2	Ground
+ * 3	Low vegetation
+ * 4	Medium vegetation
+ * 5	High vegetation
+ * 6	Building
+ * 7	Low point (noise)
+ * 8	Reserved
+ * 9	Water
+ * 10	Rail
+ * 11	Road surface
+ * 12	Reserved
+ * 13	Wire - Guard
+ * 14	Wire - Conductor
+ * 15	Transmission tower
+ * 16	Wire-structure connector
+ * 17	Bridge deck
+ * 18	High noise (e.g. bird)
+ * 19	Reserved
+ * :63	Reserved
+ * 64	User definable
+ * :255	User definable
+ * Classes 32-255 cannot appear in formats 1-5.
+ */
+
 void classifyCylinder(Eisenstein cylAddress)
 {
   Cylinder cyl=snake.cyl(cylAddress);
