@@ -550,12 +550,12 @@ void WolkenCanvas::mouseMoveEvent(QMouseEvent *event)
     if (i)
       tipString+=' ';
     tipString+=baseName(fileHeaders[filenums[i]].getFileName());
-    if (snake.cyl(Eisenstein(0,0)).getRadius())
-    {
-      double den=tiles[snake.tileAddress(eventLoc)].density;
-      if (den)
-	tipString=tipString+'\n'+ldecimal(den,den/1e3)+"/m²";
-    }
+  }
+  if (snake.cyl(Eisenstein(0,0)).getRadius())
+  {
+    double den=tiles[snake.tileAddress(eventLoc)].density;
+    if (den)
+      tipString=tipString+'\n'+ldecimal(den,den/1e3)+"/m²";
   }
   QToolTip::showText(event->globalPos(),QString::fromStdString(tipString),this);
 }
