@@ -62,7 +62,7 @@ bool surround(set<int> &directions)
  */
 {
   int n=0,first,last;
-  bool ret=true;
+  bool ret=directions.size()>5;
   set<int>::iterator i;
   for (i=directions.begin();ret && i!=directions.end();++i)
   {
