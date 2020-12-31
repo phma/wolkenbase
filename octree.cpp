@@ -37,6 +37,7 @@ double lowRam;
 set<int> watchedBuffers;
 mutex msgMutex;
 mutex cubeMutex;
+mutex alreadyMutex;
 map<int,Cube> lockedCubes,readLockedCubes;
 vector<xyz> alreadyInOctree;
 
@@ -502,8 +503,12 @@ bool OctBuffer::put(LasPoint pnt)
     inx=emptyinx;
   if (inx>=0)
   {
-    if (points[inx].location==key)
+    if (points[inx].location==key && !store->ignoreDupes)
+    {
+      alreadyMutex.lock();
       alreadyInOctree.push_back(key);
+      alreadyMutex.unlock();
+    }
     markDirty();
     points[inx]=pnt;
   }
@@ -557,6 +562,7 @@ OctStore::OctStore()
   int i;
   nowUsed=0;
   nBlocks=0;
+  ignoreDupes=false;
   for (i=0;i<9;i++)
   {
     blocks[i].store=this;
@@ -722,6 +728,15 @@ void OctStore::plot(PostScript &ps)
 	      octRoot.cube().maxX(),octRoot.cube().maxY());
   octRoot.plot(ps);
   ps.endpage();
+}
+
+void OctStore::setIgnoreDupes(bool ig)
+/* When reading the point cloud, duplicate points should be told to the user.
+ * When classifying, all points put into the octree are already in the octree,
+ * so ignore the duplicates.
+ */
+{
+  ignoreDupes=ig;
 }
 
 void OctStore::dumpBuffers()

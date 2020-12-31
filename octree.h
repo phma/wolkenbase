@@ -136,6 +136,7 @@ public:
   void put(LasPoint pnt,bool splitting=false);
   void dump(std::ofstream &file);
   void plot(PostScript &ps);
+  void setIgnoreDupes(bool ig);
   void dumpBuffers();
   bool isConsistent();
   std::vector<LasPoint> pointsIn(const Shape &sh);
@@ -152,6 +153,7 @@ private:
   std::shared_mutex bufferMutex; // lock when adding new buffers to store
   long long nowUsed;
   int nFiles;
+  bool ignoreDupes;
   int leastRecentlyUsed(int thread,int nthreads);
   long long nBlocks;
   int newBlock();

@@ -426,6 +426,7 @@ void WolkenCanvas::startClassify()
 {
   waitForThreads(TH_SPLIT);
   cout<<"Starting classifying\n";
+  octStore.setIgnoreDupes(true);
   snake.restart();
 }
 
