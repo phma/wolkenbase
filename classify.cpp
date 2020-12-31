@@ -57,7 +57,9 @@ void classifyCylinder(Eisenstein cylAddress)
 {
   Cylinder cyl=snake.cyl(cylAddress);
   vector<LasPoint> cylPoints=octStore.pointsIn(cyl);
+  vector<LasPoint> upPoints,downPoints,sphPoints;
   Paraboloid downward,upward;
+  Sphere sphere;
   if (cylPoints.size())
   {
     /* Classifying a cylinder (which circumscribes a hexagonal tile) is done
@@ -75,73 +77,12 @@ void classifyCylinder(Eisenstein cylAddress)
      *   is low noise.
      * • Otherwise it is ground.
      */
-    matrix a(cylPoints.size(),3);
-    vector<double> b,slopev;
-    vector<xyz> pnts,pntsUntilted,pntsBottom;
-    xy slope;
-    double bottom=INFINITY,bottom2=INFINITY;
-    double density=0,paraboloidSize=0;
     int i,sector;
-    int histo[7];
     for (i=0;i<cylPoints.size();i++)
     {
-      pnts.push_back(cylPoints[i].location-xyz(cyl.getCenter(),0));
-      a[i][0]=pnts[i].getx();
-      a[i][1]=pnts[i].gety();
-      a[i][2]=1;
-      b.push_back(pnts[i].getz());
     }
-    slopev=linearLeastSquares(a,b);
-    slope=xy(slopev[0],slopev[1]);
-    if (slope.length()>1)
-      slope/=slope.length();
-    if (slope.isnan())
-      slope=xy(0,0);
-    for (i=0;i<pnts.size();i++)
-    {
-      double z=dot(slope,xy(pnts[i]));
-      pntsUntilted.push_back(xyz(xy(pnts[i]),pnts[i].getz()-z));
-      if (pntsUntilted[i].getz()<bottom)
-      {
-	bottom2=bottom;
-	bottom=pntsUntilted[i].getz();
-      }
-    }
-    if (isinf(bottom2))
-      bottom2=bottom;
-    for (i=0;i<pntsUntilted.size();i++)
-      if (pntsUntilted[i].getz()<bottom2+2*cyl.getRadius())
-	pntsBottom.push_back(pntsUntilted[i]);
-    for (i=0;i<7;i++)
-      histo[i]=0;
-    for (i=0;i<pntsBottom.size();i++)
-    {
-      sector=lrint(atan2(pntsBottom[i].gety(),pntsBottom[i].getx())*3/M_PI);
-      if (sector<0)
-	sector+=6;
-      sector=(sector%6)+1;
-      histo[sector]++;
-    }
-    for (i=0;i<7;i++)
-      density+=sqr(histo[i]);
-    paraboloidSize=1/sqrt(density); // this may need to be multiplied by something
     snake.countNonempty();
     tileMutex.lock();
-    tiles[cylAddress].nPoints=cylPoints.size();
-    tiles[cylAddress].density=density;
-    tiles[cylAddress].paraboloidSize=paraboloidSize;
-    if (tiles[cylAddress].nPoints>maxTile.nPoints)
-      maxTile.nPoints=tiles[cylAddress].nPoints;
-    if (tiles[cylAddress].nPoints<minTile.nPoints)
-      minTile.nPoints=tiles[cylAddress].nPoints;
-    if (tiles[cylAddress].density>maxTile.density)
-      maxTile.density=tiles[cylAddress].density;
-    if (tiles[cylAddress].density<minTile.density)
-      minTile.density=tiles[cylAddress].density;
-    if (tiles[cylAddress].paraboloidSize>maxTile.paraboloidSize)
-      maxTile.paraboloidSize=tiles[cylAddress].paraboloidSize;
-    if (tiles[cylAddress].paraboloidSize<minTile.paraboloidSize)
-      minTile.paraboloidSize=tiles[cylAddress].paraboloidSize;
     tileMutex.unlock();
   }
   octStore.disown();
