@@ -126,7 +126,10 @@ void classifyCylinder(Eisenstein cylAddress)
       if (aboveGround)
 	cylPoints[i].classification=1;
       else
+      {
 	cylPoints[i].classification=2;
+	thisTile->nGround++;
+      }
       octStore.put(cylPoints[i]);
     }
     snake.countNonempty();

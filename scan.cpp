@@ -103,12 +103,17 @@ void scanCylinder(Eisenstein cylAddress)
     snake.countNonempty();
     tileMutex.lock();
     tiles[cylAddress].nPoints=cylPoints.size();
+    tiles[cylAddress].nGround=0;
     tiles[cylAddress].density=density;
     tiles[cylAddress].paraboloidSize=paraboloidSize;
     if (tiles[cylAddress].nPoints>maxTile.nPoints)
       maxTile.nPoints=tiles[cylAddress].nPoints;
     if (tiles[cylAddress].nPoints<minTile.nPoints)
       minTile.nPoints=tiles[cylAddress].nPoints;
+    if (tiles[cylAddress].nGround>maxTile.nGround)
+      maxTile.nGround=tiles[cylAddress].nGround;
+    if (tiles[cylAddress].nGround<minTile.nGround)
+      minTile.nGround=tiles[cylAddress].nGround;
     if (tiles[cylAddress].density>maxTile.density)
       maxTile.density=tiles[cylAddress].density;
     if (tiles[cylAddress].density<minTile.density)

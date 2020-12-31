@@ -25,7 +25,7 @@
 class Tile
 {
 public:
-  int nPoints;
+  int nPoints,nGround;
   int roofFlags;
   double density; // of bottom layer
   double paraboloidSize; // radius of curvature

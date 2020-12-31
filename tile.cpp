@@ -32,6 +32,8 @@ void initTiles()
 {
   minTile.nPoints=INT_MAX;
   maxTile.nPoints=0;
+  minTile.nGround=INT_MAX;
+  maxTile.nGround=0;
   minTile.density=INFINITY;
   maxTile.density=0;
   minTile.paraboloidSize=INFINITY;
