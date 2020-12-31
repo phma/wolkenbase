@@ -19,6 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Wolkenbase. If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef TILE_H
+#define TILE_H
 #include "flowsnake.h"
 #include "threads.h"
 
@@ -36,3 +38,4 @@ extern std::mutex tileMutex;
 extern Tile minTile,maxTile;
 
 void initTiles();
+#endif

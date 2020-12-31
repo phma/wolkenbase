@@ -33,6 +33,7 @@
 #include "freeram.h"
 #include "octree.h"
 #include "scan.h"
+#include "classify.h"
 
 using namespace std;
 namespace cr=std::chrono;
@@ -535,7 +536,7 @@ void WolkenThread::operator()(int thread)
       cylAddress=snake.next();
       if (cylAddress.getx()!=INT_MIN)
       {
-	scanCylinder(cylAddress);
+	classifyCylinder(cylAddress);
 	enqueueTileDone(cylAddress);
       }
       else

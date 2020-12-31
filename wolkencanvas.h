@@ -52,6 +52,7 @@ public slots:
   void clearCloud();
   void startProcess();
   void startScan();
+  void startClassify();
   void setLengthUnit(double unit);
   void setScalePos();
   void tick(); // 50 ms
