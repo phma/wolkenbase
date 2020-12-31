@@ -563,9 +563,15 @@ void WolkenCanvas::mouseMoveEvent(QMouseEvent *event)
   }
   if (snake.cyl(Eisenstein(0,0)).getRadius())
   {
+    tileMutex.lock();
     double den=tiles[snake.tileAddress(eventLoc)].density;
+    int nGround=tiles[snake.tileAddress(eventLoc)].nGround;
+    int nPoints=tiles[snake.tileAddress(eventLoc)].nPoints;
+    tileMutex.unlock();
     if (den)
       tipString=tipString+'\n'+ldecimal(den,den/1e3)+"/m²";
+    if (nGround)
+      tipString=tipString+'\n'+to_string(nGround)+"/"+to_string(nPoints);
   }
   QToolTip::showText(event->globalPos(),QString::fromStdString(tipString),this);
 }
