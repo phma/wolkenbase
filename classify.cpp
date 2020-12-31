@@ -20,6 +20,8 @@
  * along with Wolkenbase. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <climits>
+#include <set>
 #include "classify.h"
 #include "octree.h"
 #include "angle.h"
@@ -52,6 +54,28 @@ using namespace std;
  * :255	User definable
  * Classes 32-255 cannot appear in formats 1-5.
  */
+
+bool surround(set<int> &directions)
+/* Returns true if none of the angles between successive directions is greater
+ * than 72°. There must be at least 6 directions.
+ */
+{
+  int n=0,first,last;
+  bool ret=true;
+  set<int>::iterator i;
+  for (i=directions.begin();ret && i!=directions.end();++i)
+  {
+    if (i==directions.begin())
+      first=*i;
+    else
+      if (((*i-last)&INT_MAX)>=DEG72)
+	ret=false;
+    last=*i;
+  }
+  if (((first-last)&INT_MAX)>=DEG72)
+    ret=false;
+  return ret;
+}
 
 void classifyCylinder(Eisenstein cylAddress)
 {
