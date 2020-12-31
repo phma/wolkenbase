@@ -25,6 +25,7 @@
 #include "classify.h"
 #include "octree.h"
 #include "angle.h"
+#include "relprime.h"
 #include "leastsquares.h"
 using namespace std;
 
@@ -84,6 +85,7 @@ void classifyCylinder(Eisenstein cylAddress)
   vector<LasPoint> upPoints,downPoints,sphPoints;
   Paraboloid downward,upward;
   Sphere sphere;
+  Tile *thisTile;
   if (cylPoints.size())
   {
     /* Classifying a cylinder (which circumscribes a hexagonal tile) is done
@@ -101,13 +103,33 @@ void classifyCylinder(Eisenstein cylAddress)
      *   is low noise.
      * • Otherwise it is ground.
      */
-    int i,sector;
+    int i,j,h,sz,n;
+    bool aboveGround;
+    tileMutex.lock();
+    thisTile=&tiles[cylAddress];
+    tileMutex.unlock();
     for (i=0;i<cylPoints.size();i++)
     {
+      set<int> directions;
+      aboveGround=false;
+      downward=Paraboloid(cylPoints[i].location,thisTile->paraboloidSize);
+      downPoints=octStore.pointsIn(downward);
+      sz=downPoints.size();
+      h=relprime(sz);
+      for (j=n=0;j<sz && !aboveGround;j++,n=(n+h)%sz)
+      {
+	if (dist(xy(cylPoints[i].location),xy(downPoints[n].location)))
+	  directions.insert(dir(xy(cylPoints[i].location),xy(downPoints[n].location)));
+	if (surround(directions))
+	  aboveGround=true;
+      }
+      if (aboveGround)
+	cylPoints[i].classification=1;
+      else
+	cylPoints[i].classification=2;
+      octStore.put(cylPoints[i]);
     }
     snake.countNonempty();
-    tileMutex.lock();
-    tileMutex.unlock();
   }
   octStore.disown();
 }
