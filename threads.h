@@ -53,6 +53,8 @@ class Flowsnake;
 
 // These are used to tell threads to do things, mostly file-related.
 #define ACT_READ 1
+#define ACT_COUNT 2
+#define ACT_WRITE 3
 
 struct ThreadAction
 {

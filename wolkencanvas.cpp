@@ -305,7 +305,7 @@ void WolkenCanvas::tick()
   while (elapsed<cr::milliseconds(timeLimit) && pixelsToPaint)
   {
     pixel=peano.step();
-    if (state==TH_SCAN || state==TH_SPLIT)
+    if (state==TH_SCAN || state==TH_SPLIT || state==TH_PAUSE)
       pcolor=pixelColorTile(pixel[0],pixel[1]);
     else
       pcolor=pixelColorRead(pixel[0],pixel[1]);
@@ -329,6 +329,8 @@ void WolkenCanvas::tick()
     update(pixminx,pixminy,pixmaxx-pixminx+1,pixmaxy-pixminy+1);
   if (pointBufferSize() || (snake.progress()>0 && snake.progress()<1))
     pixelsToPaint=(width()*height()*7+3)/4;
+  if (state==TH_SPLIT && snake.progress()==1)
+    startCount();
   if (state==TH_SCAN && snake.progress()==1)
     startClassify();
   if (state==TH_READ && actionQueueEmpty() && pointBufferEmpty() && sofar==total)
@@ -420,6 +422,7 @@ void WolkenCanvas::startScan()
 {
   waitForThreads(TH_SCAN);
   cout<<"Starting scan\n";
+  currentAction=0;
 }
 
 void WolkenCanvas::startClassify()
@@ -428,6 +431,13 @@ void WolkenCanvas::startClassify()
   cout<<"Starting classifying\n";
   octStore.setIgnoreDupes(true);
   snake.restart();
+}
+
+void WolkenCanvas::startCount()
+{
+  waitForThreads(TH_PAUSE);
+  cout<<"Counting points\n";
+  octStore.setIgnoreDupes(false);
 }
 
 void WolkenCanvas::clearCloud()
