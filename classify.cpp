@@ -21,6 +21,7 @@
  */
 
 #include <climits>
+#include <ctime>
 #include <set>
 #include "classify.h"
 #include "octree.h"
@@ -61,20 +62,27 @@ bool surround(set<int> &directions)
  * than 72°. There must be at least 6 directions.
  */
 {
-  int n=0,first,last;
+  int n=0,first,last,penult;
+  int parity=time(nullptr)&1;
   bool ret=directions.size()>5;
   set<int>::iterator i;
-  for (i=directions.begin();ret && i!=directions.end();++i)
+  vector<int> delenda;
+  for (i=directions.begin();i!=directions.end();++i,++n)
   {
     if (i==directions.begin())
       first=*i;
     else
       if (((*i-last)&INT_MAX)>=DEG72)
 	ret=false;
+    if ((n&1)==parity && n>1 && ((*i-last)&INT_MAX)<DEG30 && ((last-penult)&INT_MAX)<DEG30)
+      delenda.push_back(last);
+    penult=last;
     last=*i;
   }
   if (((first-last)&INT_MAX)>=DEG72)
     ret=false;
+  for (n=0;n<delenda.size();n++)
+    directions.erase(delenda[n]);
   return ret;
 }
 
