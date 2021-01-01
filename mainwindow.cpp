@@ -96,6 +96,7 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent)
   connect(this,SIGNAL(tinSizeChanged()),canvas,SLOT(setSize()));
   connect(this,SIGNAL(lengthUnitChanged(double)),canvas,SLOT(setLengthUnit(double)));
   connect(this,SIGNAL(fileOpened(std::string)),canvas,SLOT(readFileHeader(std::string)));
+  connect(this,SIGNAL(allPointsCounted()),canvas,SLOT(writeFile()));
   connect(canvas,SIGNAL(readFileProgress(size_t,size_t)),this,SLOT(readFileProgress(size_t,size_t)));
   connect(this,SIGNAL(gotResult(ThreadAction)),this,SLOT(handleResult(ThreadAction)));
   doneBar=new QProgressBar(this);

@@ -54,6 +54,7 @@ public slots:
   void startScan();
   void startClassify();
   void startCount();
+  void writeFile();
   void setLengthUnit(double unit);
   void setScalePos();
   void tick(); // 50 ms

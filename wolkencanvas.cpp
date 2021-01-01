@@ -447,6 +447,17 @@ void WolkenCanvas::startCount()
   }
 }
 
+void WolkenCanvas::writeFile()
+{
+  int i;
+  map<int,size_t>::iterator j;
+  ThreadAction ta;
+  waitForThreads(TH_PAUSE);
+  cout<<"Classified points:\n";
+  for (j=classTotals.begin();j!=classTotals.end();++j)
+    cout<<j->first<<' '<<j->second<<endl;
+}
+
 void WolkenCanvas::clearCloud()
 {
   fileHeaders.clear();
