@@ -305,10 +305,10 @@ void WolkenCanvas::tick()
   while (elapsed<cr::milliseconds(timeLimit) && pixelsToPaint)
   {
     pixel=peano.step();
-    if (state==TH_SCAN || state==TH_SPLIT || state==TH_PAUSE)
-      pcolor=pixelColorTile(pixel[0],pixel[1]);
-    else
+    if (state==TH_READ || state==TH_WAIT)
       pcolor=pixelColorRead(pixel[0],pixel[1]);
+    else
+      pcolor=pixelColorTile(pixel[0],pixel[1]);
     if (std::isfinite(pcolor[0]))
     {
       painter.setPen(QColor(lrint(pcolor[0]*255),lrint(pcolor[1]*255),lrint(pcolor[2]*255)));
@@ -435,9 +435,16 @@ void WolkenCanvas::startClassify()
 
 void WolkenCanvas::startCount()
 {
+  int i;
+  ThreadAction ta;
   waitForThreads(TH_PAUSE);
   cout<<"Counting points\n";
   octStore.setIgnoreDupes(false);
+  for (i=0;i<nThreads();i++)
+  {
+    ta.opcode=ACT_COUNT;
+    enqueueAction(ta);
+  }
 }
 
 void WolkenCanvas::clearCloud()

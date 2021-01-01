@@ -45,6 +45,7 @@ mutex startMutex;
 map<int,mutex> pointBufferMutex;
 shared_mutex threadStatusMutex;
 mutex tileDoneMutex;
+mutex classTotalMutex;
 
 atomic<int> threadCommand;
 vector<thread> threads;
@@ -55,7 +56,7 @@ double minArea;
 queue<ThreadAction> actQueue,resQueue;
 queue<Eisenstein> tileDoneQueue;
 map<int,vector<LasPoint> > pointBuffer;
-map<int,size_t> pbsz;
+map<int,size_t> pbsz,classTotals;
 map<int,int> bufferPos;
 int currentAction;
 map<thread::id,int> threadNums;
@@ -396,6 +397,23 @@ int nThreads()
   return threadStatus.size();
 }
 
+void countClasses(int thread)
+{
+  map<int,size_t> threadTotals,blockCounts;
+  int i;
+  map<int,size_t>::iterator j;
+  for (i=thread;i<octStore.getNumBlocks();i+=nThreads())
+  {
+    blockCounts=octStore.countClasses(i);
+    for (j=blockCounts.begin();j!=blockCounts.end();++j)
+      threadTotals[j->first]+=j->second;
+  }
+  classTotalMutex.lock();
+  for (j=threadTotals.begin();j!=threadTotals.end();++j)
+    classTotals[j->first]+=j->second;
+  classTotalMutex.unlock();
+}
+
 void WolkenThread::operator()(int thread)
 {
   long long h=0,i=0,j=0,n,nPoints=0,nChunks;
@@ -509,6 +527,9 @@ void WolkenThread::operator()(int thread)
 	case ACT_READ:
 	  cerr<<"Can't read a file in pause state\n";
 	  unsleep(thread);
+	  break;
+	case ACT_COUNT:
+	  countClasses(thread);
 	  break;
 	default:
 	  sleep(thread);
