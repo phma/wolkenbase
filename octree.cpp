@@ -531,6 +531,15 @@ bool OctBuffer::put(LasPoint pnt)
   return inx>=0;
 }
 
+map<int,size_t> OctBuffer::countClasses()
+{
+  map<int,size_t> ret;
+  int i;
+  for (i=0;i<points.size();i++)
+    ret[points[i].classification]++;
+  return ret;
+}
+
 int OctBuffer::dump(ofstream &file,Cube cube)
 {
   int i,nPoints=0,nIn=0;
@@ -714,6 +723,16 @@ void OctStore::put(LasPoint pnt,bool splitting)
     unlockCube();
   if (blkn1<0 && blkn0!=blkn2)
     cout<<"Block number changed\n";
+}
+
+map<int,size_t> OctStore::countClasses(long long block)
+{
+  return getBlock(block)->countClasses();
+}
+
+vector<LasPoint> OctStore::getAll(long long block)
+{
+  return getBlock(block)->getAll();
 }
 
 void OctStore::dump(ofstream &file)

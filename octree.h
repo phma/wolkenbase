@@ -88,6 +88,11 @@ public:
   void flush();
   LasPoint get(xyz key);
   bool put(LasPoint pnt);
+  std::map<int,size_t> countClasses();
+  std::vector<LasPoint> getAll()
+  {
+    return points;
+  }
   int dump(std::ofstream &file,Cube cube);
   void plot(PostScript &ps,Cube cube);
   double getLow()
@@ -134,6 +139,8 @@ public:
   void close();
   LasPoint get(xyz key);
   void put(LasPoint pnt,bool splitting=false);
+  std::map<int,size_t> countClasses(long long block);
+  std::vector<LasPoint> getAll(long long block);
   void dump(std::ofstream &file);
   void plot(PostScript &ps);
   void setIgnoreDupes(bool ig);
