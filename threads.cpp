@@ -3,7 +3,7 @@
 /* threads.cpp - multithreading                       */
 /*                                                    */
 /******************************************************/
-/* Copyright 2020 Pierre Abbat.
+/* Copyright 2020,2021 Pierre Abbat.
  * This file is part of Wolkenbase.
  *
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -530,6 +530,8 @@ void WolkenThread::operator()(int thread)
 	  break;
 	case ACT_COUNT:
 	  countClasses(thread);
+	  enqueueResult(act);
+	  octStore.disown();
 	  break;
 	default:
 	  sleep(thread);

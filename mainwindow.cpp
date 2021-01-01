@@ -3,7 +3,7 @@
 /* mainwindow.cpp - main window                       */
 /*                                                    */
 /******************************************************/
-/* Copyright 2020 Pierre Abbat.
+/* Copyright 2020,2021 Pierre Abbat.
  * This file is part of Wolkenbase.
  *
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -97,6 +97,7 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent)
   connect(this,SIGNAL(lengthUnitChanged(double)),canvas,SLOT(setLengthUnit(double)));
   connect(this,SIGNAL(fileOpened(std::string)),canvas,SLOT(readFileHeader(std::string)));
   connect(canvas,SIGNAL(readFileProgress(size_t,size_t)),this,SLOT(readFileProgress(size_t,size_t)));
+  connect(this,SIGNAL(gotResult(ThreadAction)),this,SLOT(handleResult(ThreadAction)));
   doneBar=new QProgressBar(this);
   busyBar=new QProgressBar(this);
   doneBar->setRange(0,16777216);
@@ -234,19 +235,17 @@ void MainWindow::readFileProgress(size_t sofar,size_t total)
 }
 
 void MainWindow::handleResult(ThreadAction ta)
-/* Receives the result of reading a file. If an error happened, pops up a message.
- * The file was read by a worker thread, which put the result in a queue.
+/* Receives the result of counting classified points.
  */
 {
   QString message;
   showingResult=true;
-  tinSizeChanged();
   switch (ta.opcode)
   {
-    case ACT_READ:
+    case ACT_COUNT:
+      cout<<"Counted\n";
       break;
   }
-  fileMsg->setText(QString::fromStdString(fileNames));
   showingResult=false;
 }
 
