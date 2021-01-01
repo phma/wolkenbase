@@ -104,6 +104,7 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent)
   busyBar->setRange(0,16777216);
   lpfBusyFraction=0;
   density=0;
+  threadsCountedPoints=0;
   conversionStopped=false;
   showingResult=false;
   toolbar=new QToolBar(this);
@@ -244,6 +245,11 @@ void MainWindow::handleResult(ThreadAction ta)
   {
     case ACT_COUNT:
       cout<<"Counted\n";
+      if (++threadsCountedPoints==nThreads())
+      {
+	allPointsCounted();
+	threadsCountedPoints=0;
+      }
       break;
   }
   showingResult=false;

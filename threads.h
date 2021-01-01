@@ -3,7 +3,7 @@
 /* threads.h - multithreading                         */
 /*                                                    */
 /******************************************************/
-/* Copyright 2020 Pierre Abbat.
+/* Copyright 2020,2021 Pierre Abbat.
  * This file is part of Wolkenbase.
  *
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -71,6 +71,7 @@ struct ThreadAction
 extern int currentAction;
 extern std::chrono::steady_clock clk;
 extern Flowsnake snake;
+extern std::map<int,size_t> classTotals;
 
 double busyFraction();
 void startThreads(int n);

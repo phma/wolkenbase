@@ -3,7 +3,7 @@
 /* mainwindow.h - main window                         */
 /*                                                    */
 /******************************************************/
-/* Copyright 2020 Pierre Abbat.
+/* Copyright 2020,2021 Pierre Abbat.
  * This file is part of Wolkenbase.
  *
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -52,6 +52,7 @@ signals:
   void noCloudArea();
   void gotResult(ThreadAction ta);
   void fileOpened(std::string name);
+  void allPointsCounted();
 public slots:
   void tick();
   void setSettings(double lu,int thr);
@@ -68,10 +69,10 @@ public slots:
 protected:
   void closeEvent(QCloseEvent *event) override;
 private:
-  int lastNumDots,lastNumTriangles,lastNumEdges;
+  int threadsCountedPoints;
   double lastTolerance,lastStageTolerance,writtenTolerance,lastDensity,rmsadj;
   int numberThreads;
-  int lastState; // state is in TinCanvas
+  int lastState; // state is in WolkenCanvas
   size_t readFileSoFar,readFileTotal;
   bool conversionStopped,showingResult,exportEmpty;
   double tolerance,density,lengthUnit;
