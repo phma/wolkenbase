@@ -113,6 +113,14 @@ public:
   void setVersion(int major,int minor);
   void setPointFormat(int format);
   void setScale(xyz minCor,xyz maxCor,xyz scale);
+  xyz getScale()
+  {
+    return xyz(xScale*unit,yScale*unit,zScale*unit);
+  }
+  xyz getOffset()
+  {
+    return xyz(xOffset*unit,yOffset*unit,zOffset*unit);
+  }
   std::string getFileName()
   {
     return filename;

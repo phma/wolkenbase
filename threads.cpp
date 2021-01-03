@@ -418,6 +418,7 @@ void WolkenThread::operator()(int thread)
 {
   long long h=0,i=0,j=0,n,nPoints=0,nChunks;
   long long blknum;
+  xyz offset,scale;
   ThreadAction act;
   LasPoint point,gotPoint;
   Eisenstein cylAddress;
@@ -445,6 +446,10 @@ void WolkenThread::operator()(int thread)
 	case ACT_READ:
 	  i=j=n=0;
 	  cout<<"Thread "<<thread<<" reading "<<act.hdr->getFileName()<<endl;
+	  offset=act.hdr->getOffset();
+	  scale=act.hdr->getScale();
+	  cout<<"Offset "<<offset.getx()<<','<<offset.gety()<<','<<offset.getz();
+	  cout<<" Scale "<<scale.getx()<<','<<scale.gety()<<','<<scale.getz()<<endl;
 	  nChunks=(act.hdr->numberPoints()+CHUNKSIZE-1)/CHUNKSIZE;
 	  h=relprime(nChunks,thread);
 	  try
