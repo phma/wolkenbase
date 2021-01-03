@@ -93,6 +93,7 @@ void testflat()
   vector<LasPoint> points;
   int i;
   Cylinder cyl(center,1);
+  setStorePoints(true);
   flatScene(10,100);
   blocks=octRoot.findBlocks(cyl);
   cout<<"Blocks:";
@@ -786,13 +787,17 @@ void testbigcloud()
   map<int,LasHeader> headers;
   const int totalPoints=7000000;
   double radius=sqrt(totalPoints/M_PI/700);
-  wavyScene(radius,700,33,30,0.1);
+  setStorePoints(false);
+  wavyScene(radius,700,0.33,0.30,0.1);
   for (i=0;i<7;i++)
   {
     headers[i].openWrite("big"+to_string(i)+".las");
     headers[i].setVersion(1,4);
     headers[i].setPointFormat(6);
     headers[i].setScale(xyz(-radius,-radius,0.03),xyz(radius,radius,0.63),xyz(0,0,0));
+    for (j=0;j<totalPoints/7;j++)
+      headers[i].writePoint(testCloud[i*(totalPoints/7)+j]);
+    headers[i].writeHeader();
   }
 }
 

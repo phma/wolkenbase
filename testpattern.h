@@ -22,6 +22,9 @@
 #include <vector>
 #include "las.h"
 
+extern std::vector<LasPoint> testCloud;
+
+void setStorePoints(bool s);
 void initPhases();
 void flatScene(double rad=50,double den=100);
 void wavyScene(double rad,double den,double avg,double amp,double freq);

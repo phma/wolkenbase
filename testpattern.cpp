@@ -30,6 +30,13 @@ using namespace std;
 
 unsigned int areaPhase;
 int anglePhase;
+vector<LasPoint> testCloud;
+bool storePoints=true;
+
+void setStorePoints(bool s)
+{
+  storePoints=s;
+}
 
 void reputPoints()
 // When splitting a block, points are put in the buffer, and must be reput.
@@ -176,7 +183,10 @@ void flatScene(double rad,double den)
   for (i=0;i<dots.size();i++)
   {
     lPoint=laserize(dots[i],i);
-    octStore.put(lPoint);
+    if (storePoints)
+      octStore.put(lPoint);
+    else
+      testCloud.push_back(lPoint);
   }
   reputPoints();
 }
@@ -197,7 +207,10 @@ void wavyScene(double rad,double den,double avg,double amp,double freq)
   {
     dots[i]=xyz(xy(dots[i]),avg+amp*sin(dots[i].getx()*2*M_PI*freq));
     lPoint=laserize(dots[i],i);
-    octStore.put(lPoint);
+    if (storePoints)
+      octStore.put(lPoint);
+    else
+      testCloud.push_back(lPoint);
   }
   reputPoints();
 }
