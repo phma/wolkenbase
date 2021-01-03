@@ -471,7 +471,7 @@ void WolkenThread::operator()(int thread)
 		  n=(n+h)%nChunks;
 		}
 	      }
-	      if (pointBuffersNonempty() || pointBufferSize()*sizeof(point)>lowRam)
+	      if (pointBuffersNonempty() || pointBufferSize()*sizeof(point)>lowRam || pointBufferSize()>65536)
 	      {
 		point=debufferPoint(thread);
 		if (point.isEmpty() && pointBufferSize()*sizeof(point)>lowRam)
