@@ -462,7 +462,7 @@ void OctBuffer::flush()
 
 LasPoint OctBuffer::get(xyz key)
 {
-  int i,inx=-1,emptyinx=-1;
+  int i,inx=-1;
   LasPoint ret;
   blockMutex.lock_shared();
   for (i=0;i<points.size();i++)
@@ -472,8 +472,6 @@ LasPoint OctBuffer::get(xyz key)
       inx=i;
       break;
     }
-    if (points[i].isEmpty())
-      emptyinx=i;
   }
   if (inx>=0)
   {
@@ -486,7 +484,7 @@ LasPoint OctBuffer::get(xyz key)
 bool OctBuffer::put(LasPoint pnt)
 // Returns true if put, false if no room.
 {
-  int i,inx=-1,emptyinx=-1;
+  int i,inx=-1;
   xyz key=pnt.location;
   blockMutex.lock();
   for (i=0;i<points.size();i++)
@@ -496,11 +494,7 @@ bool OctBuffer::put(LasPoint pnt)
       inx=i;
       break;
     }
-    if (points[i].isEmpty())
-      emptyinx=i;
   }
-  if (inx<0 && emptyinx>=0)
-    inx=emptyinx;
   if (inx>=0)
   {
     if (points[inx].location==key && !store->ignoreDupes)
