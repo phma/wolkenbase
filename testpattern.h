@@ -3,7 +3,7 @@
 /* testpattern.h - test patterns                      */
 /*                                                    */
 /******************************************************/
-/* Copyright 2019 Pierre Abbat.
+/* Copyright 2019,2021 Pierre Abbat.
  * This file is part of Wolkenbase.
  * 
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -24,3 +24,4 @@
 
 void initPhases();
 void flatScene(double rad=50,double den=100);
+void wavyScene(double rad,double den,double avg,double amp,double freq);

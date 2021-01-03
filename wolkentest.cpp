@@ -772,6 +772,30 @@ void testsplitfile()
   test1splitfile(5779,5762);
 }
 
+void testbigcloud()
+/* Creates a big point cloud in seven files to test loading of big point clouds.
+ * The density is 700/m² so that, except at the edges, each cube containing
+ * points is a 1 meter cube.
+ * The total number of points is 7 million. This normally fits in RAM, but
+ * the program can be forced to swap by setting low RAM to all RAM.
+ */
+{
+  vector<long long> blocks;
+  vector<LasPoint> points;
+  int i,j;
+  map<int,LasHeader> headers;
+  const int totalPoints=7000000;
+  double radius=sqrt(totalPoints/M_PI/700);
+  wavyScene(radius,700,33,30,0.1);
+  for (i=0;i<7;i++)
+  {
+    headers[i].openWrite("big"+to_string(i)+".las");
+    headers[i].setVersion(1,4);
+    headers[i].setPointFormat(6);
+    headers[i].setScale(xyz(-radius,-radius,0.03),xyz(radius,radius,0.63),xyz(0,0,0));
+  }
+}
+
 void testwkt()
 {
   char wvawkt[]= // Well-known text from square of West Virginia terrain
@@ -851,6 +875,8 @@ int main(int argc, char *argv[])
     testpeano();
   if (shoulddo("splitfile"))
     testsplitfile();
+  if (shoulddo("bigcloud"))
+    testbigcloud();
   if (shoulddo("wkt"))
     testwkt();
   cout<<"\nTest "<<(testfail?"failed":"passed")<<endl;

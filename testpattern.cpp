@@ -3,7 +3,7 @@
 /* testpattern.cpp - test patterns                    */
 /*                                                    */
 /******************************************************/
-/* Copyright 2019 Pierre Abbat.
+/* Copyright 2019,2021 Pierre Abbat.
  * This file is part of Wolkenbase.
  * 
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -85,7 +85,7 @@ Quaternion rotateTo(xyz normal)
     return Quaternion(1);
 }
 
-LasPoint laserize(xyz pnt)
+LasPoint laserize(xyz pnt,int n)
 {
   LasPoint ret;
   ret.location=pnt;
@@ -98,7 +98,7 @@ LasPoint laserize(xyz pnt)
   ret.waveIndex=0;
   ret.pointSource=0;
   ret.scanAngle=0;
-  ret.gpsTime=0;
+  ret.gpsTime=n;
   ret.nir=ret.red=ret.green=ret.blue=33000; // maybe change depending on type of point
   ret.waveformOffset=ret.waveformSize=0;
   ret.waveformTime=0;
@@ -175,7 +175,28 @@ void flatScene(double rad,double den)
   cout<<dots.size()<<" points\n";
   for (i=0;i<dots.size();i++)
   {
-    lPoint=laserize(dots[i]);
+    lPoint=laserize(dots[i],i);
+    octStore.put(lPoint);
+  }
+  reputPoints();
+}
+
+void wavyScene(double rad,double den,double avg,double amp,double freq)
+/* Same as flatScene, except that the elevation varies in a sine wave.
+ */
+{
+  vector<xyz> limits,dots;
+  int i;
+  LasPoint lPoint;
+  limits.push_back(xyz(-rad,-rad,-1));
+  limits.push_back(xyz(rad,rad,1));
+  octRoot.sizeFit(limits);
+  dots=diskSpatter(xyz(0,0,0),xyz(0,0,1),rad,den);
+  cout<<dots.size()<<" points\n";
+  for (i=0;i<dots.size();i++)
+  {
+    dots[i]=xyz(xy(dots[i]),avg+amp*sin(dots[i].getx()*2*M_PI*freq));
+    lPoint=laserize(dots[i],i);
     octStore.put(lPoint);
   }
   reputPoints();
