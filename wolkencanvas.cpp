@@ -81,8 +81,8 @@ vector<int> WolkenCanvas::fileHitTest(xy pnt)
   vector<int> ret;
   xyz pntz(pnt,NAN);
   int i;
-  for (i=0;i<fileHeaders.size();i++)
-    if (fileHeaders[i].inBox(pntz))
+  for (i=0;i<inFileHeaders.size();i++)
+    if (inFileHeaders[i].inBox(pntz))
       ret.push_back(i);
   return ret;
 }
@@ -134,10 +134,10 @@ void WolkenCanvas::sizeToFit()
 {
   int i;
   double xscale,yscale;
-  for (i=0;i<fileHeaders.size();i++)
+  for (i=0;i<inFileHeaders.size();i++)
   {
-    br.include(fileHeaders[i].minCorner());
-    br.include(fileHeaders[i].maxCorner());
+    br.include(inFileHeaders[i].minCorner());
+    br.include(inFileHeaders[i].maxCorner());
   }
   if (br.left()>=br.right() && br.bottom()>=br.top())
   {
@@ -154,7 +154,7 @@ void WolkenCanvas::sizeToFit()
     else
       scale=yscale;
   }
-  fileCountdown=fileHeaders.size()+10;
+  fileCountdown=inFileHeaders.size()+10;
   if (splashScreenTime)
     scale=scale*2/3;
 }
@@ -185,10 +185,10 @@ void WolkenCanvas::tick()
   painter.setRenderHint(QPainter::Antialiasing,true);
   painter.setPen(Qt::NoPen);
   brush.setStyle(Qt::SolidPattern);
-  for (i=0;i<fileHeaders.size();i++)
+  for (i=0;i<inFileHeaders.size();i++)
   {
-    sofar+=fileHeaders[i].numberReadPoints();
-    total+=fileHeaders[i].numberPoints();
+    sofar+=inFileHeaders[i].numberReadPoints();
+    total+=inFileHeaders[i].numberPoints();
   }
   readFileProgress(sofar,total);
   if ((tstatus&0x3ffbfeff)%1048577==0)
@@ -228,14 +228,14 @@ void WolkenCanvas::tick()
   }
   update(QRegion(swath));
   // Draw a rectangle for each open LAS file.
-  if (fileCountdown==fileHeaders.size())
+  if (fileCountdown==inFileHeaders.size())
     frameBuffer.fill();
-  if (fileCountdown>=0 && fileCountdown<fileHeaders.size())
+  if (fileCountdown>=0 && fileCountdown<inFileHeaders.size())
   {
-    QLinearGradient grad(worldToWindow(fileHeaders[fileCountdown].minCorner()),
-			 worldToWindow(fileHeaders[fileCountdown].maxCorner()));
-    fileBound=QRectF(worldToWindow(fileHeaders[fileCountdown].minCorner()),
-		     worldToWindow(fileHeaders[fileCountdown].maxCorner()));
+    QLinearGradient grad(worldToWindow(inFileHeaders[fileCountdown].minCorner()),
+			 worldToWindow(inFileHeaders[fileCountdown].maxCorner()));
+    fileBound=QRectF(worldToWindow(inFileHeaders[fileCountdown].minCorner()),
+		     worldToWindow(inFileHeaders[fileCountdown].maxCorner()));
     grad.setColorAt(0,lightColors[fileCountdown%7]);
     grad.setColorAt(1,darkColors[fileCountdown%8]);
     painter.setBrush(grad);
@@ -374,10 +374,10 @@ void WolkenCanvas::setSize()
 
 void WolkenCanvas::readFileHeader(string name)
 {
-  fileHeaders.resize(fileHeaders.size()+1);
+  inFileHeaders.resize(inFileHeaders.size()+1);
   cout<<"Opening "<<name<<endl;
-  fileHeaders.back().openRead(name);
-  fileHeaders.back().setUnit(lengthUnit);
+  inFileHeaders.back().openRead(name);
+  inFileHeaders.back().setUnit(lengthUnit);
   setSize();
 }
 
@@ -391,13 +391,13 @@ void WolkenCanvas::startProcess()
   multimap<int64_t,LasHeader *> sorter;
   multimap<int64_t,LasHeader *>::iterator j;
   waitForThreads(TH_READ);
-  for (i=0;i<fileHeaders.size();i++)
+  for (i=0;i<inFileHeaders.size();i++)
   {
-    limits.push_back(fileHeaders[i].minCorner());
-    limits.push_back(fileHeaders[i].maxCorner());
-    br.include(fileHeaders[i].minCorner());
-    br.include(fileHeaders[i].maxCorner());
-    sorter.insert(pair<int64_t,LasHeader *>(-fileHeaders[i].numberPoints(),&fileHeaders[i]));
+    limits.push_back(inFileHeaders[i].minCorner());
+    limits.push_back(inFileHeaders[i].maxCorner());
+    br.include(inFileHeaders[i].minCorner());
+    br.include(inFileHeaders[i].maxCorner());
+    sorter.insert(pair<int64_t,LasHeader *>(-inFileHeaders[i].numberPoints(),&inFileHeaders[i]));
   }
   octRoot.sizeFit(limits);
   side=br.right()-br.left();
@@ -460,7 +460,7 @@ void WolkenCanvas::writeFile()
 
 void WolkenCanvas::clearCloud()
 {
-  fileHeaders.clear();
+  inFileHeaders.clear();
   setSize();
 }
 
@@ -587,7 +587,7 @@ void WolkenCanvas::mouseMoveEvent(QMouseEvent *event)
   {
     if (i)
       tipString+=' ';
-    tipString+=baseName(fileHeaders[filenums[i]].getFileName());
+    tipString+=baseName(inFileHeaders[filenums[i]].getFileName());
   }
   if (snake.cyl(Eisenstein(0,0)).getRadius())
   {

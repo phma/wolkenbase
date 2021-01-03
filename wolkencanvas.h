@@ -73,7 +73,7 @@ private:
   double lengthUnit;
   double maxScaleSize,scaleSize;
   double tileSize;
-  std::deque<LasHeader> fileHeaders;
+  std::deque<LasHeader> inFileHeaders;
   xy ballPos;
   xy leftScaleEnd,rightScaleEnd,scaleEnd;
   int penPos;
