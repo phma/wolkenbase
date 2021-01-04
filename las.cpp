@@ -22,6 +22,7 @@
 
 #include <cassert>
 #include <cstring>
+#include <ctime>
 #include "config.h"
 #include "las.h"
 #include "binio.h"
@@ -312,6 +313,8 @@ void LasHeader::openRead(string fileName)
 void LasHeader::openWrite(string fileName,int sysId)
 {
   int i;
+  time_t now=time(nullptr);
+  tm *ptm;
   if (lasfile)
     close();
   filename=fileName;
@@ -334,6 +337,9 @@ void LasHeader::openWrite(string fileName,int sysId)
     default:
       systemId="OTHER";
   }
+  ptm=gmtime(&now);
+  creationDay=ptm->tm_yday+1; // tm Jan 1 is 0, LAS Jan 1 is 1
+  creationYear=ptm->tm_year+1900;
   softwareName="Wolkenbase ";
   softwareName+=VERSION;
   nReadPoints=0;
