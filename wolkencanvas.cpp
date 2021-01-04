@@ -280,6 +280,7 @@ void WolkenCanvas::tick()
     if (tileDone.getRadius()==0)
       break;
     pcolor=pixelColorTile(tileAddress);
+    ballAngle+=DEG1;
     painter.setPen(Qt::NoPen);
     painter.setBrush(QColor(lrint(pcolor[0]*255),lrint(pcolor[1]*255),lrint(pcolor[2]*255)));
     circleCenter=worldToWindow(tileDone.getCenter());
