@@ -41,6 +41,9 @@ class Flowsnake;
 #include "las.h"
 #include "eisenstein.h"
 #include "flowsnake.h"
+#ifdef GUI
+#include "cloudoutput.h"
+#endif
 
 // These are used as both commands to the threads and status from the threads.
 #define TH_WAIT 1
@@ -72,6 +75,9 @@ extern int currentAction;
 extern std::chrono::steady_clock clk;
 extern Flowsnake snake;
 extern std::map<int,size_t> classTotals;
+#ifdef GUI
+extern CloudOutput cloudOutput;
+#endif
 
 double busyFraction();
 void startThreads(int n);

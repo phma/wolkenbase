@@ -457,6 +457,13 @@ void WolkenCanvas::writeFile()
   cout<<"Classified points:\n";
   for (j=classTotals.begin();j!=classTotals.end();++j)
     cout<<j->first<<' '<<j->second<<endl;
+  cloudOutput.minCor=xyz(br.left(),br.bottom(),br.low());
+  cloudOutput.maxCor=xyz(br.right(),br.top(),br.high());
+  cloudOutput.scale=xyz(0,0,0); // TODO check the inFileHeaders for same scale and offset
+  cloudOutput.nInputFiles=inFileHeaders.size();
+  cloudOutput.pointsPerFile=0;
+  cloudOutput.separateClasses=true;
+  cloudOutput.openFiles("classified");
 }
 
 void WolkenCanvas::clearCloud()

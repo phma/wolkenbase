@@ -75,7 +75,7 @@ target_link_libraries(wolkentest ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(wolkencli ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(wolkenbase ${CMAKE_THREAD_LIBS_INIT} Qt5::Widgets Qt5::Core)
 target_compile_definitions(wolkencli PUBLIC _USE_MATH_DEFINES)
-target_compile_definitions(wolkenbase PUBLIC _USE_MATH_DEFINES)
+target_compile_definitions(wolkenbase PUBLIC _USE_MATH_DEFINES GUI)
 target_compile_definitions(wolkentest PUBLIC _USE_MATH_DEFINES)
 install(TARGETS wolkenbase DESTINATION bin)
 

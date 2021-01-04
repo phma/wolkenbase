@@ -19,6 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Wolkenbase. If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef CLOUDOUTPUT_H
+#define CLOUDOUTPUT_H
 
 #include <QObject>
 #include <map>
@@ -33,7 +35,9 @@ public:
   int pointsPerFile; // 0 means no limit
   bool separateClasses;
   std::string className(int n);
-  void writeFiles(std::string name);
+  void openFiles(std::string name);
 private:
   std::map<unsigned int,LasHeader> headers;
 };
+
+#endif

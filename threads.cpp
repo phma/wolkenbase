@@ -61,6 +61,9 @@ map<int,int> bufferPos;
 int currentAction;
 map<thread::id,int> threadNums;
 Flowsnake snake;
+#ifdef GUI
+CloudOutput cloudOutput;
+#endif
 
 cr::steady_clock clk;
 const char statusNames[][8]=

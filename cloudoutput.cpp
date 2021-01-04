@@ -44,6 +44,6 @@ string CloudOutput::className(int n)
   return qret.toStdString();
 }
 
-void CloudOutput::writeFiles(string name)
+void CloudOutput::openFiles(string name)
 {
 }
