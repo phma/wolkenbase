@@ -752,7 +752,7 @@ void test1splitfile(int p,int proot)
   int zstep=(proot*proot)%p;
   LasHeader lasHeader;
   LasPoint pnt;
-  lasHeader.openWrite(to_string(p)+".las");
+  lasHeader.openWrite(to_string(p)+".las",SI_TEST);
   lasHeader.setVersion(1,2);
   lasHeader.setPointFormat(0);
   lasHeader.setScale(xyz(0,0,0),xyz(1,1,1),xyz(1./p,1./p,1./p));
@@ -791,7 +791,7 @@ void testbigcloud()
   wavyScene(radius,700,0.33,0.30,0.1);
   for (i=0;i<7;i++)
   {
-    headers[i].openWrite("big"+to_string(i)+".las");
+    headers[i].openWrite("big"+to_string(i)+".las",SI_TEST);
     headers[i].setVersion(1,4);
     headers[i].setPointFormat(6);
     headers[i].setScale(xyz(-radius,-radius,0.03),xyz(radius,radius,0.63),xyz(0,0,0));

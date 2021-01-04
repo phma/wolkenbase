@@ -22,6 +22,7 @@
 
 #include <cassert>
 #include <cstring>
+#include "config.h"
 #include "las.h"
 #include "binio.h"
 #include "angle.h"
@@ -308,7 +309,7 @@ void LasHeader::openRead(string fileName)
     versionMajor=versionMinor=nPoints[0]=0;
 }
 
-void LasHeader::openWrite(string fileName)
+void LasHeader::openWrite(string fileName,int sysId)
 {
   int i;
   if (lasfile)
@@ -316,6 +317,25 @@ void LasHeader::openWrite(string fileName)
   filename=fileName;
   lasfile=new fstream(fileName,ios::binary|ios::out);
   reading=false;
+  switch (sysId)
+  {
+    case SI_MERGE:
+      systemId="MERGE";
+      break;
+    case SI_MODIFY:
+      systemId="MODIFICATION";
+      break;
+    case SI_EXTRACT:
+      systemId="EXTRACTION";
+      break;
+    case SI_TEST:
+      systemId="TEST";
+      break;
+    default:
+      systemId="OTHER";
+  }
+  softwareName="Wolkenbase ";
+  softwareName+=VERSION;
   nReadPoints=0;
   versionMajor=1;
   versionMinor=4;
