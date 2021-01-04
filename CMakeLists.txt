@@ -40,7 +40,7 @@ qt5_add_translation(qm_files wolkenbase_en.ts wolkenbase_es.ts)
 
 # point.cpp must be before las.cpp for noPoint to be initialized to nanxyz.
 add_executable(wolkenbase angle.cpp binio.cpp boundrect.cpp
-	       brevno.cpp classify.cpp configdialog.cpp eisenstein.cpp
+	       brevno.cpp classify.cpp cloudoutput.cpp configdialog.cpp eisenstein.cpp
                fileio.cpp flowsnake.cpp freeram.cpp point.cpp las.cpp ldecimal.cpp
                leastsquares.cpp lissajous.cpp mainwindow.cpp manysum.cpp matrix.cpp
                octree.cpp peano.cpp ps.cpp quaternion.cpp
