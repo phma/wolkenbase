@@ -33,10 +33,12 @@ class CloudOutput: public QObject
 public:
   xyz minCor,maxCor,scale;
   int nInputFiles;
+  size_t grandTotal;
   int pointsPerFile; // 0 means no limit
   bool separateClasses;
   std::string className(int n);
   void openFiles(std::string name,std::map<int,size_t> classTotals);
+  void writeFiles();
   void closeFiles();
 private:
   std::map<int,std::deque<LasHeader> > headers;

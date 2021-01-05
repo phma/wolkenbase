@@ -20,6 +20,7 @@
  * along with Wolkenbase. If not, see <http://www.gnu.org/licenses/>.
  */
 #include "cloudoutput.h"
+#include "octree.h"
 using namespace std;
 
 string ndecimal(size_t n,int dig)
@@ -65,7 +66,7 @@ void CloudOutput::openFiles(string name,map<int,size_t> classTotals)
   map<int,size_t>::iterator j;
   map<int,deque<LasHeader> >::iterator k;
   int nDigits=0; // number of digits appended to filenames
-  size_t grandTotal=0;
+  grandTotal=0;
   if (separateClasses)
     sysId=SI_EXTRACT;
   else if (nInputFiles>1)
@@ -114,6 +115,34 @@ void CloudOutput::openFiles(string name,map<int,size_t> classTotals)
       headers[0][i].openWrite(name+(pointsPerFile?"-":"")+ndecimal(i,nDigits),sysId);
       headers[0][i].setScale(minCor,maxCor,scale);
     }
+  }
+}
+
+void CloudOutput::writeFiles()
+{
+  long long i;
+  int j;
+  long long min;
+  int nextBlocks[256];
+  vector<LasPoint> blockPoints;
+  map<int,deque<LasHeader> >::iterator k;
+  for (i=0;i<octStore.getNumBlocks();i++)
+  {
+    for (k=headers.begin();k!=headers.end();++k)
+    {
+      min=grandTotal;
+      for (j=0;j<k->second.size();j++)
+	if (k->second[j].numberPoints()<min)
+	{
+	  nextBlocks[k->first]=j;
+	  min=k->second[j].numberPoints();
+	}
+    }
+    blockPoints=octStore.getAll(i);
+    for (j=0;j<blockPoints.size();j++)
+      headers[blockPoints[j].classification]
+	     [nextBlocks[blockPoints[j].classification]].
+	     writePoint(blockPoints[j]);
   }
 }
 
