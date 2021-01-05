@@ -22,6 +22,20 @@
 #include "cloudoutput.h"
 using namespace std;
 
+string ndecimal(size_t n,int dig)
+{
+  char buf[24];
+  char fmt[8];
+  if (dig)
+  {
+    sprintf(fmt,"%%0%dld",dig);
+    sprintf(buf,fmt,n);
+  }
+  else
+    buf[0]=0;
+  return buf;
+}
+
 string CloudOutput::className(int n)
 // The output should have no spaces. It will be part of a file name.
 {
@@ -46,4 +60,51 @@ string CloudOutput::className(int n)
 
 void CloudOutput::openFiles(string name,map<int,size_t> classTotals)
 {
+  int i,sysId=SI_EXTRACT;
+  size_t quot;
+  map<int,size_t>::iterator j;
+  map<int,deque<LasHeader> >::iterator k;
+  int nDigits=0; // number of digits appended to filenames
+  size_t grandTotal=0;
+  for (j=classTotals.begin();j!=classTotals.end();++j)
+    grandTotal+=j->second;
+  if (pointsPerFile)
+  {
+    quot=(grandTotal+pointsPerFile-1)/pointsPerFile;
+    if (quot)
+      quot--; // If quot is 10, only one digit is needed.
+    if (!quot)
+      quot++; // If quot is 0, still append a digit.
+    while (quot)
+    {
+      quot/=10;
+      nDigits++;
+    }
+  }
+  if (separateClasses)
+    for (j=classTotals.begin();j!=classTotals.end();++j)
+    {
+      if (pointsPerFile)
+	quot=(j->second+pointsPerFile-1)/pointsPerFile;
+      else
+	quot=1;
+      for (i=0;i<quot;i++)
+      {
+	headers[j->first].push_back(LasHeader());
+	headers[j->first][i].openWrite(name+'-'+className(j->first)+
+				       (pointsPerFile?"-":"")+ndecimal(i,nDigits),sysId);
+      }
+    }
+  else
+  {
+    if (pointsPerFile)
+      quot=(grandTotal+pointsPerFile-1)/pointsPerFile;
+    else
+      quot=1;
+    for (i=0;i<quot;i++)
+    {
+      headers[0].push_back(LasHeader());
+      headers[0][i].openWrite(name+(pointsPerFile?"-":"")+ndecimal(i,nDigits),sysId);
+    }
+  }
 }
