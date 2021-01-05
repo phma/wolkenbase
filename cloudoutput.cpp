@@ -60,12 +60,18 @@ string CloudOutput::className(int n)
 
 void CloudOutput::openFiles(string name,map<int,size_t> classTotals)
 {
-  int i,sysId=SI_EXTRACT;
+  int i,sysId;
   size_t quot;
   map<int,size_t>::iterator j;
   map<int,deque<LasHeader> >::iterator k;
   int nDigits=0; // number of digits appended to filenames
   size_t grandTotal=0;
+  if (separateClasses)
+    sysId=SI_EXTRACT;
+  else if (nInputFiles>1)
+    sysId=SI_MERGE;
+  else
+    sysId=SI_MODIFY;
   for (j=classTotals.begin();j!=classTotals.end();++j)
     grandTotal+=j->second;
   if (pointsPerFile)
