@@ -36,7 +36,7 @@ public:
   int pointsPerFile; // 0 means no limit
   bool separateClasses;
   std::string className(int n);
-  void openFiles(std::string name);
+  void openFiles(std::string name,std::map<int,size_t> classTotals);
 private:
   std::map<int,std::deque<LasHeader> > headers;
 };

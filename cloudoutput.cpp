@@ -44,6 +44,6 @@ string CloudOutput::className(int n)
   return qret.toStdString();
 }
 
-void CloudOutput::openFiles(string name)
+void CloudOutput::openFiles(string name,map<int,size_t> classTotals)
 {
 }

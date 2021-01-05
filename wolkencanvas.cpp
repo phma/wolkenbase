@@ -3,7 +3,7 @@
 /* wolkencanvas.cpp - canvas for drawing point cloud  */
 /*                                                    */
 /******************************************************/
-/* Copyright 2020 Pierre Abbat.
+/* Copyright 2020,2021 Pierre Abbat.
  * This file is part of Wolkenbase.
  *
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -463,7 +463,7 @@ void WolkenCanvas::writeFile()
   cloudOutput.nInputFiles=inFileHeaders.size();
   cloudOutput.pointsPerFile=0;
   cloudOutput.separateClasses=true;
-  cloudOutput.openFiles("classified");
+  cloudOutput.openFiles("classified",classTotals);
 }
 
 void WolkenCanvas::clearCloud()
