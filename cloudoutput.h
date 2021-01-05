@@ -24,6 +24,7 @@
 
 #include <QObject>
 #include <map>
+#include <deque>
 #include "las.h"
 
 class CloudOutput: public QObject
@@ -37,7 +38,7 @@ public:
   std::string className(int n);
   void openFiles(std::string name);
 private:
-  std::map<unsigned int,LasHeader> headers;
+  std::map<int,std::deque<LasHeader> > headers;
 };
 
 #endif
