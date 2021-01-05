@@ -464,6 +464,8 @@ void WolkenCanvas::writeFile()
   cloudOutput.pointsPerFile=0;
   cloudOutput.separateClasses=true;
   cloudOutput.openFiles("classified",classTotals);
+  ta.opcode=ACT_WRITE;
+  enqueueAction(ta);
 }
 
 void WolkenCanvas::clearCloud()

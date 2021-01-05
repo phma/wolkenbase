@@ -541,6 +541,11 @@ void WolkenThread::operator()(int thread)
 	  enqueueResult(act);
 	  octStore.disown();
 	  break;
+	case ACT_WRITE:
+#ifdef GUI
+	  cloudOutput.closeFiles();
+#endif
+	  break;
 	default:
 	  sleep(thread);
       }

@@ -37,6 +37,7 @@ public:
   bool separateClasses;
   std::string className(int n);
   void openFiles(std::string name,std::map<int,size_t> classTotals);
+  void closeFiles();
 private:
   std::map<int,std::deque<LasHeader> > headers;
 };

@@ -108,3 +108,18 @@ void CloudOutput::openFiles(string name,map<int,size_t> classTotals)
     }
   }
 }
+
+void CloudOutput::closeFiles()
+{
+  int i;
+  map<int,deque<LasHeader> >::iterator k;
+  for (k=headers.begin();k!=headers.end();++k)
+  {
+    for (i=0;i<k->second.size();i++)
+    {
+      k->second[i].writeHeader();
+      k->second[i].close();
+    }
+    k->second.clear();
+  }
+}
