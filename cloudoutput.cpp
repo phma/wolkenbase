@@ -101,6 +101,8 @@ void CloudOutput::openFiles(string name,map<int,size_t> classTotals)
 	headers[j->first][i].openWrite(name+'-'+className(j->first)+
 				       (pointsPerFile?"-":"")+ndecimal(i,nDigits),sysId);
 	headers[j->first][i].setScale(minCor,maxCor,scale);
+	headers[j->first][i].setVersion(1,4);
+	headers[j->first][i].setPointFormat(10);
       }
     }
   else
@@ -114,6 +116,8 @@ void CloudOutput::openFiles(string name,map<int,size_t> classTotals)
       headers[0].push_back(LasHeader());
       headers[0][i].openWrite(name+(pointsPerFile?"-":"")+ndecimal(i,nDigits),sysId);
       headers[0][i].setScale(minCor,maxCor,scale);
+      headers[0][i].setVersion(1,4);
+      headers[0][i].setPointFormat(10);
     }
   }
 }
