@@ -571,6 +571,13 @@ LasPoint LasHeader::readPoint(size_t num)
     ret.zDir=readlefloat(*lasfile);
   }
   ret.location=xyz(xOffset+xScale*xInt,yOffset+yScale*yInt,zOffset+zScale*zInt)*unit;
+  if (ret.location.getx()>maxX*unit || ret.location.getx()<minX*unit ||
+      ret.location.gety()>maxY*unit || ret.location.gety()<minY*unit ||
+      ret.location.getz()>maxZ*unit || ret.location.getz()<minZ*unit)
+  {
+    cerr<<"Point out of range\n";
+    //ret.location=nanxyz;
+  }
   if (!lasfile->good())
     throw -1;
   nReadPoints++;
