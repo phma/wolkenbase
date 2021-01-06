@@ -543,6 +543,7 @@ void WolkenThread::operator()(int thread)
 	  break;
 	case ACT_WRITE:
 #ifdef GUI
+	  cloudOutput.writeFiles();
 	  cloudOutput.closeFiles();
 #endif
 	  break;
