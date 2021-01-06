@@ -33,6 +33,7 @@ const int MASK_RGB=    0x5ac; // RGB takes 6 bytes
 const int MASK_NIR=    0x500; // NIR takes 2 bytes
 const int MASK_WAVE=   0x630; // Wave data take 29 bytes
 const short pointLengths[]={20,28,26,34,57,63,30,36,38,59,67};
+const short pointFeatures[]={0x0,0x1,0x2,0x3,0x9,0xb,0x1,0x3,0x7,0x9,0xf};
 
 using namespace std;
 
