@@ -454,17 +454,17 @@ void LasHeader::setScale(xyz minCor,xyz maxCor,xyz scale)
   if (scale.getx()!=0 && isfinite(scale.getx()))
     xScale=scale.getx();
   else
-    xScale=(maxCor.getx()-minCor.getx())/4294967294.;
+    xScale=(maxCor.getx()-minCor.getx())/4132485216.;
   yOffset=(minCor.gety()+maxCor.gety())/2;
   if (scale.gety()!=0 && isfinite(scale.gety()))
     yScale=scale.gety();
   else
-    yScale=(maxCor.gety()-minCor.gety())/4294967294.;
+    yScale=(maxCor.gety()-minCor.gety())/4132485216.;
   zOffset=(minCor.getz()+maxCor.getz())/2;
   if (scale.getz()!=0 && isfinite(scale.getz()))
     zScale=scale.getz();
   else
-    zScale=(maxCor.getz()-minCor.getz())/4294967294.;
+    zScale=(maxCor.getz()-minCor.getz())/4132485216.;
 }
 
 void LasHeader::close()
