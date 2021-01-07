@@ -22,4 +22,6 @@
 #include "tile.h"
 #define M_SQRT7 2.6457513110645905905016
 
+extern double minParaboloidSize;
+
 void scanCylinder(Eisenstein cylAddress);

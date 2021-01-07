@@ -32,6 +32,7 @@
 #include "threads.h"
 #include "ldecimal.h"
 #include "tile.h"
+#include "scan.h"
 
 using namespace std;
 namespace cr=std::chrono;
@@ -421,6 +422,7 @@ void WolkenCanvas::startProcess()
 
 void WolkenCanvas::startScan()
 {
+  minParaboloidSize=0.2;
   waitForThreads(TH_SCAN);
   cout<<"Starting scan\n";
   currentAction=0;

@@ -26,6 +26,8 @@
 #include "leastsquares.h"
 using namespace std;
 
+double minParaboloidSize;
+
 void scanCylinder(Eisenstein cylAddress)
 {
   Cylinder cyl=snake.cyl(cylAddress);
@@ -99,7 +101,7 @@ void scanCylinder(Eisenstein cylAddress)
     for (i=0;i<7;i++)
       density+=sqr(histo[i]);
     density=sqrt(density)*M_SQRT7/sqr(cyl.getRadius())/M_PI;
-    paraboloidSize=1/sqrt(density); // this may need to be multiplied by something
+    paraboloidSize=sqrt(1/density+sqr(minParaboloidSize)); // this may need to be multiplied by something
     snake.countNonempty();
     tileMutex.lock();
     tiles[cylAddress].nPoints=cylPoints.size();
