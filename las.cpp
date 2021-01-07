@@ -3,7 +3,7 @@
 /* las.cpp - laser point cloud files                  */
 /*                                                    */
 /******************************************************/
-/* Copyright 2019,2020 Pierre Abbat.
+/* Copyright 2019-2021 Pierre Abbat.
  * This file is part of Wolkenbase.
  * 
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -33,9 +33,27 @@ const int MASK_RGB=    0x5ac; // RGB takes 6 bytes
 const int MASK_NIR=    0x500; // NIR takes 2 bytes
 const int MASK_WAVE=   0x630; // Wave data take 29 bytes
 const short pointLengths[]={20,28,26,34,57,63,30,36,38,59,67};
-const short pointFeatures[]={0x0,0x1,0x2,0x3,0x9,0xb,0x1,0x3,0x7,0x9,0xf};
+const short pointFeatures[]={0x0,0x1,0x2,0x3,0x9,0xb,0x101,0x103,0x107,0x109,0x10f};
 
 using namespace std;
+
+int joinPointFormat(vector<int> formats)
+/* Computes the join (supremum) of the formats, according to their features.
+ * See https://en.wikipedia.org/wiki/Lattice_(order) .
+ */
+{
+  int i,allFeatures=0,ret;
+  for (i=0;i<formats.size();i++)
+    if (formats[i]>=0 && formats[i]<sizeof(pointFeatures)/sizeof(pointFeatures[0]))
+      allFeatures|=pointFeatures[formats[i]];
+  for (i=0;i<sizeof(pointFeatures)/sizeof(pointFeatures[0]);i++)
+    if ((allFeatures|pointFeatures[i])==pointFeatures[i])
+    {
+      ret=i;
+      break;
+    }
+  return ret;
+}
 
 LasPoint::LasPoint()
 {

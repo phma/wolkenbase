@@ -3,7 +3,7 @@
 /* las.h - laser point cloud files                    */
 /*                                                    */
 /******************************************************/
-/* Copyright 2019,2020 Pierre Abbat.
+/* Copyright 2019-2021 Pierre Abbat.
  * This file is part of Wolkenbase.
  * 
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -38,6 +38,8 @@
 #define SI_TEST 3
 
 class OctBlock;
+
+int joinPointFormat(std::vector<int> formats);
 
 class LasPoint
 { // 91 bytes in temporary file, 720 points per block

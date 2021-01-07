@@ -454,11 +454,15 @@ void WolkenCanvas::writeFile()
 {
   int i;
   map<int,size_t>::iterator j;
+  vector<int> formats;
   ThreadAction ta;
   waitForThreads(TH_PAUSE);
   cout<<"Classified points:\n";
   for (j=classTotals.begin();j!=classTotals.end();++j)
     cout<<j->first<<' '<<j->second<<endl;
+  for (i=0;i<inFileHeaders.size();i++)
+    formats.push_back(inFileHeaders[i].getPointFormat());
+  cloudOutput.pointFormat=joinPointFormat(formats);
   cloudOutput.minCor=xyz(br.left(),br.bottom(),br.low());
   cloudOutput.maxCor=xyz(br.right(),br.top(),br.high());
   cloudOutput.scale=xyz(0,0,0); // TODO check the inFileHeaders for same scale and offset
