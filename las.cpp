@@ -59,10 +59,13 @@ LasPoint::LasPoint()
 {
   location=nanxyz;
   intensity=returnNum=nReturns=classification=classificationFlags=0;
-  scannerChannel=userData=waveIndex=pointSource=nir=red=green=blue=0;
+  scannerChannel=userData=pointSource=nir=red=green=blue=0;
   scanDirection=edgeLine=false;
-  scanAngle=waveformSize=waveformOffset=0;
-  gpsTime=waveformTime=xDir=yDir=zDir=0;
+  scanAngle=0;
+  gpsTime=0;
+#ifdef WAVEFORM
+  waveformTime=xDir=yDir=zDir=waveformSize=waveformOffset=waveIndex=0;
+#endif
 }
 
 bool LasPoint::isEmpty()
@@ -89,7 +92,9 @@ void LasPoint::read(istream &file)
   classificationFlags=readleshort(file);
   scannerChannel=readleshort(file);
   userData=readleshort(file);
+#ifdef WAVEFORM
   waveIndex=readleshort(file);
+#endif
   pointSource=readleshort(file);
   scanAngle=readleint(file);
   gpsTime=readledouble(file);
@@ -97,12 +102,14 @@ void LasPoint::read(istream &file)
   red=readleshort(file);
   green=readleshort(file);
   blue=readleshort(file);
+#ifdef WAVEFORM
   waveformOffset=readlelong(file);
   waveformSize=readleint(file);
   waveformTime=readlefloat(file);
   xDir=readlefloat(file);
   yDir=readlefloat(file);
   zDir=readlefloat(file);
+#endif
 }
 
 void LasPoint::write(ostream &file) const
@@ -118,7 +125,9 @@ void LasPoint::write(ostream &file) const
   writeleshort(file,classificationFlags);
   writeleshort(file,scannerChannel);
   writeleshort(file,userData);
+#ifdef WAVEFORM
   writeleshort(file,waveIndex);
+#endif
   writeleshort(file,pointSource);
   writeleint(file,scanAngle);
   writeledouble(file,gpsTime);
@@ -126,12 +135,14 @@ void LasPoint::write(ostream &file) const
   writeleshort(file,red);
   writeleshort(file,green);
   writeleshort(file,blue);
+#ifdef WAVEFORM
   writelelong(file,waveformOffset);
   writeleint(file,waveformSize);
   writelefloat(file,waveformTime);
   writelefloat(file,xDir);
   writelefloat(file,yDir);
   writelefloat(file,zDir);
+#endif
 }
 
 const LasPoint noPoint;
@@ -580,6 +591,7 @@ LasPoint LasHeader::readPoint(size_t num)
   if ((1<<pointFormat)&MASK_NIR) // 10 or 8
     ret.nir=readleshort(*lasfile);
   if ((1<<pointFormat)&MASK_WAVE) // 10, 9, 5 or 4
+#ifdef WAVEFORM
   {
     ret.waveIndex=(unsigned char)lasfile->get();
     ret.waveformOffset=readlelong(*lasfile);
@@ -589,6 +601,17 @@ LasPoint LasHeader::readPoint(size_t num)
     ret.yDir=readlefloat(*lasfile);
     ret.zDir=readlefloat(*lasfile);
   }
+#else
+  {
+    lasfile->get();
+    readlelong(*lasfile);
+    readleint(*lasfile);
+    readlefloat(*lasfile);
+    readlefloat(*lasfile);
+    readlefloat(*lasfile);
+    readlefloat(*lasfile);
+  }
+#endif
   ret.location=xyz(xOffset+xScale*xInt,yOffset+yScale*yInt,zOffset+zScale*zInt)*unit;
   if (ret.location.getx()>maxX*unit || ret.location.getx()<minX*unit ||
       ret.location.gety()>maxY*unit || ret.location.gety()<minY*unit ||
@@ -659,6 +682,7 @@ void LasHeader::writePoint(const LasPoint &pnt)
   if ((1<<pointFormat)&MASK_NIR) // 10 or 8
     writeleshort(*lasfile,pnt.nir);
   if ((1<<pointFormat)&MASK_WAVE) // 10, 9, 5 or 4
+#ifdef WAVEFORM
   {
     lasfile->put(pnt.waveIndex);
     writelelong(*lasfile,pnt.waveformOffset);
@@ -668,6 +692,17 @@ void LasHeader::writePoint(const LasPoint &pnt)
     writelefloat(*lasfile,pnt.yDir);
     writelefloat(*lasfile,pnt.zDir);
   }
+#else
+  {
+    lasfile->put('\0');
+    writelelong(*lasfile,0);
+    writeleint(*lasfile,0);
+    writelefloat(*lasfile,0);
+    writelefloat(*lasfile,0);
+    writelefloat(*lasfile,0);
+    writelefloat(*lasfile,0);
+  }
+#endif
   nPoints[0]++;
   if (pnt.returnNum>0 && pnt.returnNum<16)
     nPoints[pnt.returnNum]++;

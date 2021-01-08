@@ -21,6 +21,7 @@
  */
 #include <cmath>
 #include <cassert>
+#include "config.h"
 #include "testpattern.h"
 #include "angle.h"
 #include "random.h"
@@ -102,15 +103,19 @@ LasPoint laserize(xyz pnt,int n)
   ret.classification=ret.classificationFlags=0;
   ret.scannerChannel=0;
   ret.userData=0;
+#ifdef WAVEFORM
   ret.waveIndex=0;
+#endif
   ret.pointSource=0;
   ret.scanAngle=0;
   ret.gpsTime=n;
   ret.nir=ret.red=ret.green=ret.blue=33000; // maybe change depending on type of point
+#ifdef WAVEFORM
   ret.waveformOffset=ret.waveformSize=0;
   ret.waveformTime=0;
   ret.xDir=ret.yDir=0;
   ret.zDir=-1;
+#endif
   return ret;
 }
 

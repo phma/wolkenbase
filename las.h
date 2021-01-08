@@ -24,6 +24,7 @@
 #define LAS_H
 #include <string>
 #include <iostream>
+#include "config.h"
 #include "point.h"
 
 /* These tell what to put in the system identifier field of the header.
@@ -51,14 +52,18 @@ public:
   unsigned short classification,classificationFlags;
   unsigned short scannerChannel;
   unsigned short userData;
+#ifdef WAVEFORM
   unsigned short waveIndex;
+#endif
   unsigned short pointSource;
   int scanAngle;
   double gpsTime;
   unsigned short nir,red,green,blue;
+#ifdef WAVEFORM
   size_t waveformOffset;
   unsigned int waveformSize;
   float waveformTime,xDir,yDir,zDir;
+#endif
   LasPoint();
   bool isEmpty();
 //private:
