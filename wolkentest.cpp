@@ -30,6 +30,7 @@
 #include <cstring>
 #include <vector>
 #include <string>
+#include "config.h"
 #include "angle.h"
 #include "octree.h"
 #include "shape.h"
@@ -775,7 +776,7 @@ void testsplitfile()
 
 void testbigcloud()
 /* Creates a big point cloud in seven files to test loading of big point clouds.
- * The density is 700/m² so that, except at the edges, each cube containing
+ * The density is set so that, except at the edges, each cube containing
  * points is a 1 meter cube.
  * The total number of points is 7 million. This normally fits in RAM, but
  * the program can be forced to swap by setting low RAM to all RAM.
@@ -784,11 +785,16 @@ void testbigcloud()
   vector<long long> blocks;
   vector<LasPoint> points;
   int i,j;
+#ifdef WAVEFORM
+  const double density=700; //  720 points per block
+#else
+  const double density=500; // 537 points per block
+#endif
   map<int,LasHeader> headers;
   const int totalPoints=7000000;
-  double radius=sqrt(totalPoints/M_PI/700);
+  double radius=sqrt(totalPoints/M_PI/density);
   setStorePoints(false);
-  wavyScene(radius,700,0.33,0.30,0.1);
+  wavyScene(radius,density,0.33,0.30,0.1);
   for (i=0;i<7;i++)
   {
     headers[i].openWrite("big"+to_string(i)+".las",SI_TEST);
