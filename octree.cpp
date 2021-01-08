@@ -577,7 +577,7 @@ OctStore::OctStore()
 
 OctStore::~OctStore()
 {
-  flush();
+  //flush();
   close();
 }
 
@@ -669,7 +669,6 @@ void OctStore::open(string fileName,int numFiles)
 void OctStore::close()
 {
   int i;
-  flush();
   for (i=0;i<nFiles;i++)
     file[i].close();
 }
