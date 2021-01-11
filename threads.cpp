@@ -473,6 +473,7 @@ void WolkenThread::operator()(int thread)
 	  catch (...)
 	  {
 	  }
+	  act.hdr->clearNumberReadPoints();
 	  i=j=n=0;
 	  cout<<"Thread "<<thread<<" reading "<<act.hdr->getFileName()<<endl;
 	  offset=act.hdr->getOffset();

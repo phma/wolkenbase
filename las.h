@@ -153,6 +153,10 @@ public:
   }
   void close();
   size_t numberPoints(int r=0);
+  void clearNumberReadPoints()
+  {
+    nReadPoints=0;
+  }
   size_t numberReadPoints()
   {
     return nReadPoints;
