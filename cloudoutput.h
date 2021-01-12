@@ -37,6 +37,7 @@ public:
   int pointsPerFile; // 0 means no limit
   int pointFormat;
   bool separateClasses;
+  double unit;
   std::string className(int n);
   void openFiles(std::string name,std::map<int,size_t> classTotals);
   void writeFiles();
