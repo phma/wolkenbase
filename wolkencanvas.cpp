@@ -467,7 +467,7 @@ void WolkenCanvas::writeFile()
   cloudOutput.maxCor=xyz(br.right(),br.top(),br.high());
   cloudOutput.scale=xyz(0,0,0); // TODO check the inFileHeaders for same scale and offset
   cloudOutput.nInputFiles=inFileHeaders.size();
-  cloudOutput.pointsPerFile=0;
+  cloudOutput.pointsPerFile=10000000;
   cloudOutput.unit=lengthUnit;
   cloudOutput.separateClasses=true;
   cloudOutput.openFiles("classified",classTotals);
