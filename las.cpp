@@ -477,24 +477,24 @@ void LasHeader::setScale(xyz minCor,xyz maxCor,xyz scale)
  * sets (xScale,yScale,zScale) to scale. Sets (xOffset,yOffset,zOffset) to
  * the middle of the box. Does not set (minX,minY,minZ) or (maxX,maxY,maxZ);
  * those are computed as the points are written.
- * TBD: are minCor and maxCor in meters or in unit?
+ * minCor, maxCor, and scale are in meters. Set unit before setting scale.
  */
 {
-  xOffset=(minCor.getx()+maxCor.getx())/2;
+  xOffset=(minCor.getx()+maxCor.getx())/2/unit;
   if (scale.getx()!=0 && isfinite(scale.getx()))
-    xScale=scale.getx();
+    xScale=scale.getx()/unit;
   else
-    xScale=(maxCor.getx()-minCor.getx())/4132485216.;
-  yOffset=(minCor.gety()+maxCor.gety())/2;
+    xScale=(maxCor.getx()-minCor.getx())/4132485216./unit;
+  yOffset=(minCor.gety()+maxCor.gety())/2/unit;
   if (scale.gety()!=0 && isfinite(scale.gety()))
-    yScale=scale.gety();
+    yScale=scale.gety()/unit;
   else
-    yScale=(maxCor.gety()-minCor.gety())/4132485216.;
-  zOffset=(minCor.getz()+maxCor.getz())/2;
+    yScale=(maxCor.gety()-minCor.gety())/4132485216./unit;
+  zOffset=(minCor.getz()+maxCor.getz())/2/unit;
   if (scale.getz()!=0 && isfinite(scale.getz()))
-    zScale=scale.getz();
+    zScale=scale.getz()/unit;
   else
-    zScale=(maxCor.getz()-minCor.getz())/4132485216.;
+    zScale=(maxCor.getz()-minCor.getz())/4132485216./unit;
 }
 
 void LasHeader::close()
@@ -631,9 +631,9 @@ void LasHeader::writePoint(const LasPoint &pnt)
   int xInt,yInt,zInt;
   double writtenX,writtenY,writtenZ;
   lasfile->seekp(writePos,ios::beg);
-  xInt=lrint((pnt.location.getx()-xOffset)/xScale/unit);
-  yInt=lrint((pnt.location.gety()-yOffset)/yScale/unit);
-  zInt=lrint((pnt.location.getz()-zOffset)/zScale/unit);
+  xInt=lrint((pnt.location.getx()/unit-xOffset)/xScale);
+  yInt=lrint((pnt.location.gety()/unit-yOffset)/yScale);
+  zInt=lrint((pnt.location.getz()/unit-zOffset)/zScale);
   writeleint(*lasfile,xInt);
   writeleint(*lasfile,yInt);
   writeleint(*lasfile,zInt);
@@ -652,7 +652,7 @@ void LasHeader::writePoint(const LasPoint &pnt)
     maxZ=writtenZ;
   if (writtenZ<minZ)
     minZ=writtenZ;
-  assert(dist(xyz(writtenX,writtenY,writtenZ),pnt.location)<sqrt(sqr(xScale)+sqr(yScale)+sqr(zScale))*0.6);
+  assert(dist(xyz(writtenX,writtenY,writtenZ),pnt.location/unit)<sqrt(sqr(xScale)+sqr(yScale)+sqr(zScale))*0.6);
   writeleshort(*lasfile,pnt.intensity);
   if (pointFormat<6)
   {
