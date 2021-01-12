@@ -291,12 +291,12 @@ void WolkenCanvas::tick()
     painter.drawEllipse(circleBox);
     if (ceil(circleCenter.x()+radius)>pixmaxx)
       pixmaxx=ceil(circleCenter.x()+radius);
-    if (floor(circleCenter.x()+radius)<pixminx)
-      pixminx=floor(circleCenter.x()+radius);
+    if (floor(circleCenter.x()-radius)<pixminx)
+      pixminx=floor(circleCenter.x()-radius);
     if (ceil(circleCenter.y()+radius)>pixmaxy)
       pixmaxy=ceil(circleCenter.y()+radius);
-    if (floor(circleCenter.y()+radius)<pixminy)
-      pixminy=floor(circleCenter.y()+radius);
+    if (floor(circleCenter.y()-radius)<pixminy)
+      pixminy=floor(circleCenter.y()-radius);
     elapsed=clk.now()-timeStart;
   }
   if (pixminx<=pixmaxx)
