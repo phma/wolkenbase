@@ -112,12 +112,12 @@ void classifyCylinder(Eisenstein cylAddress)
      * • Otherwise it is ground.
      */
     int i,j,h,sz,n;
-    bool aboveGround;
+    bool aboveGround,isTreeTile=false;
     tileMutex.lock();
     thisTile=&tiles[cylAddress];
     tileMutex.unlock();
     if (cylPoints.size()>=343 && thisTile->paraboloidSize>cyl.getRadius())
-      cout<<"paraboloid size "<<thisTile->paraboloidSize<<endl;
+      isTreeTile=true;
     for (i=0;i<cylPoints.size();i++)
     {
       set<int> directions;
