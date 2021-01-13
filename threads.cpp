@@ -633,6 +633,6 @@ void WolkenThread::operator()(int thread)
   //octStore.flush(thread,threads.size());
   threadStatusMutex.lock();
   threadStatus[thread]=TH_STOP;
-  cout<<"Thread "<<thread<<" processed "<<nPoints<<" points\n";
+  //cout<<"Thread "<<thread<<" processed "<<nPoints<<" points\n";
   threadStatusMutex.unlock();
 }

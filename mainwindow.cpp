@@ -245,7 +245,6 @@ void MainWindow::handleResult(ThreadAction ta)
   switch (ta.opcode)
   {
     case ACT_COUNT:
-      cout<<"Counted\n";
       if (++threadsCountedPoints==nThreads())
       {
 	allPointsCounted();
