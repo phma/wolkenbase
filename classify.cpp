@@ -3,7 +3,7 @@
 /* classify.cpp - classify points                     */
 /*                                                    */
 /******************************************************/
-/* Copyright 2020 Pierre Abbat.
+/* Copyright 2020,2021 Pierre Abbat.
  * This file is part of Wolkenbase.
  *
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -26,9 +26,11 @@
 #include "classify.h"
 #include "octree.h"
 #include "angle.h"
+#include "threads.h"
 #include "relprime.h"
 #include "leastsquares.h"
 using namespace std;
+namespace cr=std::chrono;
 
 /* Point classes:
  * 0	Created, never classified
@@ -113,6 +115,7 @@ void classifyCylinder(Eisenstein cylAddress)
      */
     int i,j,h,sz,n;
     bool aboveGround,isTreeTile=false;
+    cr::time_point<cr::steady_clock> timeStart=clk.now();
     tileMutex.lock();
     thisTile=&tiles[cylAddress];
     tileMutex.unlock();
@@ -142,6 +145,9 @@ void classifyCylinder(Eisenstein cylAddress)
       }
       octStore.put(cylPoints[i]);
     }
+    cr::nanoseconds elapsed=clk.now()-timeStart;
+    if (isTreeTile)
+      cout<<"Classifying "<<cylPoints.size()<<" points took "<<elapsed.count()*1e-6<<" ms\n";
     snake.countNonempty();
   }
   octStore.disown();
