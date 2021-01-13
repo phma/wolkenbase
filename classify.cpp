@@ -116,6 +116,8 @@ void classifyCylinder(Eisenstein cylAddress)
     tileMutex.lock();
     thisTile=&tiles[cylAddress];
     tileMutex.unlock();
+    if (cylPoints.size()>=343 && thisTile->paraboloidSize>cyl.getRadius())
+      cout<<"paraboloid size "<<thisTile->paraboloidSize<<endl;
     for (i=0;i<cylPoints.size();i++)
     {
       set<int> directions;
