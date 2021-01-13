@@ -91,8 +91,8 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent)
   canvas=new WolkenCanvas(this);
   configDialog=new ConfigurationDialog(this);
   msgBox=new QMessageBox(this);
-  /*connect(configDialog,SIGNAL(settingsChanged(double,double,int,bool,Printer3dSize)),
-	  this,SLOT(setSettings(double,double,int,bool,Printer3dSize)));*/
+  connect(configDialog,SIGNAL(settingsChanged(double,int)),
+	  this,SLOT(setSettings(double,int)));
   connect(this,SIGNAL(tinSizeChanged()),canvas,SLOT(setSize()));
   connect(this,SIGNAL(lengthUnitChanged(double)),canvas,SLOT(setLengthUnit(double)));
   connect(this,SIGNAL(fileOpened(std::string)),canvas,SLOT(readFileHeader(std::string)));
