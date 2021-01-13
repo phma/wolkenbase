@@ -126,7 +126,17 @@ void classifyCylinder(Eisenstein cylAddress)
       set<int> directions;
       aboveGround=false;
       downward=Paraboloid(cylPoints[i].location,thisTile->paraboloidSize);
-      downPoints=octStore.pointsIn(downward);
+      sz=downPoints.size();
+      h=relprime(sz);
+      for (j=n=0;j<sz && !aboveGround;j++,n=(n+h)%sz)
+      {
+	if (downward.in(cylPoints[i].location) && dist(xy(cylPoints[i].location),xy(downPoints[n].location)))
+	  directions.insert(dir(xy(cylPoints[i].location),xy(downPoints[n].location)));
+	if (surround(directions))
+	  aboveGround=true;
+      }
+      if (!aboveGround)
+	downPoints=octStore.pointsIn(downward);
       sz=downPoints.size();
       h=relprime(sz);
       for (j=n=0;j<sz && !aboveGround;j++,n=(n+h)%sz)
