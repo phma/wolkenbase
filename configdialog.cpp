@@ -3,7 +3,7 @@
 /* configdialog.cpp - configuration dialog            */
 /*                                                    */
 /******************************************************/
-/* Copyright 2020 Pierre Abbat.
+/* Copyright 2020,2021 Pierre Abbat.
  * This file is part of Wolkenbase.
  * 
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -69,74 +69,11 @@ GeneralTab::GeneralTab(QWidget *parent):QWidget(parent)
   gridLayout->addWidget(exportEmptyCheck,4,1);
 }
 
-Printer3dTab::Printer3dTab(QWidget *parent):QWidget(parent)
-{
-  int i;
-  shapeLabel=new QLabel(this);
-  shapeLabel->setText(tr("Shape"));
-  lengthLabel=new QLabel(this);
-  lengthLabel->setText(tr("Length"));
-  widthLabel=new QLabel(this);
-  widthLabel->setText(tr("Width"));
-  heightLabel=new QLabel(this);
-  heightLabel->setText(tr("Height"));
-  baseLabel=new QLabel(this);
-  baseLabel->setText(tr("Base"));
-  scaleLabel=new QLabel(this);
-  scaleLabel->setText(tr("Scale"));
-  colonLabel=new QLabel(this);
-  colonLabel->setText(tr(":"));
-  for (i=0;i<sizeof(mmLabel)/sizeof(mmLabel[0]);i++)
-  {
-    mmLabel[i]=new QLabel(this);
-    mmLabel[i]->setText(tr("mm"));
-  }
-  gridLayout=new QGridLayout(this);
-  shapeBox=new QComboBox(this);
-  for (i=0;i<sizeof(shapeNames)/sizeof(shapeNames[0]);i++)
-  {
-    shapeBox->addItem(tr(shapeNames[i]));
-  }
-  lengthInput=new QLineEdit(this);
-  widthInput=new QLineEdit(this);
-  heightInput=new QLineEdit(this);
-  baseInput=new QLineEdit(this);
-  scaleNumInput=new QLineEdit(this);
-  scaleDenomInput=new QLineEdit(this);
-  gridLayout->addWidget(shapeLabel,0,0,1,1);
-  gridLayout->addWidget(shapeBox,0,1,1,3);
-  gridLayout->addWidget(lengthLabel,1,0,1,1);
-  gridLayout->addWidget(lengthInput,1,1,1,3);
-  gridLayout->addWidget(mmLabel[0],1,4,1,1);
-  gridLayout->addWidget(widthLabel,2,0,1,1);
-  gridLayout->addWidget(widthInput,2,1,1,3);
-  gridLayout->addWidget(mmLabel[1],2,4,1,1);
-  gridLayout->addWidget(heightLabel,3,0,1,1);
-  gridLayout->addWidget(heightInput,3,1,1,3);
-  gridLayout->addWidget(mmLabel[2],3,4,1,1);
-  gridLayout->addWidget(baseLabel,4,0,1,1);
-  gridLayout->addWidget(baseInput,4,1,1,3);
-  gridLayout->addWidget(mmLabel[3],4,4,1,1);
-  gridLayout->addWidget(scaleLabel,5,0,1,1);
-  gridLayout->addWidget(scaleNumInput,5,1,1,1);
-  gridLayout->addWidget(colonLabel,5,2,1,1);
-  gridLayout->addWidget(scaleDenomInput,5,3,1,1);
-  connect(shapeBox,SIGNAL(currentIndexChanged(int)),this,SLOT(disableSome()));
-  connect(lengthInput,SIGNAL(textChanged(QString)),this,SIGNAL(contentChanged()));
-  connect(widthInput,SIGNAL(textChanged(QString)),this,SIGNAL(contentChanged()));
-  connect(heightInput,SIGNAL(textChanged(QString)),this,SIGNAL(contentChanged()));
-  connect(baseInput,SIGNAL(textChanged(QString)),this,SIGNAL(contentChanged()));
-  connect(scaleNumInput,SIGNAL(textChanged(QString)),this,SIGNAL(contentChanged()));
-  connect(scaleDenomInput,SIGNAL(textChanged(QString)),this,SIGNAL(contentChanged()));
-  connect(shapeBox,SIGNAL(currentIndexChanged(int)),this,SIGNAL(contentChanged()));
-}
-
 ConfigurationDialog::ConfigurationDialog(QWidget *parent):QDialog(parent)
 {
   boxLayout=new QVBoxLayout(this);
   tabWidget=new QTabWidget(this);
   general=new GeneralTab(this);
-  printTab=new Printer3dTab(this);
   buttonBox=new QDialogButtonBox(this);
   okButton=new QPushButton(tr("OK"),this);
   cancelButton=new QPushButton(tr("Cancel"),this);
@@ -145,12 +82,10 @@ ConfigurationDialog::ConfigurationDialog(QWidget *parent):QDialog(parent)
   boxLayout->addWidget(tabWidget);
   boxLayout->addWidget(buttonBox);
   tabWidget->addTab(general,tr("General"));
-  tabWidget->addTab(printTab,tr("3D Printer"));
   connect(okButton,SIGNAL(clicked()),this,SLOT(accept()));
   connect(cancelButton,SIGNAL(clicked()),this,SLOT(reject()));
   connect(general->lengthUnitBox,SIGNAL(currentIndexChanged(int)),this,SLOT(updateToleranceConversion()));
   connect(general->toleranceBox,SIGNAL(currentIndexChanged(int)),this,SLOT(updateToleranceConversion()));
-  connect(printTab,SIGNAL(contentChanged()),this,SLOT(checkValid()));
 }
 
 void ConfigurationDialog::set(double lengthUnit,int threads)

@@ -63,6 +63,7 @@ public slots:
   void stopConversion();
   void resumeConversion();
   void readFileProgress(size_t sofar,size_t total);
+  void configure();
   void handleResult(ThreadAction ta);
   void aboutProgram();
   void aboutQt();

@@ -3,7 +3,7 @@
 /* configdialog.h - configuration dialog              */
 /*                                                    */
 /******************************************************/
-/* Copyright 2020 Pierre Abbat.
+/* Copyright 2020,2021 Pierre Abbat.
  * This file is part of Wolkenbase.
  * 
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -49,26 +49,6 @@ public:
   QCheckBox *exportEmptyCheck;
 };
 
-class Printer3dTab: public QWidget
-{
-  Q_OBJECT
-public:
-  Printer3dTab(QWidget *parent=nullptr);
-  QLabel *shapeLabel;
-  QLabel *lengthLabel,*widthLabel,*heightLabel;
-  QLabel *baseLabel;
-  QLabel *scaleLabel,*colonLabel;
-  QLabel *mmLabel[4];
-  QGridLayout *gridLayout;
-  QComboBox *shapeBox;
-  QLineEdit *lengthInput,*widthInput,*heightInput;
-  QLineEdit *baseInput;
-  QLineEdit *scaleNumInput,*scaleDenomInput;
-signals:
-  void contentChanged();
-public slots:
-};
-
 class ConfigurationDialog: public QDialog
 {
   Q_OBJECT
@@ -84,7 +64,6 @@ public slots:
 private:
   QTabWidget *tabWidget;
   GeneralTab *general;
-  Printer3dTab *printTab;
   QVBoxLayout *boxLayout;
   QDialogButtonBox *buttonBox;
   QPushButton *okButton,*cancelButton;

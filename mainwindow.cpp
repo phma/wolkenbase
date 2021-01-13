@@ -89,7 +89,7 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent)
   memoryMsg=new QLabel(this);
   densityMsg=new QLabel(this);
   canvas=new WolkenCanvas(this);
-  //configDialog=new ConfigurationDialog(this);
+  configDialog=new ConfigurationDialog(this);
   msgBox=new QMessageBox(this);
   /*connect(configDialog,SIGNAL(settingsChanged(double,double,int,bool,Printer3dSize)),
 	  this,SLOT(setSettings(double,double,int,bool,Printer3dSize)));*/
@@ -234,6 +234,12 @@ void MainWindow::readFileProgress(size_t sofar,size_t total)
 {
   readFileSoFar=sofar;
   readFileTotal=total;
+}
+
+void MainWindow::configure()
+{
+  configDialog->set(lengthUnit,numberThreads);
+  configDialog->open();
 }
 
 void MainWindow::handleResult(ThreadAction ta)
