@@ -23,6 +23,7 @@
 #include <map>
 #include <set>
 #include <cassert>
+#include <climits>
 #include <atomic>
 #include "threads.h"
 #include "angle.h"
