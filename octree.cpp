@@ -1001,6 +1001,8 @@ vector<LasPoint> OctStore::pointsIn(const Shape &sh)
 {
   vector<long long> blockList=octRoot.findBlocks(sh);
   OctBuffer *buf;
+  multimap<double,LasPoint> sorter;
+  multimap<double,LasPoint>::iterator k;
   vector<LasPoint> ret;
   int i,j;
   for (i=0;i<blockList.size();i++)
@@ -1008,8 +1010,10 @@ vector<LasPoint> OctStore::pointsIn(const Shape &sh)
     buf=getBlock(blockList[i]);
     for (j=0;j<buf->points.size();j++)
       if (sh.in(buf->points[j].location))
-	ret.push_back(buf->points[j]);
+	sorter.insert(pair<double,LasPoint>(buf->points[j].location.getz(),buf->points[j]));
   }
+  for (k=sorter.begin();k!=sorter.end();++k)
+    ret.push_back(k->second);
   return ret;
 }
 
