@@ -56,7 +56,7 @@ public:
 signals:
   void settingsChanged(double lu,int thr);
 public slots:
-  void set(double lengthUnit,int threads);
+  void set(double lengthUnit,int threads,int pointsPerFile,bool separateClasses);
   void checkValid();
   virtual void accept();
 private:

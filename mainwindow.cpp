@@ -238,7 +238,7 @@ void MainWindow::readFileProgress(size_t sofar,size_t total)
 
 void MainWindow::configure()
 {
-  configDialog->set(lengthUnit,numberThreads);
+  configDialog->set(lengthUnit,numberThreads,cloudOutput.pointsPerFile,cloudOutput.separateClasses);
   configDialog->open();
 }
 

@@ -66,7 +66,7 @@ GeneralTab::GeneralTab(QWidget *parent):QWidget(parent)
   pointsPerFileBox=new QComboBox(this);
   threadInput=new QLineEdit(this);
   gridLayout=new QGridLayout(this);
-  separateClassesCheck=new QCheckBox(this);
+  separateClassesCheck=new QCheckBox(tr("Separate classes"),this);
   setLayout(gridLayout);
   gridLayout->addWidget(lengthUnitLabel,1,0);
   gridLayout->addWidget(lengthUnitBox,1,1);
@@ -95,7 +95,7 @@ ConfigurationDialog::ConfigurationDialog(QWidget *parent):QDialog(parent)
   connect(cancelButton,SIGNAL(clicked()),this,SLOT(reject()));
 }
 
-void ConfigurationDialog::set(double lengthUnit,int threads)
+void ConfigurationDialog::set(double lengthUnit,int threads,int pointsPerFile,bool separateClasses)
 {
   int i;
   general->lengthUnitBox->clear();
@@ -111,7 +111,17 @@ void ConfigurationDialog::set(double lengthUnit,int threads)
     if (lengthUnit==conversionFactors[i])
       general->lengthUnitBox->setCurrentIndex(i);
   }
+  for (i=0;i<sizeof(ppf)/sizeof(ppf[1]);i++)
+  {
+    general->pointsPerFileBox->addItem(tr(ppfStr[i]));
+  }
+  for (i=0;i<sizeof(ppf)/sizeof(ppf[1]);i++)
+  {
+    if (pointsPerFile==ppf[i])
+      general->pointsPerFileBox->setCurrentIndex(i);
+  }
   general->threadInput->setText(QString::number(threads));
+  general->separateClassesCheck->setCheckState(separateClasses?Qt::Checked:Qt::Unchecked);
 }
 
 void ConfigurationDialog::checkValid()
