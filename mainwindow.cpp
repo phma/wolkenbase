@@ -383,6 +383,8 @@ void MainWindow::readSettings()
   move(settings.value("pos",QPoint(0,0)).toPoint());
   numberThreads=settings.value("threads",0).toInt();
   lengthUnit=settings.value("lengthUnit",1).toDouble();
+  cloudOutput.pointsPerFile=settings.value("pointsPerFile",0).toInt();
+  cloudOutput.separateClasses=settings.value("separateClasses",true).toBool();
   lengthUnitChanged(lengthUnit);
 }
 
@@ -393,6 +395,8 @@ void MainWindow::writeSettings()
   settings.setValue("pos",pos());
   settings.setValue("threads",numberThreads);
   settings.setValue("lengthUnit",lengthUnit);
+  settings.setValue("pointsPerFile",cloudOutput.pointsPerFile);
+  settings.setValue("separateClasses",cloudOutput.separateClasses);
 }
 
 void MainWindow::setSettings(double lu,int thr,int ppf,bool sc)

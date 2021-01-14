@@ -101,6 +101,7 @@ void ConfigurationDialog::set(double lengthUnit,int threads,int pointsPerFile,bo
   general->lengthUnitBox->clear();
   general->lengthUnitLabel->setText(tr("Length unit"));
   general->threadLabel->setText(tr("Threads:"));
+  general->pointsPerFileLabel->setText(tr("Points per file:"));
   general->threadDefault->setText(tr("default is %n","",thread::hardware_concurrency()));
   for (i=0;i<sizeof(conversionFactors)/sizeof(conversionFactors[1]);i++)
   {
