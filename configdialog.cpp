@@ -78,11 +78,25 @@ GeneralTab::GeneralTab(QWidget *parent):QWidget(parent)
   gridLayout->addWidget(separateClassesCheck,4,1);
 }
 
+ClassifyTab::ClassifyTab(QWidget *parent):QWidget(parent)
+{
+  tileSizeLabel=new QLabel(this);
+  minimumSmoothnessLabel=new QLabel(this);
+  tileSizeBox=new QComboBox(this);
+  minimumSmoothnessBox=new QComboBox(this);
+  gridLayout=new QGridLayout(this);
+  gridLayout->addWidget(tileSizeLabel,1,0);
+  gridLayout->addWidget(tileSizeBox,1,1);
+  gridLayout->addWidget(minimumSmoothnessLabel,2,0);
+  gridLayout->addWidget(minimumSmoothnessBox,2,1);
+}
+
 ConfigurationDialog::ConfigurationDialog(QWidget *parent):QDialog(parent)
 {
   boxLayout=new QVBoxLayout(this);
   tabWidget=new QTabWidget(this);
   general=new GeneralTab(this);
+  classify=new ClassifyTab(this);
   buttonBox=new QDialogButtonBox(this);
   okButton=new QPushButton(tr("OK"),this);
   cancelButton=new QPushButton(tr("Cancel"),this);
@@ -91,6 +105,7 @@ ConfigurationDialog::ConfigurationDialog(QWidget *parent):QDialog(parent)
   boxLayout->addWidget(tabWidget);
   boxLayout->addWidget(buttonBox);
   tabWidget->addTab(general,tr("General"));
+  tabWidget->addTab(classify,tr("Classify"));
   connect(okButton,SIGNAL(clicked()),this,SLOT(accept()));
   connect(cancelButton,SIGNAL(clicked()),this,SLOT(reject()));
 }

@@ -48,6 +48,16 @@ public:
   QCheckBox *separateClassesCheck;
 };
 
+class ClassifyTab: public QWidget
+{
+  Q_OBJECT
+public:
+  ClassifyTab(QWidget *parent=nullptr);
+  QLabel *tileSizeLabel,*minimumSmoothnessLabel;
+  QComboBox *tileSizeBox,*minimumSmoothnessBox;
+  QGridLayout *gridLayout;
+};
+
 class ConfigurationDialog: public QDialog
 {
   Q_OBJECT
@@ -62,6 +72,7 @@ public slots:
 private:
   QTabWidget *tabWidget;
   GeneralTab *general;
+  ClassifyTab *classify;
   QVBoxLayout *boxLayout;
   QDialogButtonBox *buttonBox;
   QPushButton *okButton,*cancelButton;
