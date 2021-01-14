@@ -34,31 +34,48 @@ const char unitNames[4][12]=
   QT_TRANSLATE_NOOP("ConfigurationDialog","US foot"),
   QT_TRANSLATE_NOOP("ConfigurationDialog","Indian foot")
 };
-const double tolerances[10]={1e-2,25e-3,5e-2,1e-1,15e-2,2e-1,1/3.,2/3.,1.,10/3.};
-const char toleranceStr[10][7]=
+const int ppf[]=
 {
-  "10 mm","25 mm","50 mm","100 mm","150 mm","200 mm","1/3 m","2/3 m","1 m","10/3 m"
+  1000000,2000000,5000000,10000000,20000000,50000000,
+  100000000,200000000,500000000,1000000000,2000000000,0
 };
-const char shapeNames[2][12]=
+const char ppfStr[12][6]=
 {
-  QT_TRANSLATE_NOOP("Printer3dTab","Absolute"),
-  QT_TRANSLATE_NOOP("Printer3dTab","Rectangular")
+  QT_TRANSLATE_NOOP("ConfigurationDialog","1 M"),
+  QT_TRANSLATE_NOOP("ConfigurationDialog","2 M"),
+  QT_TRANSLATE_NOOP("ConfigurationDialog","5 M"),
+  QT_TRANSLATE_NOOP("ConfigurationDialog","10 M"),
+  QT_TRANSLATE_NOOP("ConfigurationDialog","20 M"),
+  QT_TRANSLATE_NOOP("ConfigurationDialog","50 M"),
+  QT_TRANSLATE_NOOP("ConfigurationDialog","100 M"),
+  QT_TRANSLATE_NOOP("ConfigurationDialog","200 M"),
+  QT_TRANSLATE_NOOP("ConfigurationDialog","500 M"),
+  QT_TRANSLATE_NOOP("ConfigurationDialog","1 G"),
+  QT_TRANSLATE_NOOP("ConfigurationDialog","2 G"),
+  QT_TRANSLATE_NOOP("ConfigurationDialog","nolmt")
 };
+  
 
 GeneralTab::GeneralTab(QWidget *parent):QWidget(parent)
 {
   lengthUnitLabel=new QLabel(this);
   threadLabel=new QLabel(this);
   threadDefault=new QLabel(this);
+  pointsPerFileLabel=new QLabel(this);
   lengthUnitBox=new QComboBox(this);
+  pointsPerFileBox=new QComboBox(this);
   threadInput=new QLineEdit(this);
   gridLayout=new QGridLayout(this);
+  separateClassesCheck=new QCheckBox(this);
   setLayout(gridLayout);
   gridLayout->addWidget(lengthUnitLabel,1,0);
   gridLayout->addWidget(lengthUnitBox,1,1);
-  gridLayout->addWidget(threadLabel,3,0);
-  gridLayout->addWidget(threadInput,3,1);
-  gridLayout->addWidget(threadDefault,3,2);
+  gridLayout->addWidget(threadLabel,2,0);
+  gridLayout->addWidget(threadInput,2,1);
+  gridLayout->addWidget(threadDefault,2,2);
+  gridLayout->addWidget(pointsPerFileLabel,3,0);
+  gridLayout->addWidget(pointsPerFileBox,3,1);
+  gridLayout->addWidget(separateClassesCheck,4,1);
 }
 
 ConfigurationDialog::ConfigurationDialog(QWidget *parent):QDialog(parent)
@@ -76,7 +93,6 @@ ConfigurationDialog::ConfigurationDialog(QWidget *parent):QDialog(parent)
   tabWidget->addTab(general,tr("General"));
   connect(okButton,SIGNAL(clicked()),this,SLOT(accept()));
   connect(cancelButton,SIGNAL(clicked()),this,SLOT(reject()));
-  connect(general->lengthUnitBox,SIGNAL(currentIndexChanged(int)),this,SLOT(updateToleranceConversion()));
 }
 
 void ConfigurationDialog::set(double lengthUnit,int threads)

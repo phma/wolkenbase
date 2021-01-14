@@ -40,11 +40,12 @@ class GeneralTab: public QWidget
   Q_OBJECT
 public:
   GeneralTab(QWidget *parent=nullptr);
-  QLabel *lengthUnitLabel;
+  QLabel *lengthUnitLabel,*pointsPerFileLabel;
   QLabel *threadLabel,*threadDefault;
-  QComboBox *lengthUnitBox;
+  QComboBox *lengthUnitBox,*pointsPerFileBox;
   QGridLayout *gridLayout;
   QLineEdit *threadInput;
+  QCheckBox *separateClassesCheck;
 };
 
 class ConfigurationDialog: public QDialog
