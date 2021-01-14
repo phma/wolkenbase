@@ -48,25 +48,17 @@ const char shapeNames[2][12]=
 GeneralTab::GeneralTab(QWidget *parent):QWidget(parent)
 {
   lengthUnitLabel=new QLabel(this);
-  toleranceLabel=new QLabel(this);
-  toleranceInUnit=new QLabel(this);
   threadLabel=new QLabel(this);
   threadDefault=new QLabel(this);
   lengthUnitBox=new QComboBox(this);
-  toleranceBox=new QComboBox(this);
   threadInput=new QLineEdit(this);
-  exportEmptyCheck=new QCheckBox(tr("Export empty"),this);
   gridLayout=new QGridLayout(this);
   setLayout(gridLayout);
   gridLayout->addWidget(lengthUnitLabel,1,0);
   gridLayout->addWidget(lengthUnitBox,1,1);
-  gridLayout->addWidget(toleranceLabel,2,0);
-  gridLayout->addWidget(toleranceBox,2,1);
-  gridLayout->addWidget(toleranceInUnit,2,2);
   gridLayout->addWidget(threadLabel,3,0);
   gridLayout->addWidget(threadInput,3,1);
   gridLayout->addWidget(threadDefault,3,2);
-  gridLayout->addWidget(exportEmptyCheck,4,1);
 }
 
 ConfigurationDialog::ConfigurationDialog(QWidget *parent):QDialog(parent)
@@ -85,16 +77,13 @@ ConfigurationDialog::ConfigurationDialog(QWidget *parent):QDialog(parent)
   connect(okButton,SIGNAL(clicked()),this,SLOT(accept()));
   connect(cancelButton,SIGNAL(clicked()),this,SLOT(reject()));
   connect(general->lengthUnitBox,SIGNAL(currentIndexChanged(int)),this,SLOT(updateToleranceConversion()));
-  connect(general->toleranceBox,SIGNAL(currentIndexChanged(int)),this,SLOT(updateToleranceConversion()));
 }
 
 void ConfigurationDialog::set(double lengthUnit,int threads)
 {
   int i;
   general->lengthUnitBox->clear();
-  general->toleranceBox->clear();
   general->lengthUnitLabel->setText(tr("Length unit"));
-  general->toleranceLabel->setText(tr("Tolerance"));
   general->threadLabel->setText(tr("Threads:"));
   general->threadDefault->setText(tr("default is %n","",thread::hardware_concurrency()));
   for (i=0;i<sizeof(conversionFactors)/sizeof(conversionFactors[1]);i++)
@@ -107,16 +96,6 @@ void ConfigurationDialog::set(double lengthUnit,int threads)
       general->lengthUnitBox->setCurrentIndex(i);
   }
   general->threadInput->setText(QString::number(threads));
-}
-
-void ConfigurationDialog::updateToleranceConversion()
-{
-  double tolIn;
-  tolIn=tolerances[general->toleranceBox->currentIndex()]/conversionFactors[general->lengthUnitBox->currentIndex()];
-  if (std::isfinite(tolIn))
-  {
-    general->toleranceInUnit->setText(QString::fromStdString(ldecimal(tolIn,tolIn/1000)));
-  }
 }
 
 void ConfigurationDialog::checkValid()

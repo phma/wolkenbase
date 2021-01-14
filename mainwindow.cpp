@@ -382,9 +382,7 @@ void MainWindow::readSettings()
   resize(settings.value("size",QSize(707,500)).toSize());
   move(settings.value("pos",QPoint(0,0)).toPoint());
   numberThreads=settings.value("threads",0).toInt();
-  tolerance=settings.value("tolerance",0.1).toDouble();
   lengthUnit=settings.value("lengthUnit",1).toDouble();
-  exportEmpty=settings.value("exportEmpty",false).toBool();
   lengthUnitChanged(lengthUnit);
 }
 
@@ -394,9 +392,7 @@ void MainWindow::writeSettings()
   settings.setValue("size",size());
   settings.setValue("pos",pos());
   settings.setValue("threads",numberThreads);
-  settings.setValue("tolerance",tolerance);
   settings.setValue("lengthUnit",lengthUnit);
-  settings.setValue("exportEmpty",exportEmpty);
 }
 
 void MainWindow::setSettings(double lu,int thr)

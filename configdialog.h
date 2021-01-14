@@ -40,13 +40,11 @@ class GeneralTab: public QWidget
   Q_OBJECT
 public:
   GeneralTab(QWidget *parent=nullptr);
-  QLabel *lengthUnitLabel,*toleranceLabel;
+  QLabel *lengthUnitLabel;
   QLabel *threadLabel,*threadDefault;
-  QLabel *toleranceInUnit;
-  QComboBox *lengthUnitBox,*toleranceBox;
+  QComboBox *lengthUnitBox;
   QGridLayout *gridLayout;
   QLineEdit *threadInput;
-  QCheckBox *exportEmptyCheck;
 };
 
 class ConfigurationDialog: public QDialog
@@ -58,7 +56,6 @@ signals:
   void settingsChanged(double lu,int thr);
 public slots:
   void set(double lengthUnit,int threads);
-  void updateToleranceConversion();
   void checkValid();
   virtual void accept();
 private:

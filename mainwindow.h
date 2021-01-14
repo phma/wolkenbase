@@ -75,8 +75,8 @@ private:
   int numberThreads;
   int lastState; // state is in WolkenCanvas
   size_t readFileSoFar,readFileTotal;
-  bool conversionStopped,showingResult,exportEmpty;
-  double tolerance,density,lengthUnit;
+  bool conversionStopped,showingResult;
+  double density,lengthUnit;
   double lpfBusyFraction;
   std::string fileNames,saveFileName,lastFileName;
   QTimer *timer;
