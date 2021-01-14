@@ -131,6 +131,8 @@ void ConfigurationDialog::checkValid()
 void ConfigurationDialog::accept()
 {
   settingsChanged(conversionFactors[general->lengthUnitBox->currentIndex()],
-		  general->threadInput->text().toInt());
+		  general->threadInput->text().toInt(),
+		  ppf[general->pointsPerFileBox->currentIndex()],
+		  general->separateClassesCheck->checkState()>0);
   QDialog::accept();
 }

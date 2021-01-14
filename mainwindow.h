@@ -55,7 +55,7 @@ signals:
   void allPointsCounted();
 public slots:
   void tick();
-  void setSettings(double lu,int thr);
+  void setSettings(double lu,int thr,int ppf,bool sc);
   void setUnit(double lu);
   void openFile();
   void disableMenuSplash();

@@ -91,8 +91,8 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent)
   canvas=new WolkenCanvas(this);
   configDialog=new ConfigurationDialog(this);
   msgBox=new QMessageBox(this);
-  connect(configDialog,SIGNAL(settingsChanged(double,int)),
-	  this,SLOT(setSettings(double,int)));
+  connect(configDialog,SIGNAL(settingsChanged(double,int,int,bool)),
+	  this,SLOT(setSettings(double,int,int,bool)));
   connect(this,SIGNAL(tinSizeChanged()),canvas,SLOT(setSize()));
   connect(this,SIGNAL(lengthUnitChanged(double)),canvas,SLOT(setLengthUnit(double)));
   connect(this,SIGNAL(fileOpened(std::string)),canvas,SLOT(readFileHeader(std::string)));
@@ -395,10 +395,12 @@ void MainWindow::writeSettings()
   settings.setValue("lengthUnit",lengthUnit);
 }
 
-void MainWindow::setSettings(double lu,int thr)
+void MainWindow::setSettings(double lu,int thr,int ppf,bool sc)
 {
   lengthUnit=lu;
   numberThreads=thr;
+  cloudOutput.pointsPerFile=ppf;
+  cloudOutput.separateClasses=sc;
   writeSettings();
   lengthUnitChanged(lengthUnit);
 }
