@@ -186,6 +186,8 @@ void ConfigurationDialog::accept()
   settingsChanged(conversionFactors[general->lengthUnitBox->currentIndex()],
 		  general->threadInput->text().toInt(),
 		  ppf[general->pointsPerFileBox->currentIndex()],
-		  general->separateClassesCheck->checkState()>0);
+		  general->separateClassesCheck->checkState()>0,
+		  ts[classify->tileSizeBox->currentIndex()],
+		  minsm[classify->minimumSmoothnessBox->currentIndex()]);
   QDialog::accept();
 }

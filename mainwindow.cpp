@@ -91,8 +91,8 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent)
   canvas=new WolkenCanvas(this);
   configDialog=new ConfigurationDialog(this);
   msgBox=new QMessageBox(this);
-  connect(configDialog,SIGNAL(settingsChanged(double,int,int,bool)),
-	  this,SLOT(setSettings(double,int,int,bool)));
+  connect(configDialog,SIGNAL(settingsChanged(double,int,int,bool,double,double)),
+	  this,SLOT(setSettings(double,int,int,bool,double,double)));
   connect(this,SIGNAL(tinSizeChanged()),canvas,SLOT(setSize()));
   connect(this,SIGNAL(lengthUnitChanged(double)),canvas,SLOT(setLengthUnit(double)));
   connect(this,SIGNAL(fileOpened(std::string)),canvas,SLOT(readFileHeader(std::string)));
@@ -385,6 +385,8 @@ void MainWindow::readSettings()
   lengthUnit=settings.value("lengthUnit",1).toDouble();
   cloudOutput.pointsPerFile=settings.value("pointsPerFile",0).toInt();
   cloudOutput.separateClasses=settings.value("separateClasses",true).toBool();
+  canvas->tileSize=settings.value("tileSize",1).toDouble();
+  canvas->minimumParaboloidSize=settings.value("minimumParaboloidSize",0.1).toDouble();
   lengthUnitChanged(lengthUnit);
 }
 
@@ -397,14 +399,18 @@ void MainWindow::writeSettings()
   settings.setValue("lengthUnit",lengthUnit);
   settings.setValue("pointsPerFile",cloudOutput.pointsPerFile);
   settings.setValue("separateClasses",cloudOutput.separateClasses);
+  settings.setValue("tileSize",canvas->tileSize);
+  settings.setValue("minimumParaboloidSize",canvas->minimumParaboloidSize);
 }
 
-void MainWindow::setSettings(double lu,int thr,int ppf,bool sc)
+void MainWindow::setSettings(double lu,int thr,int ppf,bool sc,double ts,double minps)
 {
   lengthUnit=lu;
   numberThreads=thr;
   cloudOutput.pointsPerFile=ppf;
   cloudOutput.separateClasses=sc;
+  canvas->tileSize=ts;
+  canvas->minimumParaboloidSize=minps;
   writeSettings();
   lengthUnitChanged(lengthUnit);
 }
