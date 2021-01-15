@@ -40,6 +40,7 @@ public:
   WolkenCanvas(QWidget *parent=0);
   QPointF worldToWindow(xy pnt);
   xy windowToWorld(QPointF pnt);
+  double tileSize,minimumParaboloidSize;
   int state;
 signals:
   void splashScreenStarted();
@@ -72,7 +73,6 @@ private:
   double scale;
   double lengthUnit;
   double maxScaleSize,scaleSize;
-  double tileSize;
   std::deque<LasHeader> inFileHeaders;
   xy ballPos;
   xy leftScaleEnd,rightScaleEnd,scaleEnd;

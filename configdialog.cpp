@@ -54,7 +54,24 @@ const char ppfStr[12][6]=
   QT_TRANSLATE_NOOP("ConfigurationDialog","2 G"),
   QT_TRANSLATE_NOOP("ConfigurationDialog","nolmt")
 };
-  
+const double ts[]={0.1,0.2,0.5,1,2,5,10};
+const char tsStr[7][8]=
+{
+  "100 mm","200 mm","500 mm","1 m","2 m","5 m","10 m"
+};
+const double minsm[11]=
+{
+  0.01,0.016,0.025,0.04,0.063,0.1,0.16,0.25,0.4,0.63,1
+};
+const char minsmStr[11][7]=
+{
+  "10 mm","16 mm","25 mm","40 mm","63 mm","100 mm","160 mm","250 mm","400 mm","630 mm","1 m"
+};
+
+/* Minimum smoothness is what the config dialog calls minimum paraboloid size.
+ * It is the size of the smallest hump of ground that the algorithm will call
+ * ground, even with an infinitely dense point cloud.
+ */
 
 GeneralTab::GeneralTab(QWidget *parent):QWidget(parent)
 {
@@ -110,7 +127,7 @@ ConfigurationDialog::ConfigurationDialog(QWidget *parent):QDialog(parent)
   connect(cancelButton,SIGNAL(clicked()),this,SLOT(reject()));
 }
 
-void ConfigurationDialog::set(double lengthUnit,int threads,int pointsPerFile,bool separateClasses)
+void ConfigurationDialog::set(double lengthUnit,int threads,int pointsPerFile,bool separateClasses,double tileSize,double minimumSmoothness)
 {
   int i;
   general->lengthUnitBox->clear();
@@ -118,6 +135,8 @@ void ConfigurationDialog::set(double lengthUnit,int threads,int pointsPerFile,bo
   general->threadLabel->setText(tr("Threads:"));
   general->pointsPerFileLabel->setText(tr("Points per file:"));
   general->threadDefault->setText(tr("default is %n","",thread::hardware_concurrency()));
+  classify->tileSizeLabel->setText(tr("Tile size"));
+  classify->minimumSmoothnessLabel->setText(tr("Minimum smoothness"));
   for (i=0;i<sizeof(conversionFactors)/sizeof(conversionFactors[1]);i++)
   {
     general->lengthUnitBox->addItem(tr(unitNames[i]));
@@ -135,6 +154,24 @@ void ConfigurationDialog::set(double lengthUnit,int threads,int pointsPerFile,bo
   {
     if (pointsPerFile==ppf[i])
       general->pointsPerFileBox->setCurrentIndex(i);
+  }
+  for (i=0;i<sizeof(ts)/sizeof(ts[1]);i++)
+  {
+    classify->tileSizeBox->addItem(QString::fromStdString(tsStr[i]));
+  }
+  for (i=0;i<sizeof(ts)/sizeof(ts[1]);i++)
+  {
+    if (tileSize==ts[i])
+      classify->tileSizeBox->setCurrentIndex(i);
+  }
+  for (i=0;i<sizeof(minsm)/sizeof(minsm[1]);i++)
+  {
+    classify->minimumSmoothnessBox->addItem(QString::fromStdString(minsmStr[i]));
+  }
+  for (i=0;i<sizeof(minsm)/sizeof(minsm[1]);i++)
+  {
+    if (minimumSmoothness==minsm[i])
+      classify->minimumSmoothnessBox->setCurrentIndex(i);
   }
   general->threadInput->setText(QString::number(threads));
   general->separateClassesCheck->setCheckState(separateClasses?Qt::Checked:Qt::Unchecked);
