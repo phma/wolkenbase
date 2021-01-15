@@ -3,7 +3,7 @@
 /* angle.h - angles as binary fractions of rotation   */
 /*                                                    */
 /******************************************************/
-/* Copyright 2019,2020 Pierre Abbat.
+/* Copyright 2019-2021 Pierre Abbat.
  * This file is part of Wolkenbase.
  * 
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -109,6 +109,7 @@ double gontorad(double angle);
 #define DEG72 0x1999999a
 #define DEG90 0x20000000
 #define DEG120 0x2aaaaaab
+#define DEG144 0x33333333
 #define DEG150 0x35555555
 #define DEG180 0x40000000
 #define DEG270 0x60000000

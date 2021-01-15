@@ -61,12 +61,12 @@ namespace cr=std::chrono;
 
 bool surround(set<int> &directions)
 /* Returns true if none of the angles between successive directions is greater
- * than 72°. There must be at least 6 directions.
+ * than 144°. There must be at least 3 directions.
  */
 {
   int n=0,first,last,penult;
   int parity=time(nullptr)&1;
-  bool ret=directions.size()>5;
+  bool ret=directions.size()>1;
   set<int>::iterator i;
   vector<int> delenda;
   for (i=directions.begin();i!=directions.end();++i,++n)
@@ -74,14 +74,14 @@ bool surround(set<int> &directions)
     if (i==directions.begin())
       first=*i;
     else
-      if (((*i-last)&INT_MAX)>=DEG72)
+      if (((*i-last)&INT_MAX)>=DEG144)
 	ret=false;
     if ((n&1)==parity && n>1 && ((*i-last)&INT_MAX)<DEG30 && ((last-penult)&INT_MAX)<DEG30)
       delenda.push_back(last);
     penult=last;
     last=*i;
   }
-  if (((first-last)&INT_MAX)>=DEG72)
+  if (((first-last)&INT_MAX)>=DEG144)
     ret=false;
   for (n=0;n<delenda.size();n++)
     directions.erase(delenda[n]);
