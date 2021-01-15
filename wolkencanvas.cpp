@@ -59,7 +59,6 @@ WolkenCanvas::WolkenCanvas(QWidget *parent):QWidget(parent)
   setMinimumSize(40,30);
   setMouseTracking(true);
   fileCountdown=splashScreenTime=dartAngle=ballAngle=0;
-  tileSize=1;
   lowRam=freeRam()/7;
 }
 
@@ -422,7 +421,6 @@ void WolkenCanvas::startProcess()
 
 void WolkenCanvas::startScan()
 {
-  minParaboloidSize=0.2;
   waitForThreads(TH_SCAN);
   cout<<"Starting scan\n";
   currentAction=0;

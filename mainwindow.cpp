@@ -26,6 +26,7 @@
 #include "fileio.h"
 #include "brevno.h"
 #include "freeram.h"
+#include "scan.h"
 using namespace std;
 
 const char unitIconNames[4][28]=
@@ -238,7 +239,7 @@ void MainWindow::readFileProgress(size_t sofar,size_t total)
 
 void MainWindow::configure()
 {
-  configDialog->set(lengthUnit,numberThreads,cloudOutput.pointsPerFile,cloudOutput.separateClasses,canvas->tileSize,canvas->minimumParaboloidSize);
+  configDialog->set(lengthUnit,numberThreads,cloudOutput.pointsPerFile,cloudOutput.separateClasses,canvas->tileSize,minParaboloidSize);
   configDialog->open();
 }
 
@@ -386,7 +387,7 @@ void MainWindow::readSettings()
   cloudOutput.pointsPerFile=settings.value("pointsPerFile",0).toInt();
   cloudOutput.separateClasses=settings.value("separateClasses",true).toBool();
   canvas->tileSize=settings.value("tileSize",1).toDouble();
-  canvas->minimumParaboloidSize=settings.value("minimumParaboloidSize",0.1).toDouble();
+  minParaboloidSize=settings.value("minimumParaboloidSize",0.1).toDouble();
   lengthUnitChanged(lengthUnit);
 }
 
@@ -400,7 +401,7 @@ void MainWindow::writeSettings()
   settings.setValue("pointsPerFile",cloudOutput.pointsPerFile);
   settings.setValue("separateClasses",cloudOutput.separateClasses);
   settings.setValue("tileSize",canvas->tileSize);
-  settings.setValue("minimumParaboloidSize",canvas->minimumParaboloidSize);
+  settings.setValue("minimumParaboloidSize",minParaboloidSize);
 }
 
 void MainWindow::setSettings(double lu,int thr,int ppf,bool sc,double ts,double minps)
@@ -410,7 +411,7 @@ void MainWindow::setSettings(double lu,int thr,int ppf,bool sc,double ts,double 
   cloudOutput.pointsPerFile=ppf;
   cloudOutput.separateClasses=sc;
   canvas->tileSize=ts;
-  canvas->minimumParaboloidSize=minps;
+  minParaboloidSize=minps;
   writeSettings();
   lengthUnitChanged(lengthUnit);
 }

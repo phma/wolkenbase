@@ -40,7 +40,7 @@ public:
   WolkenCanvas(QWidget *parent=0);
   QPointF worldToWindow(xy pnt);
   xy windowToWorld(QPointF pnt);
-  double tileSize,minimumParaboloidSize;
+  double tileSize;
   int state;
 signals:
   void splashScreenStarted();
