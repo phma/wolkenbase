@@ -652,6 +652,13 @@ void OctStore::resize(int n)
   bufferMutex.unlock();
 }
 
+void OctStore::shrink()
+{
+  int i;
+  for (i=0;i<blocks.size();i++)
+    blocks[i].shrink();
+}
+
 void OctStore::open(string fileName,int numFiles)
 {
   int i;

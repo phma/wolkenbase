@@ -423,6 +423,7 @@ void WolkenCanvas::startScan()
 {
   waitForThreads(TH_SCAN);
   cout<<"Starting scan\n";
+  octStore.shrink();
   currentAction=0;
 }
 

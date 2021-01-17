@@ -94,6 +94,10 @@ public:
   void read(long long block);
   void update();
   void flush();
+  void shrink()
+  {
+    points.shrink_to_fit();
+  }
   LasPoint get(xyz key);
   bool put(LasPoint pnt);
   std::map<int,size_t> countClasses();
@@ -135,6 +139,7 @@ public:
   void disown();
   bool setTransit(int buffer,bool t);
   void resize(int n);
+  void shrink();
   size_t getNumBuffers()
   {
     return blocks.size();
