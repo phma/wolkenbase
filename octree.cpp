@@ -460,6 +460,13 @@ void OctBuffer::flush()
     write();
 }
 
+void OctBuffer::shrink()
+{
+  blockMutex.lock();
+  points.shrink_to_fit();
+  blockMutex.unlock();
+}
+
 LasPoint OctBuffer::get(xyz key)
 {
   int i,inx=-1;
