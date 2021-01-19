@@ -332,8 +332,10 @@ void WolkenCanvas::tick()
     pixelsToPaint=(width()*height()*7+3)/4;
   if (state==TH_SPLIT && snake.progress()==1)
     startCount();
-  if (state==TH_SCAN && snake.progress()==1)
+  if (state==TH_POSTSCAN && snake.progress()==1)
     startClassify();
+  if (state==TH_SCAN && snake.progress()==1)
+    startPostscan();
   if (state==TH_READ && actionQueueEmpty() && pointBufferEmpty() && sofar==total)
     startScan();
 }
@@ -442,6 +444,13 @@ void WolkenCanvas::startScan()
   cout<<"Starting scan\n";
   octStore.shrink();
   currentAction=0;
+}
+
+void WolkenCanvas::startPostscan()
+{
+  waitForThreads(TH_POSTSCAN);
+  cout<<"Starting postscan\n";
+  snake.restart();
 }
 
 void WolkenCanvas::startClassify()

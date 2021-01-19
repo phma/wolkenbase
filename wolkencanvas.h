@@ -53,6 +53,7 @@ public slots:
   void clearCloud();
   void startProcess();
   void startScan();
+  void startPostscan();
   void startClassify();
   void startCount();
   void writeFile();
