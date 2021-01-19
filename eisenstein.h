@@ -102,6 +102,7 @@ public:
 Eisenstein start(int n);
 Eisenstein nthEisenstein(int n,int size,int nelts);
 extern const Eisenstein LETTERMOD,PAGEMOD;
+extern const Eisenstein root1[6];
 extern int debugEisenstein;
 
 template <typename T> class harray

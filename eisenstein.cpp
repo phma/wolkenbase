@@ -48,6 +48,7 @@ using namespace std;
  */
 const Eisenstein PAGEMOD(PAGERAD+1,2*PAGERAD+1);
 const Eisenstein LETTERMOD(-2,-4);
+const Eisenstein root1[6] {{1,0},{1,1},{0,1},{-1,0},{-1,-1},{0,-1}};
 const complex<double> ZLETTERMOD(0,-2*M_SQRT_3);
 const complex<double> omega(-0.5,M_SQRT_3_4); // this is Eisenstein(0,1)
 int debugEisenstein;
