@@ -384,39 +384,56 @@ void WolkenCanvas::readFileHeader(string name)
 
 void WolkenCanvas::startProcess()
 {
-  int i;
+  int i,dialogResult;
   vector<xyz> limits;
+  QStringList files;
+  string fileName;
   ThreadAction ta;
   BoundRect br;
   double side;
   multimap<int64_t,LasHeader *> sorter;
   multimap<int64_t,LasHeader *>::iterator j;
-  waitForThreads(TH_READ);
-  for (i=0;i<inFileHeaders.size();i++)
+  fileDialog=new QFileDialog(this);
+  fileDialog->setWindowTitle(tr("Save classified point cloud"));
+  fileDialog->setFileMode(QFileDialog::AnyFile);
+  fileDialog->setAcceptMode(QFileDialog::AcceptSave);
+  fileDialog->setNameFilter(tr("(*.las)"));
+  dialogResult=fileDialog->exec();
+  if (dialogResult)
   {
-    limits.push_back(inFileHeaders[i].minCorner());
-    limits.push_back(inFileHeaders[i].maxCorner());
-    br.include(inFileHeaders[i].minCorner());
-    br.include(inFileHeaders[i].maxCorner());
-    sorter.insert(pair<int64_t,LasHeader *>(-inFileHeaders[i].numberPoints(),&inFileHeaders[i]));
+    files=fileDialog->selectedFiles();
+    saveFileName=files[0].toStdString();
+    if (extension(saveFileName)==".las")
+      saveFileName=noExt(saveFileName);
+    waitForThreads(TH_READ);
+    for (i=0;i<inFileHeaders.size();i++)
+    {
+      limits.push_back(inFileHeaders[i].minCorner());
+      limits.push_back(inFileHeaders[i].maxCorner());
+      br.include(inFileHeaders[i].minCorner());
+      br.include(inFileHeaders[i].maxCorner());
+      sorter.insert(pair<int64_t,LasHeader *>(-inFileHeaders[i].numberPoints(),&inFileHeaders[i]));
+    }
+    octRoot.sizeFit(limits);
+    side=br.right()-br.left();
+    if (br.top()-br.bottom()>side)
+      side=br.top()-br.bottom();
+    if (br.high()-br.low()>side)
+      side=br.high()-br.low();
+    cube=Cube(xyz((br.right()+br.left())/2,(br.top()+br.bottom())/2,
+		  (br.high()+br.low())/2),side);
+    snake.setSize(cube,tileSize);
+    initTiles();
+    for (j=sorter.begin();j!=sorter.end();++j)
+    {
+      cout<<"Read file "<<baseName(j->second->getFileName())<<endl;
+      ta.hdr=j->second;
+      ta.opcode=ACT_READ;
+      enqueueAction(ta);
+    }
   }
-  octRoot.sizeFit(limits);
-  side=br.right()-br.left();
-  if (br.top()-br.bottom()>side)
-    side=br.top()-br.bottom();
-  if (br.high()-br.low()>side)
-    side=br.high()-br.low();
-  cube=Cube(xyz((br.right()+br.left())/2,(br.top()+br.bottom())/2,
-		(br.high()+br.low())/2),side);
-  snake.setSize(cube,tileSize);
-  initTiles();
-  for (j=sorter.begin();j!=sorter.end();++j)
-  {
-    cout<<"Read file "<<baseName(j->second->getFileName())<<endl;
-    ta.hdr=j->second;
-    ta.opcode=ACT_READ;
-    enqueueAction(ta);
-  }
+  delete fileDialog;
+  fileDialog=nullptr;
 }
 
 void WolkenCanvas::startScan()
@@ -469,7 +486,7 @@ void WolkenCanvas::writeFile()
   cloudOutput.pointsPerFile=10000000;
   cloudOutput.unit=lengthUnit;
   cloudOutput.separateClasses=true;
-  cloudOutput.openFiles("classified",classTotals);
+  cloudOutput.openFiles(saveFileName,classTotals);
   ta.opcode=ACT_WRITE;
   enqueueAction(ta);
 }

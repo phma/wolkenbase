@@ -65,11 +65,13 @@ protected:
   void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
 private:
   QPixmap frameBuffer;
+  QFileDialog *fileDialog;
   Lissajous lis;
   Peano peano;
   BoundRect br;
   Cube cube; // sized to files, not octree
   xy windowCenter,worldCenter;
+  std::string saveFileName;
   double scale;
   double lengthUnit;
   double maxScaleSize,scaleSize;
