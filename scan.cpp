@@ -131,7 +131,11 @@ void scanCylinder(Eisenstein cylAddress)
 
 void postscanCylinder(Eisenstein cylAddress)
 {
-  if (true) // placeholder for checking whether the tile is allocated
+  bool isalloc;
+  tileMutex.lock();
+  isalloc=tiles.count(cylAddress);
+  tileMutex.unlock();
+  if (isalloc)
   {
     Tile *thisTile;
     tileMutex.lock();

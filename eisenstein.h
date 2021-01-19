@@ -3,7 +3,7 @@
 /* eisenstein.h - Eisenstein integers                 */
 /*                                                    */
 /******************************************************/
-/* Copyright 2019 Pierre Abbat.
+/* Copyright 2019,2021 Pierre Abbat.
  * This file is part of Wolkenbase.
  *
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -109,6 +109,7 @@ template <typename T> class harray
   std::map<Eisenstein,T *> index;
 public:
   T& operator[](Eisenstein i);
+  int count(Eisenstein i);
   void clear();
 };
 
@@ -120,6 +121,14 @@ template <typename T> T& harray<T>::operator[](Eisenstein i)
   if (!index[q])
     index[q]=(T*)calloc(PAGESIZE,sizeof(T));
   return index[q][r.pageinx()];
+}
+
+template <typename T> int harray<T>::count(Eisenstein i)
+// Returns 1 if the page is allocated, even if the item hasn't been written to.
+{
+  Eisenstein q;
+  q=i/PAGEMOD;
+  return index[q]!=nullptr;
 }
 
 template <typename T> void harray<T>::clear()
