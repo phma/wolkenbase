@@ -53,7 +53,7 @@ void scanCylinder(Eisenstein cylAddress)
     vector<double> b,slopev;
     vector<xyz> pnts,pntsUntilted,pntsBottom;
     xy slope;
-    double bottom=INFINITY,bottom2=INFINITY;
+    double bottom=INFINITY,bottom2=INFINITY,top=-INFINITY;
     double density=0,paraboloidSize=0;
     int i,sector,treeFlags=0;
     int histo[7];
@@ -80,6 +80,8 @@ void scanCylinder(Eisenstein cylAddress)
 	bottom2=bottom;
 	bottom=pntsUntilted[i].getz();
       }
+      if (pntsUntilted[i].getz()>top)
+	top=pntsUntilted[i].getz();
     }
     if (isinf(bottom2))
       bottom2=bottom;
@@ -105,6 +107,8 @@ void scanCylinder(Eisenstein cylAddress)
     density=sqrt(density)*M_SQRT7/sqr(cyl.getRadius())/M_PI;
     if (pntsUntilted.size()>pntsBottom.size() && density<0.5)
       treeFlags=1;
+    if (top-bottom>1.5)
+      treeFlags=1;
     paraboloidSize=sqrt(1/density+sqr(minParaboloidSize)); // this may need to be multiplied by something
     snake.countNonempty();
     tileMutex.lock();
@@ -113,6 +117,7 @@ void scanCylinder(Eisenstein cylAddress)
     tiles[cylAddress].density=density;
     tiles[cylAddress].treeFlags=treeFlags;
     tiles[cylAddress].paraboloidSize=paraboloidSize;
+    tiles[cylAddress].height=top-bottom;
     if (tiles[cylAddress].nPoints>maxTile.nPoints)
       maxTile.nPoints=tiles[cylAddress].nPoints;
     if (tiles[cylAddress].nPoints<minTile.nPoints)

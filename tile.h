@@ -31,6 +31,7 @@ public:
   short roofFlags,treeFlags;
   double density; // of bottom layer
   double paraboloidSize; // radius of curvature
+  double height; // after untilting
 };
 
 extern harray<Tile> tiles;
