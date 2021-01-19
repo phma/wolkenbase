@@ -161,7 +161,7 @@ void MainWindow::tick()
     doneBar->setValue(lrint((double)readFileSoFar/readFileTotal*16777216));
   if ((tstatus&0x3ffbfeff)==1048577*TH_SCAN || (tstatus&0x3ffbfeff)==1048577*TH_SPLIT)
     doneBar->setValue(lrint(snake.progress()*16777216));
-  if (tstatus==1048577*TH_WAIT+TH_ASLEEP && actionQueueEmpty())
+  if (tstatus==1048577*TH_PAUSE+TH_ASLEEP && actionQueueEmpty())
     currentAction=0;
   writeBufLog();
 }

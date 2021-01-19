@@ -567,7 +567,7 @@ void WolkenCanvas::paintEvent(QPaintEvent *event)
       painter.setBrush(Qt::blue);
       painter.drawChord(square,lrint(bintodeg(ballAngle+DEG180)*16),2880);
       break;
-    case 99: // FIXME writing file
+    case -ACT_WRITE:
       painter.setBrush(Qt::white);
       painter.setPen(Qt::NoPen);
       painter.drawRect(paper);
