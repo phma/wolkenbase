@@ -25,3 +25,4 @@
 extern double minParaboloidSize;
 
 void scanCylinder(Eisenstein cylAddress);
+void postscanCylinder(Eisenstein cylAddress);

@@ -608,7 +608,7 @@ void WolkenThread::operator()(int thread)
       cylAddress=snake.next();
       if (cylAddress.getx()!=INT_MIN)
       {
-	//postscanCylinder(cylAddress);
+	postscanCylinder(cylAddress);
 	enqueueTileDone(cylAddress);
       }
       else

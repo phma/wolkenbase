@@ -128,3 +128,18 @@ void scanCylinder(Eisenstein cylAddress)
   }
   octStore.disown();
 }
+
+void postscanCylinder(Eisenstein cylAddress)
+{
+  if (true) // placeholder for checking whether the tile is allocated
+  {
+    Tile *thisTile;
+    tileMutex.lock();
+    thisTile=&tiles[cylAddress];
+    tileMutex.unlock();
+    if (thisTile->nPoints)
+    {
+      snake.countNonempty();
+    }
+  }
+}
