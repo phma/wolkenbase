@@ -3,7 +3,7 @@
 /* point.h - classes for points                       */
 /*                                                    */
 /******************************************************/
-/* Copyright 2019,2020 Pierre Abbat.
+/* Copyright 2019-2021 Pierre Abbat.
  * This file is part of Wolkenbase.
  * 
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -25,6 +25,7 @@
 #include <string>
 #include <fstream>
 #include <vector>
+#include <cmath>
 
 class xyz;
 class latlong;
