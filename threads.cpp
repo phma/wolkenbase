@@ -587,7 +587,7 @@ void WolkenThread::operator()(int thread)
       }
     }
     if (threadCommand==TH_SCAN)
-    {
+    { // Scan the tiles to find the point density of the bottom.
       threadStatusMutex.lock();
       threadStatus[thread]=TH_SCAN;
       threadStatusMutex.unlock();
@@ -595,6 +595,20 @@ void WolkenThread::operator()(int thread)
       if (cylAddress.getx()!=INT_MIN)
       {
 	scanCylinder(cylAddress);
+	enqueueTileDone(cylAddress);
+      }
+      else
+	sleep(thread);
+    }
+    if (threadCommand==TH_POSTSCAN)
+    { // After scanning, set the paraboloid size for forests and roofs.
+      threadStatusMutex.lock();
+      threadStatus[thread]=TH_POSTSCAN;
+      threadStatusMutex.unlock();
+      cylAddress=snake.next();
+      if (cylAddress.getx()!=INT_MIN)
+      {
+	//postscanCylinder(cylAddress);
 	enqueueTileDone(cylAddress);
       }
       else

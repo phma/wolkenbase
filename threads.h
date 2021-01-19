@@ -49,9 +49,10 @@ class Flowsnake;
 #define TH_WAIT 1
 #define TH_READ 2
 #define TH_SCAN 3
-#define TH_SPLIT 4
-#define TH_PAUSE 5
-#define TH_STOP 6
+#define TH_POSTSCAN 4
+#define TH_SPLIT 5
+#define TH_PAUSE 6
+#define TH_STOP 7
 #define TH_ASLEEP 256
 
 // These are used to tell threads to do things, mostly file-related.
