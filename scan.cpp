@@ -55,7 +55,7 @@ void scanCylinder(Eisenstein cylAddress)
     xy slope;
     double bottom=INFINITY,bottom2=INFINITY;
     double density=0,paraboloidSize=0;
-    int i,sector;
+    int i,sector,treeFlags=0;
     int histo[7];
     for (i=0;i<cylPoints.size();i++)
     {
@@ -100,13 +100,18 @@ void scanCylinder(Eisenstein cylAddress)
     }
     for (i=0;i<7;i++)
       density+=sqr(histo[i]);
+    if (pntsUntilted.size()>pntsBottom.size() && density<7)
+      treeFlags=1;
     density=sqrt(density)*M_SQRT7/sqr(cyl.getRadius())/M_PI;
+    if (pntsUntilted.size()>pntsBottom.size() && density<0.5)
+      treeFlags=1;
     paraboloidSize=sqrt(1/density+sqr(minParaboloidSize)); // this may need to be multiplied by something
     snake.countNonempty();
     tileMutex.lock();
     tiles[cylAddress].nPoints=cylPoints.size();
     tiles[cylAddress].nGround=0;
     tiles[cylAddress].density=density;
+    tiles[cylAddress].treeFlags=treeFlags;
     tiles[cylAddress].paraboloidSize=paraboloidSize;
     if (tiles[cylAddress].nPoints>maxTile.nPoints)
       maxTile.nPoints=tiles[cylAddress].nPoints;
