@@ -3,7 +3,7 @@
 /* eisenstein.cpp - Eisenstein integers               */
 /*                                                    */
 /******************************************************/
-/* Copyright 2019 Pierre Abbat.
+/* Copyright 2019,2021 Pierre Abbat.
  * This file is part of Wolkenbase.
  *
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -274,7 +274,7 @@ bool operator<(const Eisenstein a,const Eisenstein b)
     return a.x<b.x;
 }
 
-Eisenstein Eisenstein::operator*(Eisenstein b)
+Eisenstein Eisenstein::operator*(const Eisenstein b) const
 {
   return Eisenstein(x*b.x-y*b.y,x*b.y+y*b.x-y*b.y);
 }

@@ -153,6 +153,26 @@ void postscanCylinder(Eisenstein cylAddress)
     tileMutex.unlock();
     if (thisTile->nPoints)
     {
+      /* Look at the tiles along six rays emanating from this tile.
+       * Stop when all six are empty or any one is full, but not a tree tile.
+       */
+      int i=1,j,nontree,ringcount,count=0;
+      do
+      {
+	tileMutex.lock();
+	for (nontree=ringcount=j=0;j<6 && (thisTile->treeFlags&1);j++)
+	  if (tiles[cylAddress+root1[j]*i].nPoints)
+	  {
+	    ringcount++;
+	    if (tiles[cylAddress+root1[j]*i].treeFlags&1)
+	      count++;
+	    else
+	      nontree++;
+	  }
+	tileMutex.unlock();
+	++i;
+      } while (ringcount && !nontree);
+      thisTile->paraboloidSize=sqrt(sqr(thisTile->paraboloidSize)+sqr(count*snake.getSpacing()/6));
       snake.countNonempty();
     }
   }

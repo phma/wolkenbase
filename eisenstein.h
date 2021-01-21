@@ -71,7 +71,7 @@ public:
   Eisenstein operator+(Eisenstein b);
   Eisenstein operator-();
   Eisenstein operator-(Eisenstein b);
-  Eisenstein operator*(Eisenstein b);
+  Eisenstein operator*(const Eisenstein b) const;
   Eisenstein& operator*=(Eisenstein b);
   Eisenstein& operator+=(Eisenstein b);
   Eisenstein operator/(Eisenstein b);

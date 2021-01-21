@@ -93,6 +93,10 @@ public:
   Cylinder cyl(Eisenstein e);
   Eisenstein tileAddress(xy pnt);
   double progress();
+  double getSpacing()
+  {
+    return spacing;
+  }
 private:
   xy center;
   double spacing;
