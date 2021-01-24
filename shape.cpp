@@ -3,7 +3,7 @@
 /* shape.cpp - shapes                                 */
 /*                                                    */
 /******************************************************/
-/* Copyright 2019,2020 Pierre Abbat.
+/* Copyright 2019-2021 Pierre Abbat.
  * This file is part of Wolkenbase.
  * 
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -87,6 +87,54 @@ xyz Paraboloid::closestPoint(Cube cube) const
   if (radiusCurvature>0)
     z-=cube.getSide()/2;
   if (radiusCurvature<0)
+    z+=cube.getSide()/2;
+  ret=xyz(x,y,z);
+  return ret;
+}
+
+Hyperboloid::Hyperboloid()
+{
+  por2=0;
+  slope=1;
+}
+
+Hyperboloid::Hyperboloid(xyz v,double r,double s)
+{
+  double por=r*s; // FIXME
+  slope=s;
+  por2=sqr(por);
+  center=v+xyz(0,0,por);
+}
+
+bool Hyperboloid::in(xyz pnt) const
+{
+  double xydist=dist(xy(center),xy(pnt));
+  double zdist=center.getz()-pnt.getz(); // so because opens downward
+  if (slope>0)
+    return zdist>0 && sqr(zdist)-sqr(xydist*slope)>por2;
+  else
+    return zdist<0 && sqr(zdist)-sqr(xydist*slope)>por2;
+}
+
+xyz Hyperboloid::closestPoint(Cube cube) const
+{
+  xyz ret=cube.getCenter();
+  double x=ret.getx(),y=ret.gety(),z=ret.getz();
+  if (fabs(center.getx()-x)<cube.getSide()/2)
+    x=center.getx();
+  else if (center.getx()>x)
+    x+=cube.getSide()/2;
+  else
+    x-=cube.getSide()/2;
+  if (fabs(center.gety()-y)<cube.getSide()/2)
+    y=center.gety();
+  else if (center.gety()>y)
+    y+=cube.getSide()/2;
+  else
+    y-=cube.getSide()/2;
+  if (slope>0)
+    z-=cube.getSide()/2;
+  if (slope<0)
     z+=cube.getSide()/2;
   ret=xyz(x,y,z);
   return ret;

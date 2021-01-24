@@ -3,7 +3,7 @@
 /* shape.h - shapes                                   */
 /*                                                    */
 /******************************************************/
-/* Copyright 2019,2020 Pierre Abbat.
+/* Copyright 2019-2021 Pierre Abbat.
  * This file is part of Wolkenbase.
  * 
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -89,6 +89,27 @@ public:
 private:
   xyz vertex;
   double radiusCurvature;
+};
+
+class Hyperboloid: public Shape
+/* One sheet of a two-sheet hyperboloid. Points down if slope is positive.
+ * The parameters are the vertex, the radius of curvature, and the slope.
+ * The members are the center, the polar radius squared, and the slope.
+ * The radius of curvature at the vertex (pole) of an ellipsoid is
+ * the square of the equatorial radius divided by the polar radius. The same
+ * formula holds for the hyperboloid, but as the equatorial radius is imaginary,
+ * the radius of curvature is negative, meaning that it is convex away from
+ * the center. This sign is ignored.
+ */
+{
+public:
+  Hyperboloid();
+  Hyperboloid(xyz v,double r,double s);
+  virtual bool in(xyz pnt) const;
+  virtual xyz closestPoint(Cube cube) const;
+private:
+  xyz center;
+  double por2,slope;
 };
 
 class Sphere: public Shape
