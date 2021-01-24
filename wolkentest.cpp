@@ -146,6 +146,19 @@ void testsphere()
   tassert(!s1.in(h));
 }
 
+void testhyperboloid()
+{
+  xyz ver(100,200,300),ocen1(100,200,228);
+  Hyperboloid h1(ver,72,1);
+  /* 72²=5184 is a square that can be expressed as the difference of three different
+   * positive squares in more than one way.
+   * 72²=78²-18²-24²=97²-25²-60²
+   */
+  Sphere s1(ocen1,72);
+  xyz a(118,176,222);
+  tassert(h1.in(a));
+}
+
 void testcylinder()
 {
   Cylinder c1(xy(0,0),13);
@@ -866,6 +879,8 @@ int main(int argc, char *argv[])
     testparaboloid();
   if (shoulddo("sphere"))
     testsphere();
+  if (shoulddo("hyperboloid"))
+    testhyperboloid();
   if (shoulddo("cylinder"))
     testcylinder();
   if (shoulddo("flat"))

@@ -111,7 +111,7 @@ include(CPack)
 
 include(CTest)
 add_test(arith wolkentest complex pageinx relprime manysum)
-add_test(geom wolkentest paraboloid sphere cylinder flat)
+add_test(geom wolkentest paraboloid sphere hyperboloid cylinder flat)
 add_test(fractal wolkentest flowsnake peano)
 add_test(random wolkentest random)
 add_test(matrix wolkentest matrix)
