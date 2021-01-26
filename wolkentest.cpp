@@ -27,6 +27,7 @@
 #include <cstdlib>
 #include <csignal>
 #include <cfloat>
+#include <cassert>
 #include <cstring>
 #include <vector>
 #include <string>
@@ -111,6 +112,25 @@ void testflat()
   octStore.dump(dumpFile);
 }
 
+xyz findIntersection(Shape &shape,xyz a,xyz b)
+{
+  bool ain=shape.in(a),bin=shape.in(b),min;
+  xyz m;
+  assert(ain^bin);
+  while (true)
+  {
+    m=(a+b)/2;
+    if (a==m || m==b)
+      break;
+    min=shape.in(m);
+    if (min==ain)
+      a=m;
+    else
+      b=m;
+  }
+  return m;
+}
+
 void testparaboloid()
 {
   Paraboloid p1(xyz(0,0,13),13);
@@ -149,6 +169,8 @@ void testsphere()
 void testhyperboloid()
 {
   xyz ver(100,200,300),ocen1(100,200,228);
+  xyz topEnd(100.6,200.8,300),bottomEnd(100.6,200.8,228);
+  double sint,hint;
   Hyperboloid h1(ver,72,1);
   /* 72²=5184 is a square that can be expressed as the difference of three different
    * positive squares in more than one way.
@@ -157,6 +179,10 @@ void testhyperboloid()
   Sphere s1(ocen1,72);
   xyz a(118,176,222);
   tassert(h1.in(a));
+  sint=findIntersection(s1,topEnd,bottomEnd).getz();
+  hint=findIntersection(h1,topEnd,bottomEnd).getz();
+  cout<<"Sphere intersection "<<ldecimal(sint)<<" Hyperboloid intersection "<<ldecimal(hint)<<endl;
+  tassert(fabs(sint-hint)<1/sqr(72.)); // Check curvatures are equal. The actual difference is 1/(72**3*4).
 }
 
 void testcylinder()
