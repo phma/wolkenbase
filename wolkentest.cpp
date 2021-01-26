@@ -168,7 +168,7 @@ void testsphere()
 
 void testhyperboloid()
 {
-  xyz ver(100,200,300),ocen1(100,200,228);
+  xyz ver(100,200,300),ocen1(100,200,228),ocen2(100,200,203);
   xyz topEndCur(100.6,200.8,300),bottomEndCur(100.6,200.8,228);
   xyz topEndAsy1(3000100,4000200,300),bottomEndAsy1(3000100,4000200,-4e9);
   xyz topEndAsy2(6000100,8000200,300),bottomEndAsy2(6000100,8000200,-4e9);
@@ -179,6 +179,8 @@ void testhyperboloid()
    * 72²=78²-18²-24²=97²-25²-60²
    */
   Sphere s1(ocen1,72);
+  Hyperboloid h2(ver,97,2);
+  Sphere s2(ocen2,97);
   xyz a(118,176,222);
   tassert(h1.in(a));
   sint=findIntersection(s1,topEndCur,bottomEndCur).getz();
@@ -189,6 +191,14 @@ void testhyperboloid()
   aint2=findIntersection(h1,topEndAsy2,bottomEndAsy2).getz();
   cout<<"Asymptotic slope "<<ldecimal((aint1-aint2)/5e6)<<endl;
   tassert(fabs(1-(aint1-aint2)/5e6)<1e-6);
+  sint=findIntersection(s2,topEndCur,bottomEndCur).getz();
+  hint=findIntersection(h2,topEndCur,bottomEndCur).getz();
+  cout<<"Sphere intersection "<<ldecimal(sint)<<" Hyperboloid intersection "<<ldecimal(hint)<<endl;
+  //tassert(fabs(sint-hint)<1/sqr(97.));
+  aint1=findIntersection(h1,topEndAsy1,bottomEndAsy1).getz();
+  aint2=findIntersection(h1,topEndAsy2,bottomEndAsy2).getz();
+  cout<<"Asymptotic slope "<<ldecimal((aint1-aint2)/5e6)<<endl;
+  //tassert(fabs(2-(aint1-aint2)/5e6)<1e-6);
 }
 
 void testcylinder()
