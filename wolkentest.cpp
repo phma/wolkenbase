@@ -169,8 +169,10 @@ void testsphere()
 void testhyperboloid()
 {
   xyz ver(100,200,300),ocen1(100,200,228);
-  xyz topEnd(100.6,200.8,300),bottomEnd(100.6,200.8,228);
-  double sint,hint;
+  xyz topEndCur(100.6,200.8,300),bottomEndCur(100.6,200.8,228);
+  xyz topEndAsy1(3000100,4000200,300),bottomEndAsy1(3000100,4000200,-4e9);
+  xyz topEndAsy2(6000100,8000200,300),bottomEndAsy2(6000100,8000200,-4e9);
+  double sint,hint,aint1,aint2;
   Hyperboloid h1(ver,72,1);
   /* 72²=5184 is a square that can be expressed as the difference of three different
    * positive squares in more than one way.
@@ -179,10 +181,14 @@ void testhyperboloid()
   Sphere s1(ocen1,72);
   xyz a(118,176,222);
   tassert(h1.in(a));
-  sint=findIntersection(s1,topEnd,bottomEnd).getz();
-  hint=findIntersection(h1,topEnd,bottomEnd).getz();
+  sint=findIntersection(s1,topEndCur,bottomEndCur).getz();
+  hint=findIntersection(h1,topEndCur,bottomEndCur).getz();
   cout<<"Sphere intersection "<<ldecimal(sint)<<" Hyperboloid intersection "<<ldecimal(hint)<<endl;
   tassert(fabs(sint-hint)<1/sqr(72.)); // Check curvatures are equal. The actual difference is 1/(72**3*4).
+  aint1=findIntersection(h1,topEndAsy1,bottomEndAsy1).getz();
+  aint2=findIntersection(h1,topEndAsy2,bottomEndAsy2).getz();
+  cout<<"Asymptotic slope "<<ldecimal((aint1-aint2)/5e6)<<endl;
+  tassert(fabs(1-(aint1-aint2)/5e6)<1e-6);
 }
 
 void testcylinder()
