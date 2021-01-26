@@ -100,7 +100,7 @@ Hyperboloid::Hyperboloid()
 
 Hyperboloid::Hyperboloid(xyz v,double r,double s)
 {
-  double por=r*s; // FIXME
+  double por=r*sqr(s);
   slope=s;
   por2=sqr(por);
   center=v+xyz(0,0,por);
