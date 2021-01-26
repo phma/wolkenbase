@@ -111,9 +111,9 @@ bool Hyperboloid::in(xyz pnt) const
   double xydist=dist(xy(center),xy(pnt));
   double zdist=center.getz()-pnt.getz(); // so because opens downward
   if (slope>0)
-    return zdist>0 && sqr(zdist)-sqr(xydist*slope)>por2;
+    return zdist>0 && sqr(zdist)-sqr(xydist*slope)>=por2;
   else
-    return zdist<0 && sqr(zdist)-sqr(xydist*slope)>por2;
+    return zdist<0 && sqr(zdist)-sqr(xydist*slope)>=por2;
 }
 
 xyz Hyperboloid::closestPoint(Cube cube) const

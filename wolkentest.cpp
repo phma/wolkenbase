@@ -181,8 +181,15 @@ void testhyperboloid()
   Sphere s1(ocen1,72);
   Hyperboloid h2(ver,97,2);
   Sphere s2(ocen2,97);
-  xyz a(118,176,222);
+  xyz a(118,176,294),b(75,260,275);
+  xyz c(118,176,295),d(75,260,276);
+  xyz e(118,176,293),f(75,260,274);
   tassert(h1.in(a));
+  tassert(h1.in(b));
+  tassert(!h1.in(c));
+  tassert(!h1.in(d));
+  tassert(h1.in(e));
+  tassert(h1.in(f));
   sint=findIntersection(s1,topEndCur,bottomEndCur).getz();
   hint=findIntersection(h1,topEndCur,bottomEndCur).getz();
   cout<<"Sphere intersection "<<ldecimal(sint)<<" Hyperboloid intersection "<<ldecimal(hint)<<endl;
