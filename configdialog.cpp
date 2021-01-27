@@ -188,6 +188,7 @@ void ConfigurationDialog::accept()
 		  ppf[general->pointsPerFileBox->currentIndex()],
 		  general->separateClassesCheck->checkState()>0,
 		  ts[classify->tileSizeBox->currentIndex()],
+		  1,
 		  minsm[classify->minimumSmoothnessBox->currentIndex()]);
   QDialog::accept();
 }

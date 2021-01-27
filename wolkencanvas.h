@@ -40,7 +40,7 @@ public:
   WolkenCanvas(QWidget *parent=0);
   QPointF worldToWindow(xy pnt);
   xy windowToWorld(QPointF pnt);
-  double tileSize;
+  double tileSize,maxSlope;
   int state;
 signals:
   void splashScreenStarted();
