@@ -53,8 +53,8 @@ class ClassifyTab: public QWidget
   Q_OBJECT
 public:
   ClassifyTab(QWidget *parent=nullptr);
-  QLabel *tileSizeLabel,*minimumSmoothnessLabel;
-  QComboBox *tileSizeBox,*minimumSmoothnessBox;
+  QLabel *tileSizeLabel,*minimumSmoothnessLabel,*maximumSlopeLabel;
+  QComboBox *tileSizeBox,*minimumSmoothnessBox,*maximumSlopeBox;
   QGridLayout *gridLayout;
 };
 

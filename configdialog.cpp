@@ -67,6 +67,24 @@ const char minsmStr[11][7]=
 {
   "10 mm","16 mm","25 mm","40 mm","63 mm","100 mm","160 mm","250 mm","400 mm","630 mm","1 m"
 };
+const double maxsl[9]=
+{
+  0.4663076581549986,
+  M_SQRT_1_3,
+  0.7002075382097097,
+  0.8390996311772799,
+  1,
+  1.19175359259421,
+  1.4281480067421144,
+  M_SQRT_3,
+  2.1445069205095586
+};
+const char maxslStr[9][12]=
+{
+  "0.47 (25°)","0.58 (30°)","0.70 (35°)",
+  "0.84 (40°)","1 (45°)","1.2 (50°)",
+  "1.4 (55°)","1.7 (60°)","2.1 (65°)"
+};
 
 /* Minimum smoothness is what the config dialog calls minimum paraboloid size.
  * It is the size of the smallest hump of ground that the algorithm will call
@@ -85,27 +103,31 @@ GeneralTab::GeneralTab(QWidget *parent):QWidget(parent)
   gridLayout=new QGridLayout(this);
   separateClassesCheck=new QCheckBox(tr("Separate classes"),this);
   setLayout(gridLayout);
-  gridLayout->addWidget(lengthUnitLabel,1,0);
-  gridLayout->addWidget(lengthUnitBox,1,1);
-  gridLayout->addWidget(threadLabel,2,0);
-  gridLayout->addWidget(threadInput,2,1);
-  gridLayout->addWidget(threadDefault,2,2);
-  gridLayout->addWidget(pointsPerFileLabel,3,0);
-  gridLayout->addWidget(pointsPerFileBox,3,1);
-  gridLayout->addWidget(separateClassesCheck,4,1);
+  gridLayout->addWidget(lengthUnitLabel,0,0);
+  gridLayout->addWidget(lengthUnitBox,0,1);
+  gridLayout->addWidget(threadLabel,1,0);
+  gridLayout->addWidget(threadInput,1,1);
+  gridLayout->addWidget(threadDefault,1,2);
+  gridLayout->addWidget(pointsPerFileLabel,2,0);
+  gridLayout->addWidget(pointsPerFileBox,2,1);
+  gridLayout->addWidget(separateClassesCheck,3,1);
 }
 
 ClassifyTab::ClassifyTab(QWidget *parent):QWidget(parent)
 {
   tileSizeLabel=new QLabel(this);
   minimumSmoothnessLabel=new QLabel(this);
+  maximumSlopeLabel=new QLabel(this);
   tileSizeBox=new QComboBox(this);
   minimumSmoothnessBox=new QComboBox(this);
+  maximumSlopeBox=new QComboBox(this);
   gridLayout=new QGridLayout(this);
-  gridLayout->addWidget(tileSizeLabel,1,0);
-  gridLayout->addWidget(tileSizeBox,1,1);
-  gridLayout->addWidget(minimumSmoothnessLabel,2,0);
-  gridLayout->addWidget(minimumSmoothnessBox,2,1);
+  gridLayout->addWidget(tileSizeLabel,0,0);
+  gridLayout->addWidget(tileSizeBox,0,1);
+  gridLayout->addWidget(minimumSmoothnessLabel,1,0);
+  gridLayout->addWidget(minimumSmoothnessBox,1,1);
+  gridLayout->addWidget(maximumSlopeLabel,2,0);
+  gridLayout->addWidget(maximumSlopeBox,2,1);
 }
 
 ConfigurationDialog::ConfigurationDialog(QWidget *parent):QDialog(parent)
@@ -137,6 +159,7 @@ void ConfigurationDialog::set(double lengthUnit,int threads,int pointsPerFile,bo
   general->threadDefault->setText(tr("default is %n","",thread::hardware_concurrency()));
   classify->tileSizeLabel->setText(tr("Tile size"));
   classify->minimumSmoothnessLabel->setText(tr("Minimum smoothness"));
+  classify->maximumSlopeLabel->setText(tr("Maximum slope"));
   for (i=0;i<sizeof(conversionFactors)/sizeof(conversionFactors[1]);i++)
   {
     general->lengthUnitBox->addItem(tr(unitNames[i]));
@@ -173,6 +196,15 @@ void ConfigurationDialog::set(double lengthUnit,int threads,int pointsPerFile,bo
     if (minimumSmoothness==minsm[i])
       classify->minimumSmoothnessBox->setCurrentIndex(i);
   }
+  for (i=0;i<sizeof(maxsl)/sizeof(maxsl[1]);i++)
+  {
+    classify->maximumSlopeBox->addItem(QString::fromStdString(maxslStr[i]));
+  }
+  for (i=0;i<sizeof(maxsl)/sizeof(maxsl[1]);i++)
+  {
+    if (1==maxsl[i])
+      classify->maximumSlopeBox->setCurrentIndex(i);
+  }
   general->threadInput->setText(QString::number(threads));
   general->separateClassesCheck->setCheckState(separateClasses?Qt::Checked:Qt::Unchecked);
 }
@@ -188,7 +220,7 @@ void ConfigurationDialog::accept()
 		  ppf[general->pointsPerFileBox->currentIndex()],
 		  general->separateClassesCheck->checkState()>0,
 		  ts[classify->tileSizeBox->currentIndex()],
-		  1,
+		  maxsl[classify->maximumSlopeBox->currentIndex()],
 		  minsm[classify->minimumSmoothnessBox->currentIndex()]);
   QDialog::accept();
 }
