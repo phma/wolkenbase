@@ -514,6 +514,7 @@ void WolkenCanvas::setScalePos()
   bool right=false;
   leftScalePos=windowToWorld(QPointF(width()*0.01,height()*0.99));
   rightScalePos=windowToWorld(QPointF(width()*0.99,height()*0.99));
+  maxScaleSize=0; // TODO fit to rectangles of opened files
   scaleSize=lengthUnit;
   while (scaleSize>maxScaleSize)
     scaleSize/=10;
