@@ -239,7 +239,7 @@ void MainWindow::readFileProgress(size_t sofar,size_t total)
 
 void MainWindow::configure()
 {
-  configDialog->set(lengthUnit,numberThreads,cloudOutput.pointsPerFile,cloudOutput.separateClasses,canvas->tileSize,minParaboloidSize);
+  configDialog->set(lengthUnit,numberThreads,cloudOutput.pointsPerFile,cloudOutput.separateClasses,canvas->tileSize,canvas->maxSlope,minParaboloidSize);
   configDialog->open();
 }
 
@@ -387,6 +387,7 @@ void MainWindow::readSettings()
   cloudOutput.pointsPerFile=settings.value("pointsPerFile",0).toInt();
   cloudOutput.separateClasses=settings.value("separateClasses",true).toBool();
   canvas->tileSize=settings.value("tileSize",1).toDouble();
+  canvas->maxSlope=settings.value("maxSlope",1).toDouble();
   minParaboloidSize=settings.value("minimumParaboloidSize",0.1).toDouble();
   lengthUnitChanged(lengthUnit);
 }
@@ -405,14 +406,14 @@ void MainWindow::writeSettings()
   settings.setValue("minimumParaboloidSize",minParaboloidSize);
 }
 
-void MainWindow::setSettings(double lu,int thr,int ppf,bool sc,double ts,double ms,double minps)
+void MainWindow::setSettings(double lu,int thr,int ppf,bool sc,double ts,double maxsl,double minps)
 {
   lengthUnit=lu;
   numberThreads=thr;
   cloudOutput.pointsPerFile=ppf;
   cloudOutput.separateClasses=sc;
   canvas->tileSize=ts;
-  canvas->maxSlope=ms;
+  canvas->maxSlope=maxsl;
   minParaboloidSize=minps;
   writeSettings();
   lengthUnitChanged(lengthUnit);

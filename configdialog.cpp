@@ -149,7 +149,7 @@ ConfigurationDialog::ConfigurationDialog(QWidget *parent):QDialog(parent)
   connect(cancelButton,SIGNAL(clicked()),this,SLOT(reject()));
 }
 
-void ConfigurationDialog::set(double lengthUnit,int threads,int pointsPerFile,bool separateClasses,double tileSize,double minimumSmoothness)
+void ConfigurationDialog::set(double lengthUnit,int threads,int pointsPerFile,bool separateClasses,double tileSize,double maximumSlope,double minimumSmoothness)
 {
   int i;
   general->lengthUnitBox->clear();
@@ -202,7 +202,7 @@ void ConfigurationDialog::set(double lengthUnit,int threads,int pointsPerFile,bo
   }
   for (i=0;i<sizeof(maxsl)/sizeof(maxsl[1]);i++)
   {
-    if (1==maxsl[i])
+    if (maximumSlope==maxsl[i])
       classify->maximumSlopeBox->setCurrentIndex(i);
   }
   general->threadInput->setText(QString::number(threads));

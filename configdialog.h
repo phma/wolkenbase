@@ -64,9 +64,9 @@ class ConfigurationDialog: public QDialog
 public:
   ConfigurationDialog(QWidget *parent=nullptr);
 signals:
-  void settingsChanged(double lu,int thr,int ppf,bool sc,double ts,double ms,double minsm);
+  void settingsChanged(double lu,int thr,int ppf,bool sc,double ts,double maxsl,double minsm);
 public slots:
-  void set(double lengthUnit,int threads,int pointsPerFile,bool separateClasses,double tileSize,double minimumSmoothness);
+  void set(double lengthUnit,int threads,int pointsPerFile,bool separateClasses,double tileSize,double maximumSlope,double minimumSmoothness);
   void checkValid();
   virtual void accept();
 private:
