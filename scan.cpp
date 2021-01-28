@@ -26,7 +26,7 @@
 #include "leastsquares.h"
 using namespace std;
 
-double minParaboloidSize;
+double minHyperboloidSize,maxSlope;
 
 void scanCylinder(Eisenstein cylAddress)
 {
@@ -54,7 +54,7 @@ void scanCylinder(Eisenstein cylAddress)
     vector<xyz> pnts,pntsUntilted,pntsBottom;
     xy slope;
     double bottom=INFINITY,bottom2=INFINITY,top=-INFINITY;
-    double density=0,paraboloidSize=0;
+    double density=0,hyperboloidSize=0;
     int i,sector,treeFlags=0;
     int histo[7];
     for (i=0;i<cylPoints.size();i++)
@@ -109,14 +109,14 @@ void scanCylinder(Eisenstein cylAddress)
       treeFlags=1;
     if (top-bottom>1.5)
       treeFlags=1;
-    paraboloidSize=sqrt(1/density+sqr(minParaboloidSize)); // this may need to be multiplied by something
+    hyperboloidSize=sqrt(1/density+sqr(minHyperboloidSize)); // this may need to be multiplied by something
     snake.countNonempty();
     tileMutex.lock();
     tiles[cylAddress].nPoints=cylPoints.size();
     tiles[cylAddress].nGround=0;
     tiles[cylAddress].density=density;
     tiles[cylAddress].treeFlags=treeFlags;
-    tiles[cylAddress].paraboloidSize=paraboloidSize;
+    tiles[cylAddress].hyperboloidSize=hyperboloidSize;
     tiles[cylAddress].height=top-bottom;
     if (tiles[cylAddress].nPoints>maxTile.nPoints)
       maxTile.nPoints=tiles[cylAddress].nPoints;
@@ -130,10 +130,10 @@ void scanCylinder(Eisenstein cylAddress)
       maxTile.density=tiles[cylAddress].density;
     if (tiles[cylAddress].density<minTile.density)
       minTile.density=tiles[cylAddress].density;
-    if (tiles[cylAddress].paraboloidSize>maxTile.paraboloidSize)
-      maxTile.paraboloidSize=tiles[cylAddress].paraboloidSize;
-    if (tiles[cylAddress].paraboloidSize<minTile.paraboloidSize)
-      minTile.paraboloidSize=tiles[cylAddress].paraboloidSize;
+    if (tiles[cylAddress].hyperboloidSize>maxTile.hyperboloidSize)
+      maxTile.hyperboloidSize=tiles[cylAddress].hyperboloidSize;
+    if (tiles[cylAddress].hyperboloidSize<minTile.hyperboloidSize)
+      minTile.hyperboloidSize=tiles[cylAddress].hyperboloidSize;
     tileMutex.unlock();
   }
   octStore.disown();
@@ -172,7 +172,7 @@ void postscanCylinder(Eisenstein cylAddress)
 	tileMutex.unlock();
 	++i;
       } while (ringcount && !nontree);
-      thisTile->paraboloidSize=sqrt(sqr(thisTile->paraboloidSize)+sqr(count*snake.getSpacing()/6));
+      thisTile->hyperboloidSize=sqrt(sqr(thisTile->hyperboloidSize)+sqr(count*snake.getSpacing()/6));
       snake.countNonempty();
     }
   }

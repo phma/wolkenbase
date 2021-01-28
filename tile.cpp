@@ -36,6 +36,6 @@ void initTiles()
   maxTile.nGround=0;
   minTile.density=INFINITY;
   maxTile.density=0;
-  minTile.paraboloidSize=INFINITY;
-  maxTile.paraboloidSize=0;
+  minTile.hyperboloidSize=INFINITY;
+  maxTile.hyperboloidSize=0;
 }

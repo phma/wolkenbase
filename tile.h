@@ -30,7 +30,7 @@ public:
   int nPoints,nGround;
   short roofFlags,treeFlags;
   double density; // of bottom layer
-  double paraboloidSize; // radius of curvature
+  double hyperboloidSize; // radius of curvature
   double height; // after untilting
 };
 

@@ -119,13 +119,13 @@ void classifyCylinder(Eisenstein cylAddress)
     tileMutex.lock();
     thisTile=&tiles[cylAddress];
     tileMutex.unlock();
-    if (cylPoints.size()>=343 && thisTile->paraboloidSize>cyl.getRadius())
+    if (cylPoints.size()>=343 && thisTile->hyperboloidSize>cyl.getRadius())
       isTreeTile=true;
     for (i=0;i<cylPoints.size();i++)
     {
       set<int> directions;
       aboveGround=false;
-      downward=Paraboloid(cylPoints[i].location,thisTile->paraboloidSize);
+      downward=Paraboloid(cylPoints[i].location,thisTile->hyperboloidSize);
       sz=downPoints.size();
       h=relprime(sz);
       for (j=n=0;j<sz && !aboveGround;j++,n=(n+h)%sz)
