@@ -26,6 +26,7 @@
 #include "classify.h"
 #include "octree.h"
 #include "angle.h"
+#include "scan.h"
 #include "threads.h"
 #include "relprime.h"
 #include "leastsquares.h"
@@ -93,7 +94,7 @@ void classifyCylinder(Eisenstein cylAddress)
   Cylinder cyl=snake.cyl(cylAddress);
   vector<LasPoint> cylPoints=octStore.pointsIn(cyl);
   vector<LasPoint> upPoints,downPoints,sphPoints;
-  Paraboloid downward,upward;
+  Hyperboloid downward,upward;
   Sphere sphere;
   Tile *thisTile;
   if (cylPoints.size())
@@ -125,7 +126,7 @@ void classifyCylinder(Eisenstein cylAddress)
     {
       set<int> directions;
       aboveGround=false;
-      downward=Paraboloid(cylPoints[i].location,thisTile->hyperboloidSize);
+      downward=Hyperboloid(cylPoints[i].location,thisTile->hyperboloidSize,maxSlope);
       sz=downPoints.size();
       h=relprime(sz);
       for (j=n=0;j<sz && !aboveGround;j++,n=(n+h)%sz)
