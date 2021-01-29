@@ -156,7 +156,7 @@ public:
   void setIgnoreDupes(bool ig);
   void dumpBuffers();
   bool isConsistent();
-  std::vector<LasPoint> pointsIn(const Shape &sh);
+  std::vector<LasPoint> pointsIn(const Shape &sh,bool sorted=false);
   std::array<double,2> hiLoPointsIn(const Shape &sh);
   std::shared_mutex setBlockMutex; // lock when adding new blocks to file
 private:

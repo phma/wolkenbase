@@ -92,7 +92,7 @@ bool surround(set<int> &directions)
 void classifyCylinder(Eisenstein cylAddress)
 {
   Cylinder cyl=snake.cyl(cylAddress);
-  vector<LasPoint> cylPoints=octStore.pointsIn(cyl);
+  vector<LasPoint> cylPoints=octStore.pointsIn(cyl,true);
   vector<LasPoint> upPoints,downPoints,sphPoints;
   Hyperboloid downward,upward;
   Sphere sphere;
@@ -137,7 +137,7 @@ void classifyCylinder(Eisenstein cylAddress)
 	  aboveGround=true;
       }
       if (!aboveGround)
-	downPoints=octStore.pointsIn(downward);
+	downPoints=octStore.pointsIn(downward,false);
       sz=downPoints.size();
       h=relprime(sz);
       for (j=n=0;j<sz && !aboveGround;j++,n=(n+h)%sz)

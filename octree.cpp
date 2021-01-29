@@ -1017,7 +1017,7 @@ bool lowerThan(const LasPoint &a,const LasPoint &b)
   return a.location.getz()<b.location.getz();
 }
 
-vector<LasPoint> OctStore::pointsIn(const Shape &sh)
+vector<LasPoint> OctStore::pointsIn(const Shape &sh,bool sorted)
 {
   vector<long long> blockList=octRoot.findBlocks(sh);
   OctBuffer *buf;
@@ -1031,7 +1031,8 @@ vector<LasPoint> OctStore::pointsIn(const Shape &sh)
       if (sh.in(buf->points[j].location))
 	ret.push_back(buf->points[j]);
   }
-  sort(ret.begin(),ret.end(),lowerThan);
+  if (sorted)
+    sort(ret.begin(),ret.end(),lowerThan);
   ret.shrink_to_fit();
   return ret;
 }
