@@ -454,9 +454,13 @@ void OctBuffer::update()
 		/chrono::steady_clock::period::den;
   if (lastUsed!=store->nowUsed)
   {
-    store->lastUsedMap.erase(lastUsed);
+    pair<multimap<long long,int>::iterator,multimap<long long,int>::iterator> range=store->lastUsedMap.equal_range(lastUsed);
+    while (range.first!=range.second && range.first->second!=lastUsed)
+      ++range.first;
+    if (range.first!=range.second)
+      store->lastUsedMap.erase(range.first);
     lastUsed=store->nowUsed;
-    store->lastUsedMap[lastUsed]=bufferNumber;
+    store->lastUsedMap.insert(pair<long long,int>(lastUsed,bufferNumber));
   }
   store->nowUsedMutex.unlock();
 }

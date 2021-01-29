@@ -178,7 +178,7 @@ private:
   OctBuffer *getBlock(xyz key,bool writing);
   std::map<int,OctBuffer> blocks; // buffer number -> block
   std::map<int,int> revBlocks; // block number -> buffer number
-  std::map<long long,int> lastUsedMap; // time counter -> buffer number
+  std::multimap<long long,int> lastUsedMap; // time counter -> buffer number
   std::map<int,std::vector<int> > ownMap; // thread -> buffer number
   void split(long long block,xyz camelStraw);
   friend class OctBuffer;
