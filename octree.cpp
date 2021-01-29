@@ -21,6 +21,7 @@
  */
 #include <cassert>
 #include <cmath>
+#include <algorithm>
 #include "ldecimal.h"
 #include "octree.h"
 #include "brevno.h"
@@ -1011,23 +1012,27 @@ OctBuffer *OctStore::getBlock(xyz key,bool writing)
   return ret;
 }
 
+bool lowerThan(const LasPoint &a,const LasPoint &b)
+{
+  return a.location.getz()<b.location.getz();
+}
+
 vector<LasPoint> OctStore::pointsIn(const Shape &sh)
 {
   vector<long long> blockList=octRoot.findBlocks(sh);
   OctBuffer *buf;
-  multimap<double,LasPoint> sorter;
-  multimap<double,LasPoint>::iterator k;
   vector<LasPoint> ret;
   int i,j;
+  ret.reserve(blockList.size()*RECORDS);
   for (i=0;i<blockList.size();i++)
   {
     buf=getBlock(blockList[i]);
     for (j=0;j<buf->points.size();j++)
       if (sh.in(buf->points[j].location))
-	sorter.insert(pair<double,LasPoint>(buf->points[j].location.getz(),buf->points[j]));
+	ret.push_back(buf->points[j]);
   }
-  for (k=sorter.begin();k!=sorter.end();++k)
-    ret.push_back(k->second);
+  sort(ret.begin(),ret.end(),lowerThan);
+  ret.shrink_to_fit();
   return ret;
 }
 
