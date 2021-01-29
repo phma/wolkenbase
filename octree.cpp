@@ -449,9 +449,15 @@ void OctBuffer::read(long long block)
 void OctBuffer::update()
 {
   store->nowUsedMutex.lock();
-  store->lastUsedMap.erase(lastUsed);
-  lastUsed=++(store->nowUsed);
-  store->lastUsedMap[lastUsed]=bufferNumber;
+  store->nowUsed=clk.now().time_since_epoch().count()
+		*chrono::steady_clock::period::num
+		/chrono::steady_clock::period::den;
+  if (lastUsed!=store->nowUsed)
+  {
+    store->lastUsedMap.erase(lastUsed);
+    lastUsed=store->nowUsed;
+    store->lastUsedMap[lastUsed]=bufferNumber;
+  }
   store->nowUsedMutex.unlock();
 }
 
