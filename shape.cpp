@@ -47,6 +47,19 @@ xyz Cube::corner(int n)
   return xyz((n&1)?maxX():minX(),(n&2)?maxY():minY(),(n&4)?maxZ():minZ());
 }
 
+bool Shape::in(Cube &cube) const
+/* Assumes that the shape is convex. Spheres, paraboloids, cylinders, and
+ * halves of two-sheet hyperboloids are all convex. If, though, a shape is
+ * not convex, this method must be overridden.
+ */
+{
+  int i;
+  bool ret=true;
+  for (i=0;i<8;i++)
+    ret=ret && in(cube.corner(i));
+  return ret;
+}
+
 bool Shape::intersect(Cube cube) const
 {
   return in(closestPoint(cube));

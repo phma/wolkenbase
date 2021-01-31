@@ -72,6 +72,7 @@ class Shape
 {
 public:
   virtual bool in(xyz pnt) const=0;
+  virtual bool in(Cube &cube) const;
   virtual xyz closestPoint(Cube cube) const=0; // closest point to the shape in the cube
   virtual bool intersect(Cube cube) const;
 };
