@@ -366,7 +366,12 @@ void OctBuffer::own()
   ownMutex.lock();
   owningThread.insert(t);
   ownMutex.unlock();
-  store->ownMap[t].push_back(bufferNumber);
+  if (store->ownMap[t].size()<=bufferNumber || store->ownMap[t][bufferNumber]!=bufferNumber)
+  {
+    store->ownMap[t].push_back(bufferNumber);
+    if (store->ownMap[t].size()>bufferNumber)
+      swap(store->ownMap[t][bufferNumber],store->ownMap[t].back());
+  }
 }
 
 bool OctBuffer::ownAlone()
