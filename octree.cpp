@@ -21,6 +21,7 @@
  */
 #include <cassert>
 #include <cmath>
+#include <cstring>
 #include <algorithm>
 #include "ldecimal.h"
 #include "octree.h"
@@ -1038,15 +1039,25 @@ vector<LasPoint> OctStore::pointsIn(const Shape &sh,bool sorted)
 {
   vector<long long> blockList=octRoot.findBlocks(sh);
   OctBuffer *buf;
+  Cube cube;
   vector<LasPoint> ret;
   int i,j;
   ret.reserve(blockList.size()*RECORDS);
   for (i=0;i<blockList.size();i++)
   {
     buf=getBlock(blockList[i]);
-    for (j=0;j<buf->points.size();j++)
-      if (sh.in(buf->points[j].location))
-	ret.push_back(buf->points[j]);
+    if (buf->points.size())
+      cube=octRoot.findCube(buf->points[0].location);
+    if (sh.in(cube))
+    {
+      j=ret.size();
+      ret.resize(j+buf->points.size());
+      memmove(&ret[j],&buf->points[0],buf->points.size()*sizeof(LasPoint));
+    }
+    else
+      for (j=0;j<buf->points.size();j++)
+	if (sh.in(buf->points[j].location))
+	  ret.push_back(buf->points[j]);
   }
   if (sorted)
     sort(ret.begin(),ret.end(),lowerThan);
