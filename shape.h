@@ -62,6 +62,7 @@ public:
   {
     return center.getz()+side/2;
   }
+  xyz corner(int n);
 private:
   xyz center;
   double side;

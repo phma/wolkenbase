@@ -42,6 +42,11 @@ bool Cube::in(xyz pnt)
       && fabs(pnt.getz()-center.getz())<=side/2;
 }
 
+xyz Cube::corner(int n)
+{
+  return xyz((n&1)?maxX():minX(),(n&2)?maxY():minY(),(n&4)?maxZ():minZ());
+}
+
 bool Shape::intersect(Cube cube) const
 {
   return in(closestPoint(cube));
