@@ -123,6 +123,7 @@ private:
   std::set<int> owningThread;
   std::vector<LasPoint> points;
   std::shared_mutex blockMutex;
+  std::mutex ownMutex; // lock when owning or disowning blocks
   OctStore *store;
   friend class OctStore;
 };
@@ -165,7 +166,6 @@ private:
   std::shared_mutex nowUsedMutex; // lock when updating nowUsed
   std::recursive_mutex splitMutex; // lock when splitting
   std::shared_mutex revMutex; // lock when changing revBlocks
-  std::mutex ownMutex; // lock when owning or disowning blocks
   std::mutex transitMutex; // lock when setting or clearing inTransit
   std::shared_mutex bufferMutex; // lock when adding new buffers to store
   long long nowUsed;

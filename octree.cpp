@@ -362,24 +362,24 @@ void OctBuffer::markDirty()
 void OctBuffer::own()
 {
   int t=thisThread();
-  store->ownMutex.lock();
+  ownMutex.lock();
   owningThread.insert(t);
+  ownMutex.unlock();
   store->ownMap[t].push_back(bufferNumber);
-  store->ownMutex.unlock();
 }
 
 bool OctBuffer::ownAlone()
 {
   bool ret;
   int t=thisThread();
-  store->ownMutex.lock();
+  ownMutex.lock();
   ret=owningThread.size()==owningThread.count(t);
   if (ret)
   {
     owningThread.insert(t);
     store->ownMap[t].push_back(bufferNumber);
   }
-  store->ownMutex.unlock();
+  ownMutex.unlock();
   return ret;
 }
 
@@ -387,9 +387,9 @@ bool OctBuffer::iOwn()
 {
   bool ret;
   int t=thisThread();
-  store->ownMutex.lock();
+  ownMutex.lock();
   ret=owningThread.count(t);
-  store->ownMutex.unlock();
+  ownMutex.unlock();
   return ret;
 }
 
@@ -623,7 +623,6 @@ void OctStore::disown()
 {
   int i,n,t=thisThread();
   OctBuffer *buf;
-  ownMutex.lock();
   for (i=0;i<ownMap[t].size();i++)
   {
     n=ownMap[t][i];
@@ -631,10 +630,11 @@ void OctStore::disown()
     bufferMutex.lock_shared();
     buf=&blocks[n];
     bufferMutex.unlock_shared();
+    buf->ownMutex.lock();
     buf->owningThread.erase(t);
+    buf->ownMutex.unlock();
   }
   ownMap[t].clear();
-  ownMutex.unlock();
 }
 
 bool OctStore::setTransit(int buffer,bool t)
@@ -847,13 +847,13 @@ int OctStore::newBlock()
   bufferMutex.lock();
   int i=blocks.size();
   OctBuffer *buf=&blocks[i];
+  buf->ownMutex.lock();
   bufferMutex.unlock();
-  ownMutex.lock();
   buf->store=this;
   buf->bufferNumber=i;
   buf->owningThread.insert(t);
+  buf->ownMutex.unlock();
   ownMap[t].push_back(i);
-  ownMutex.unlock();
   return i;
 }
 
