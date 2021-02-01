@@ -161,8 +161,8 @@ void classifyCylinder(Eisenstein cylAddress)
       octStore.put(cylPoints[i]);
     }
     cr::nanoseconds elapsed=clk.now()-timeStart;
-    if (isTreeTile)
-      cout<<"Classifying "<<cylPoints.size()<<" points took "<<elapsed.count()*1e-6<<" ms\n";
+    //if (isTreeTile)
+      //cout<<"Classifying "<<cylPoints.size()<<" points took "<<elapsed.count()*1e-6<<" ms\n";
     snake.countNonempty();
   }
   octStore.disown();
