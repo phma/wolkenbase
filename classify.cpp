@@ -128,9 +128,9 @@ void classifyCylinder(Eisenstein cylAddress)
       aboveGround=false;
       cone=Hyperboloid(cylPoints[i].location,0,10);
       downward=Hyperboloid(cylPoints[i].location,thisTile->hyperboloidSize,maxSlope);
-      conePoints=octStore.pointsIn(cone,false);
-      if (conePoints.size()>=3)
-	aboveGround=true;
+      //conePoints=octStore.pointsIn(cone,false);
+      //if (conePoints.size()>=3)
+	//aboveGround=true;
       sz=downPoints.size();
       h=relprime(sz);
       for (j=n=0;j<sz && !aboveGround;j++,n=(n+h)%sz)
