@@ -135,7 +135,7 @@ void classifyCylinder(Eisenstein cylAddress)
       h=relprime(sz);
       for (j=n=0;j<sz && !aboveGround;j++,n=(n+h)%sz)
       {
-	if (downward.in(cylPoints[i].location) && dist(xy(cylPoints[i].location),xy(downPoints[n].location)))
+	if (downward.in(downPoints[n].location) && dist(xy(cylPoints[i].location),xy(downPoints[n].location)))
 	  directions.insert(dir(xy(cylPoints[i].location),xy(downPoints[n].location)));
 	if (surround(directions))
 	  aboveGround=true;
