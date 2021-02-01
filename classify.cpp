@@ -93,8 +93,8 @@ void classifyCylinder(Eisenstein cylAddress)
 {
   Cylinder cyl=snake.cyl(cylAddress);
   vector<LasPoint> cylPoints=octStore.pointsIn(cyl,true);
-  vector<LasPoint> upPoints,downPoints,sphPoints;
-  Hyperboloid downward,upward;
+  vector<LasPoint> upPoints,downPoints,sphPoints,conePoints;
+  Hyperboloid downward,upward,cone;
   Sphere sphere;
   Tile *thisTile;
   if (cylPoints.size())
@@ -126,7 +126,11 @@ void classifyCylinder(Eisenstein cylAddress)
     {
       set<int> directions;
       aboveGround=false;
+      cone=Hyperboloid(cylPoints[i].location,0,10);
       downward=Hyperboloid(cylPoints[i].location,thisTile->hyperboloidSize,maxSlope);
+      conePoints=octStore.pointsIn(cone,false);
+      if (conePoints.size()>=3)
+	aboveGround=true;
       sz=downPoints.size();
       h=relprime(sz);
       for (j=n=0;j<sz && !aboveGround;j++,n=(n+h)%sz)
