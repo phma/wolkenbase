@@ -456,9 +456,9 @@ void OctBuffer::update()
 {
   store->nowUsedMutex.lock();
   store->nowUsed=clk.now().time_since_epoch().count()
-		*chrono::steady_clock::period::num
+		*chrono::steady_clock::period::num*1000
 		/chrono::steady_clock::period::den;
-  if (lastUsed!=store->nowUsed)
+  if (lastUsed+618<store->nowUsed)
   {
     pair<multimap<long long,int>::iterator,multimap<long long,int>::iterator> range=store->lastUsedMap.equal_range(lastUsed);
     while (range.first!=range.second && range.first->second!=bufferNumber)
