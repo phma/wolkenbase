@@ -463,13 +463,6 @@ void OctBuffer::update()
     pair<multimap<long long,int>::iterator,multimap<long long,int>::iterator> range=store->lastUsedMap.equal_range(lastUsed);
     while (range.first!=range.second && range.first->second!=bufferNumber)
       ++range.first;
-    if (range.first==range.second)
-    {
-      range.first=store->lastUsedMap.begin();
-      range.second=store->lastUsedMap.end();
-      while (range.first!=range.second && range.first->second!=bufferNumber)
-	++range.first;
-    }
     if (range.first!=range.second)
       store->lastUsedMap.erase(range.first);
     lastUsed=store->nowUsed;
