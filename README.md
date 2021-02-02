@@ -1,7 +1,7 @@
 # Overview
-Wolkenbase reads a point cloud in LAS format and makes an octree. It will extract the ground layer, once that's working.
+Wolkenbase reads a point cloud in LAS format and extracts the ground layer. It can write the ground and nonground points to separate files, or write them all to one file with the classification byte showing which is which. You can also tell it to limit the number of points per file.
 
-The GUI program (which doesn't exist yet) needs Qt5; the command-line program needs Boost.
+The GUI program needs Qt5; the command-line program needs Boost.
 
 Wolkenbase compiles on Ubuntu Focal and Eoan and DragonFly 5.9.
 
