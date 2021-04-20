@@ -984,6 +984,7 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
     bufferMutex.lock_shared();
     buf=&blocks[bufnum];
     bufferMutex.unlock_shared();
+    assert(buf->iOwn());
     return buf;
   }
 }
