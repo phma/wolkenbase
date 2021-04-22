@@ -86,6 +86,55 @@ void testfreeram()
   cout<<"Free RAM "<<freeRam()<<endl;
 }
 
+void testintegertrig()
+{
+  double sinerror,coserror,ciserror,totsinerror,totcoserror,totciserror;
+  int i;
+  char bs=8;
+  for (totsinerror=totcoserror=totciserror=i=0;i<128;i++)
+  {
+    sinerror=sin(i<<24)+sin((i+64)<<24);
+    coserror=cos(i<<24)+cos((i+64)<<24);
+    ciserror=hypot(cos(i<<24),sin(i<<24))-1;
+    if (sinerror>0.04 || coserror>0.04 || ciserror>0.04)
+    {
+      printf("sin(%8x)=%a sin(%8x)=%a\n",i<<24,sin(i<<24),(i+64)<<24,sin((i+64)<<24));
+      printf("cos(%8x)=%a cos(%8x)=%a\n",i<<24,cos(i<<24),(i+64)<<24,cos((i+64)<<24));
+      printf("abs(cis(%8x))=%a\n",i<<24,hypot(cos(i<<24),sin(i<<24)));
+    }
+    totsinerror+=sinerror*sinerror;
+    totcoserror+=coserror*coserror;
+    totciserror+=ciserror*ciserror;
+  }
+  printf("total sine error=%e\n",totsinerror);
+  printf("total cosine error=%e\n",totcoserror);
+  printf("total cis error=%e\n",totciserror);
+  tassert(totsinerror+totcoserror+totciserror<2e-29);
+  //On Linux, the total error is 2e-38 and the M_PIl makes a big difference.
+  //On DragonFly BSD, the total error is 1.7e-29 and M_PIl is absent.
+  tassert(bintodeg(0)==0);
+  tassert(fabs(bintodeg(0x15555555)-60)<0.0000001);
+  tassert(fabs(bintomin(0x08000000)==1350));
+  tassert(fabs(bintosec(0x12345678)-184320)<0.001);
+  tassert(fabs(bintogon(0x1999999a)-80)<0.0000001);
+  tassert(fabs(bintorad(0x4f1bbcdd)-3.88322208)<0.00000001);
+  for (i=-2147400000;i<2147400000;i+=rng.usrandom()+18000)
+  {
+    cout<<setw(11)<<i<<bs<<bs<<bs<<bs<<bs<<bs<<bs<<bs<<bs<<bs<<bs;
+    cout.flush();
+    tassert(degtobin(bintodeg(i))==i);
+    tassert(mintobin(bintomin(i))==i);
+    tassert(sectobin(bintosec(i))==i);
+    tassert(gontobin(bintogon(i))==i);
+    tassert(radtobin(bintorad(i))==i);
+  }
+  tassert(sectobin(1295999.9999)==-2147483648);
+  tassert(sectobin(1296000.0001)==-2147483648);
+  tassert(sectobin(-1295999.9999)==-2147483648);
+  tassert(sectobin(-1296000.0001)==-2147483648);
+  cout<<"           "<<bs<<bs<<bs<<bs<<bs<<bs<<bs<<bs<<bs<<bs<<bs;
+}
+
 void testflat()
 {
   ofstream dumpFile("flat.dump");
@@ -942,6 +991,8 @@ int main(int argc, char *argv[])
     testmanysum(); // >2 s
   if (shoulddo("ldecimal"))
     testldecimal();
+  if (shoulddo("integertrig"))
+    testintegertrig();
   if (shoulddo("leastsquares"))
     testleastsquares();
   if (shoulddo("flowsnake"))
