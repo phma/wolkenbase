@@ -965,6 +965,7 @@ int main(int argc, char *argv[])
   for (i=1;i<argc;i++)
     args.push_back(argv[i]);
   initPhases();
+  fillTanTables();
   octStore.open("store.oct");
   if (shoulddo("sizeof"))
     testsizeof();

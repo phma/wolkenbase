@@ -27,7 +27,7 @@
 #include "angle.h"
 using namespace std;
 
-
+double tanTable[511],cosTable[512],sinTable[512];
 
 double sqr(double x)
 {
@@ -264,4 +264,19 @@ double radtogon(double angle)
 double gontorad(double angle)
 {
   return angle/200*M_PIl;
+}
+
+void fillTanTables()
+/* Fills tables used by the atan2i function. The tables cover the quadrant from
+ * -45° to 45° in 512 steps of 0x100000.
+ */
+{
+  int i;
+  for (i=0;i<511;i++)
+    tanTable[i]=tan(i*0x100000-0xff00000);
+  for (i=0;i<512;i++)
+  {
+    sinTable[i]=sin(i*0x100000-0xff80000);
+    cosTable[i]=cos(i*0x100000-0xff80000);
+  }
 }

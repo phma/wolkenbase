@@ -80,6 +80,7 @@ double radtosec(double angle);
 double sectorad(double angle);
 double radtogon(double angle);
 double gontorad(double angle);
+void fillTanTables();
 
 /* Angles, azimuths, and bearings are expressed in text as follows:
  * Hex integer  Angle, deg  Angle, gon  Azimuth, deg  Azimuth, gon  Bearing, deg  Bearing, gon
