@@ -3,7 +3,7 @@
 /* angle.cpp - angles as binary fractions of rotation */
 /*                                                    */
 /******************************************************/
-/* Copyright 2019 Pierre Abbat.
+/* Copyright 2019,2021 Pierre Abbat.
  * This file is part of Wolkenbase.
  * 
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -26,6 +26,8 @@
 #include <vector>
 #include "angle.h"
 using namespace std;
+
+
 
 double sqr(double x)
 {
@@ -85,6 +87,31 @@ double cosquarter(int angle)
 double tanquarter(int angle)
 {
   return tanl(angle*M_PIl/4294967296.);
+}
+
+int atan2j(double y,double x)
+{
+  int ret=0;
+  double temp;
+  if (x<0)
+  {
+    ret+=(y>0)?DEG180:-DEG180;
+    y=-y;
+    x=-x;
+  }
+  if (y>x)
+  {
+    ret+=DEG90;
+    swap(x,y);
+    y=-y;
+  }
+  if (-y>x)
+  {
+    ret-=DEG90;
+    swap(x,y);
+    x=-x;
+  }
+  return ret;
 }
 
 int atan2i(double y,double x)

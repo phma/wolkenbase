@@ -49,6 +49,7 @@ double coshalf(int angle);
 double tanhalf(int angle);
 double cosquarter(int angle);
 double tanquarter(int angle);
+int atan2j(double y,double x);
 int atan2i(double y,double x);
 int atan2i(xy vect); // range is [-536870912,536870912]
 int twiceasini(double x);
