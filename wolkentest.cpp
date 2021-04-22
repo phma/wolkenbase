@@ -127,6 +127,7 @@ void testintegertrig()
     tassert(sectobin(bintosec(i))==i);
     tassert(gontobin(bintogon(i))==i);
     tassert(radtobin(bintorad(i))==i);
+    tassert(foldangle(atan2i(cossin(i)))==foldangle(i));
   }
   tassert(sectobin(1295999.9999)==-2147483648);
   tassert(sectobin(1296000.0001)==-2147483648);
