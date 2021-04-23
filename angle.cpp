@@ -118,6 +118,10 @@ int atan2j(double y,double x)
       ret+=h;
     else
       ret-=h;
+  h=511-(((ret+DEG45)&0x1ff00000)>>20);
+  temp=x*cosTable[h]-y*sinTable[h];
+  y=y*cosTable[h]+x*sinTable[h];
+  x=temp;
   return ret;
 }
 
