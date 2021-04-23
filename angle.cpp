@@ -92,6 +92,7 @@ double tanquarter(int angle)
 int atan2j(double y,double x)
 {
   int ret=0;
+  int h;
   double temp;
   if (x<0)
   {
@@ -111,6 +112,12 @@ int atan2j(double y,double x)
     swap(x,y);
     x=-x;
   }
+  temp=y/x;
+  for (h=DEG45/2;h>DEG45/1024;h/=2)
+    if (temp>tanTable[(((ret+DEG45)&0x1ff00000)>>20)-1])
+      ret+=h;
+    else
+      ret-=h;
   return ret;
 }
 
