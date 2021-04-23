@@ -134,6 +134,8 @@ void testintegertrig()
   tassert(sectobin(-1295999.9999)==-2147483648);
   tassert(sectobin(-1296000.0001)==-2147483648);
   cout<<"           "<<bs<<bs<<bs<<bs<<bs<<bs<<bs<<bs<<bs<<bs<<bs;
+  cout<<"atan2i "<<hex<<atan2i(-1,M_SQRT_3)<<dec<<endl;
+  cout<<"atan2j "<<hex<<atan2j(-1,M_SQRT_3)<<dec<<endl;
 }
 
 void testflat()
