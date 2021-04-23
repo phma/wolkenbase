@@ -122,6 +122,7 @@ int atan2j(double y,double x)
   temp=x*cosTable[h]-y*sinTable[h];
   y=y*cosTable[h]+x*sinTable[h];
   x=temp;
+  ret+=lrint(341783259.899837413*y/x);
   return ret;
 }
 
