@@ -91,7 +91,8 @@ double tanquarter(int angle)
 
 double atan2a(double y,double x)
 {
-  return 341783259.899837413*y/x;
+  //return 3.417823697056007e8*y/x;
+  return 0x40000000/M_PIl*y/x-1.1392738508503886e8*cub(y/x);
 }
 
 int atan2j(double y,double x)
@@ -127,7 +128,7 @@ int atan2j(double y,double x)
   temp=x*cosTable[h]-y*sinTable[h];
   y=y*cosTable[h]+x*sinTable[h];
   x=temp;
-  ret+=lrint(341783259.899837413*y/x);
+  ret+=lrint(0x40000000/M_PIl*y/x-1.1392738508503886e8*cub(y/x));
   return ret;
 }
 
