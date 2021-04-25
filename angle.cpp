@@ -89,6 +89,11 @@ double tanquarter(int angle)
   return tanl(angle*M_PIl/4294967296.);
 }
 
+double atan2a(double y,double x)
+{
+  return 341783259.899837413*y/x;
+}
+
 int atan2j(double y,double x)
 {
   int ret=0;
