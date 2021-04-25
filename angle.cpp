@@ -20,6 +20,8 @@
  * along with Wolkenbase. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define LIBRARY_ATAN2 0
+
 #include <cstring>
 #include <cassert>
 #include <cstdio>
@@ -27,7 +29,9 @@
 #include "angle.h"
 using namespace std;
 
+#if !LIBRARY_ATAN2
 double tanTable[511],cosTable[512],sinTable[512];
+#endif
 
 double sqr(double x)
 {
@@ -95,7 +99,13 @@ double atan2a(double y,double x)
   return 0x40000000/M_PIl*y/x-1.1392738508503886e8*cub(y/x);
 }
 
-int atan2j(double y,double x)
+#if LIBRARY_ATAN2
+int atan2i(double y,double x)
+{
+  return rint(atan2(y,x)/M_PIl*1073741824.);
+}
+#else
+int atan2i(double y,double x)
 {
   int ret=0;
   int h;
@@ -131,11 +141,7 @@ int atan2j(double y,double x)
   ret+=lrint(0x40000000/M_PIl*y/x-1.1392738508503886e8*cub(y/x));
   return ret;
 }
-
-int atan2i(double y,double x)
-{
-  return rint(atan2(y,x)/M_PIl*1073741824.);
-}
+#endif
 
 int atan2i(xy vect)
 {
@@ -289,6 +295,7 @@ void fillTanTables()
  * -45° to 45° in 512 steps of 0x100000.
  */
 {
+#if !LIBRARY_ATAN2
   int i;
   for (i=0;i<511;i++)
     tanTable[i]=tan(i*0x100000-0xff00000);
@@ -297,4 +304,5 @@ void fillTanTables()
     sinTable[i]=sin(i*0x100000-0xff80000);
     cosTable[i]=cos(i*0x100000-0xff80000);
   }
+#endif
 }
