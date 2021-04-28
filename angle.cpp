@@ -99,13 +99,23 @@ double atan2a(double y,double x)
   return 0x40000000/M_PIl*y/x-1.1392738508503886e8*cub(y/x);
 }
 
+/* I ran Wolkenbase on a big and tall point cloud, and it kept segfaulting
+ * in the atan2 library routine, in a place where segfaulting doesn't make sense.
+ * Apparently there is a bug in the math library, which may involve failing to
+ * restore some floating-point register when a thread is stopped on one core
+ * and resumed on another. To get around this bug, I wrote this function.
+ * The timings are from running testintegertrig under Valgrind (Callgrind).
+ */
+
 #if LIBRARY_ATAN2
 int atan2i(double y,double x)
+// This version takes 11.4% as much time as cossin.
 {
   return rint(atan2(y,x)/M_PIl*1073741824.);
 }
 #else
 int atan2i(double y,double x)
+// This version takes 17.4% as much time as cossin.
 {
   int ret=0;
   int h;
