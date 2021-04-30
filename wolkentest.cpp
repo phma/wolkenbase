@@ -136,6 +136,7 @@ void testintegertrig()
   cout<<"           "<<bs<<bs<<bs<<bs<<bs<<bs<<bs<<bs<<bs<<bs<<bs;
   cout<<"atan2a "<<0x40000<<' '<<ldecimal(atan2a(sin(0x40000),cos(0x40000)))<<' '<<ldecimal(tan(0x40000))<<endl;
   cout<<"atan2a "<<0x80000<<' '<<ldecimal(atan2a(sin(0x80000),cos(0x80000)))<<' '<<ldecimal(tan(0x80000))<<endl;
+  cout<<"atan2i(0,0)="<<hex<<atan2i(0,0)<<dec<<endl;
 }
 
 void testflat()
