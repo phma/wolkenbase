@@ -149,6 +149,8 @@ int atan2i(double y,double x)
   y=y*cosTable[h]+x*sinTable[h];
   x=temp;
   ret+=lrint(0x40000000/M_PIl*y/x-1.1392738508503886e8*cub(y/x));
+  if (x==0 && y==0)
+    ret=0;
   return ret;
 }
 #endif
