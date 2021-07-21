@@ -3,7 +3,7 @@
 /* wolkenbase.cpp - GUI main program                  */
 /*                                                    */
 /******************************************************/
-/* Copyright 2020 Pierre Abbat.
+/* Copyright 2020-2021 Pierre Abbat.
  * This file is part of Wolkenbase.
  *
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -27,6 +27,7 @@
 #include "point.h"
 #include "config.h"
 #include "octree.h"
+#include "angle.h"
 #include "relprime.h"
 #include "mainwindow.h"
 #include "brevno.h"
@@ -63,6 +64,7 @@ int main(int argc, char *argv[])
   }
   MainWindow window;
   nthreads=window.getNumberThreads();
+  fillTanTables();
   if (nthreads<1)
     nthreads=thread::hardware_concurrency();
   if (nthreads<1)
