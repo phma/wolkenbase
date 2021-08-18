@@ -306,6 +306,23 @@ void Octree::plot(PostScript &ps)
   }
 }
 
+uint64_t Octree::countPoints()
+{
+  int i;
+  uint64_t total=0;
+  uintptr_t subi;
+  for (i=0;i<8;i++)
+  {
+    subi=sub[i];
+    if (subi&1)
+      total+=octStore.getBlock(subi>>1)->countPoints();
+    else if (subi)
+      total+=((Octree *)subi)->count;
+  }
+  count=total;
+  return total;
+}
+
 OctBuffer::OctBuffer()
 {
   int i;

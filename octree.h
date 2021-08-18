@@ -71,10 +71,12 @@ public:
   Cube cube(int n=-1);
   int dump(std::ofstream &file);
   void plot(PostScript &ps);
+  uint64_t countPoints();
 private:
   xyz center;
   double side;
   uintptr_t sub[8]; // Even means Octree *; odd means a disk block.
+  uint64_t count;
 };
 
 extern Octree octRoot;
@@ -98,6 +100,10 @@ public:
   LasPoint get(xyz key);
   bool put(LasPoint pnt);
   std::map<int,size_t> countClasses();
+  uint64_t countPoints()
+  {
+    return points.size();
+  }
   std::vector<LasPoint> getAll()
   {
     return points;
