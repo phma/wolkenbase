@@ -58,6 +58,7 @@ WolkenCanvas::WolkenCanvas(QWidget *parent):QWidget(parent)
   setBackgroundRole(QPalette::Base);
   setMinimumSize(40,30);
   setMouseTracking(true);
+  countedBlock=0;
   fileCountdown=splashScreenTime=dartAngle=ballAngle=0;
   lowRam=freeRam()/7;
 }
@@ -276,6 +277,8 @@ void WolkenCanvas::tick()
     timeLimit=20;
   while (elapsed<cr::milliseconds(timeLimit))
   {
+    countedBlock+=0x69969669;
+    //
     Eisenstein tileAddress=dequeueTileDone();
     Cylinder tileDone=snake.cyl(tileAddress);
     if (tileDone.getRadius()==0)

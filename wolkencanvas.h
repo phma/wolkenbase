@@ -86,6 +86,7 @@ private:
   int lastntri;
   int pixelsToPaint;
   int splashScreenTime; // in ticks
+  unsigned int countedBlock;
   std::vector<int> fileHitTest(xy pnt);
   std::array<double,3> pixelColorRead(int x,int y);
   std::array<double,3> pixelColorTile(Eisenstein tileAddr);
