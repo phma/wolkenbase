@@ -278,7 +278,7 @@ void WolkenCanvas::tick()
   while (elapsed<cr::milliseconds(timeLimit))
   {
     countedBlock+=0x69969669;
-    //
+    octRoot.countPoints(countedBlock);
     Eisenstein tileAddress=dequeueTileDone();
     Cylinder tileDone=snake.cyl(tileAddress);
     if (tileDone.getRadius()==0)

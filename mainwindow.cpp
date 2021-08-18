@@ -25,6 +25,7 @@
 #include "angle.h"
 #include "fileio.h"
 #include "brevno.h"
+#include "octree.h"
 #include "freeram.h"
 #include "scan.h"
 using namespace std;
@@ -154,6 +155,7 @@ void MainWindow::tick()
     ta=dequeueResult();
     gotResult(ta);
   }
+  dotTriangleMsg->setText(tr("%n dots","",octRoot.getCount()));
   memoryMsg->setText(QString::fromStdString(threePrefix(freeRam())+'B'));
   lpfBusyFraction=(16*lpfBusyFraction+busyFraction())/17;
   busyBar->setValue(lrint(lpfBusyFraction*16777216));
