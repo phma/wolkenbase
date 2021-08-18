@@ -277,8 +277,6 @@ void WolkenCanvas::tick()
     timeLimit=20;
   while (elapsed<cr::milliseconds(timeLimit))
   {
-    countedBlock+=0x69969669;
-    octRoot.countPoints(countedBlock);
     Eisenstein tileAddress=dequeueTileDone();
     Cylinder tileDone=snake.cyl(tileAddress);
     if (tileDone.getRadius()==0)
@@ -309,6 +307,8 @@ void WolkenCanvas::tick()
   pixmaxx=pixmaxy=0;
   while (elapsed<cr::milliseconds(timeLimit) && pixelsToPaint)
   {
+    countedBlock+=0x69969669;
+    octRoot.countPoints(countedBlock);
     pixel=peano.step();
     if (state==TH_READ || state==TH_WAIT)
       pcolor=pixelColorRead(pixel[0],pixel[1]);
