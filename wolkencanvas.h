@@ -69,6 +69,8 @@ private:
   QFileDialog *fileDialog;
   Lissajous lis;
   Peano peano;
+  std::vector<std::vector<int> > pixelPointCount;
+  std::vector<int64_t> columnTotal;
   BoundRect br;
   Cube cube; // sized to files, not octree
   xy windowCenter,worldCenter;
