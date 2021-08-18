@@ -110,6 +110,13 @@ void unlockCube()
   cubeMutex.unlock();
 }
 
+Octree::Octree()
+{
+  for (count=0;count<8;count++)
+    sub[count]=0;
+  count=0;
+}
+
 long long Octree::findBlock(xyz pnt)
 // Returns the disk block number that contains pnt, or -1 if none.
 {

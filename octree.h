@@ -54,6 +54,7 @@ class OctStore;
 class Octree
 {
 public:
+  Octree();
   long long findBlock(xyz pnt);
   Cube findCube(xyz pnt);
   std::vector<long long> findBlocks(const Shape &sh);
