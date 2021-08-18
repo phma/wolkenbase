@@ -306,11 +306,15 @@ void Octree::plot(PostScript &ps)
   }
 }
 
-uint64_t Octree::countPoints()
+void Octree::countPoints(unsigned int n)
+// Descends the subtree specified by n, updating count.
 {
   int i;
   uint64_t total=0;
   uintptr_t subi;
+  subi=sub[n&7];
+  if ((subi&1)==0 && subi)
+    ((Octree *)subi)->countPoints(n>>3);
   for (i=0;i<8;i++)
   {
     subi=sub[i];
@@ -320,7 +324,6 @@ uint64_t Octree::countPoints()
       total+=((Octree *)subi)->count;
   }
   count=total;
-  return total;
 }
 
 OctBuffer::OctBuffer()

@@ -71,7 +71,11 @@ public:
   Cube cube(int n=-1);
   int dump(std::ofstream &file);
   void plot(PostScript &ps);
-  uint64_t countPoints();
+  uint64_t getCount()
+  {
+    return count;
+  }
+  void countPoints(unsigned int n);
 private:
   xyz center;
   double side;
