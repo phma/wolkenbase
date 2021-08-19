@@ -169,6 +169,7 @@ public:
   void dumpBuffers();
   bool isConsistent();
   std::vector<LasPoint> pointsIn(const Shape &sh,bool sorted=false);
+  uint64_t countPointsIn(const Shape &sh);
   std::array<double,2> hiLoPointsIn(const Shape &sh);
   std::shared_mutex setBlockMutex; // lock when adding new blocks to file
 private:

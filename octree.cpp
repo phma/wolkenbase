@@ -1088,6 +1088,28 @@ vector<LasPoint> OctStore::pointsIn(const Shape &sh,bool sorted)
   return ret;
 }
 
+uint64_t OctStore::countPointsIn(const Shape &sh)
+{
+  vector<long long> blockList=octRoot.findBlocks(sh);
+  OctBuffer *buf;
+  Cube cube;
+  uint64_t ret=0;
+  int i,j;
+  for (i=0;i<blockList.size();i++)
+  {
+    buf=getBlock(blockList[i]);
+    if (buf->points.size())
+      cube=octRoot.findCube(buf->points[0].location);
+    if (sh.in(cube))
+      ret+=buf->points.size();
+    else
+      for (j=0;j<buf->points.size();j++)
+	if (sh.in(buf->points[j].location))
+	  ret++;
+  }
+  return ret;
+}
+
 array<double,2> OctStore::hiLoPointsIn(const Shape &sh)
 /* Returns the highest and lowest elevations of the points in the shape.
  * Used to color pixels when painting the scene.
