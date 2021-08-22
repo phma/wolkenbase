@@ -831,6 +831,37 @@ void OctStore::dumpBuffers()
   }
 }
 
+uint64_t OctStore::countPoints()
+// The count is not immediately up to date.
+{
+  uint64_t ret;
+  uint64_t i,nblk,ngrp;
+  countMutex.lock();
+  if (--blockGroup>=blockGroupCount.size())
+    blockGroup=blockGroupCount.size()-1;
+  ngrp=blockGroupCount.size();
+  nblk=blockPointCount.size();
+  countMutex.unlock();
+  for (ret=0,i=blockGroup*256;i<(blockGroup+1)*256 && i<nblk;++i)
+    ret+=blockPointCount[i];
+  blockGroupCount[i]=ret;
+  for (ret=i=0;i<ngrp;++i)
+    ret+=blockGroupCount[i];
+  return ret;
+}
+
+void OctStore::updateCount(long long block,int nPoints)
+{
+  uint64_t group=block/256;
+  countMutex.lock();
+  while (blockPointCount.size()<=block)
+    blockPointCount.push_back(0);
+  while (blockGroupCount.size()<=group)
+    blockGroupCount.push_back(0);
+  blockPointCount[block]=nPoints;
+  countMutex.unlock();
+}
+
 int OctStore::leastRecentlyUsed(int thread,int nthreads)
 {
   int i,age,maxAge=-1,ret=-1;
@@ -1009,6 +1040,7 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
     buf=&blocks[bufnum];
     bufferMutex.unlock_shared();
     assert(buf->iOwn());
+    updateCount(block,buf->points.size());
     return buf;
   }
 }

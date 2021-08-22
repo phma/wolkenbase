@@ -24,6 +24,7 @@
 #define OCTREE_H
 #include <map>
 #include <vector>
+#include <deque>
 #include <set>
 #include "config.h"
 #include "shape.h"
@@ -171,6 +172,7 @@ public:
   std::vector<LasPoint> pointsIn(const Shape &sh,bool sorted=false);
   uint64_t countPointsIn(const Shape &sh);
   std::array<double,2> hiLoPointsIn(const Shape &sh);
+  uint64_t countPoints();
   std::shared_mutex setBlockMutex; // lock when adding new blocks to file
 private:
   std::map<int,std::fstream> file;
@@ -180,18 +182,24 @@ private:
   std::shared_mutex revMutex; // lock when changing revBlocks
   std::mutex transitMutex; // lock when setting or clearing inTransit
   std::shared_mutex bufferMutex; // lock when adding new buffers to store
+  std::mutex countMutex; // lock when growing blockPointCount and blockGroupCount
   long long nowUsed;
   int nFiles;
+  uint32_t blockGroup;
   bool ignoreDupes;
   int leastRecentlyUsed(int thread,int nthreads);
   long long nBlocks;
   int newBlock();
+  void updateCount(long long block,int nPoints);
   OctBuffer *getBlock(long long block,bool mustExist=false);
   OctBuffer *getBlock(xyz key,bool writing);
   std::map<int,OctBuffer> blocks; // buffer number -> block
   std::map<int,int> revBlocks; // block number -> buffer number
   std::multimap<long long,int> lastUsedMap; // time counter -> buffer number
   std::map<int,std::vector<int> > ownMap; // thread -> buffer number
+  std::deque<uint16_t> blockPointCount; // block number -> number of points
+  std::deque<uint32_t> blockGroupCount; // 256 blocks group -> total number of points
+  uint64_t totalPoints;
   void split(long long block,xyz camelStraw);
   friend class OctBuffer;
   friend class Octree;
