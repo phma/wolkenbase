@@ -844,7 +844,8 @@ uint64_t OctStore::countPoints()
   countMutex.unlock();
   for (ret=0,i=blockGroup*256;i<(blockGroup+1)*256 && i<nblk;++i)
     ret+=blockPointCount[i];
-  blockGroupCount[i]=ret;
+  if (blockGroup<ngrp)
+    blockGroupCount[blockGroup]=ret;
   for (ret=i=0;i<ngrp;++i)
     ret+=blockGroupCount[i];
   return ret;

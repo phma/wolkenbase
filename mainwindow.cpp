@@ -155,7 +155,7 @@ void MainWindow::tick()
     ta=dequeueResult();
     gotResult(ta);
   }
-  dotTriangleMsg->setText(tr("%n dots","",octRoot.getCount()));
+  dotTriangleMsg->setText(tr("%n points","",octStore.countPoints()));
   memoryMsg->setText(QString::fromStdString(threePrefix(freeRam())+'B'));
   lpfBusyFraction=(16*lpfBusyFraction+busyFraction())/17;
   busyBar->setValue(lrint(lpfBusyFraction*16777216));
