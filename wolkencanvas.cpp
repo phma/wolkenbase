@@ -281,23 +281,27 @@ void WolkenCanvas::tick()
     Cylinder tileDone=snake.cyl(tileAddress);
     if (tileDone.getRadius()==0)
       break;
-    pcolor=pixelColorTile(tileAddress);
-    ballAngle+=DEG1;
-    painter.setPen(Qt::NoPen);
-    painter.setBrush(QColor(lrint(pcolor[0]*255),lrint(pcolor[1]*255),lrint(pcolor[2]*255)));
     circleCenter=worldToWindow(tileDone.getCenter());
     radius=tileDone.getRadius()*scale;
-    circleBox=QRectF(circleCenter.x()-radius,circleCenter.y()-radius,
-		     radius*2,radius*2);
-    painter.drawEllipse(circleBox);
-    if (ceil(circleCenter.x()+radius)>pixmaxx)
-      pixmaxx=ceil(circleCenter.x()+radius);
-    if (floor(circleCenter.x()-radius)<pixminx)
-      pixminx=floor(circleCenter.x()-radius);
-    if (ceil(circleCenter.y()+radius)>pixmaxy)
-      pixmaxy=ceil(circleCenter.y()+radius);
-    if (floor(circleCenter.y()-radius)<pixminy)
-      pixminy=floor(circleCenter.y()-radius);
+    ballAngle+=DEG1;
+    if (circleCenter.x()+radius>=0 && circleCenter.x()-radius<=width() &&
+	circleCenter.y()+radius>=0 && circleCenter.y()-radius<=height())
+    {
+      pcolor=pixelColorTile(tileAddress);
+      painter.setPen(Qt::NoPen);
+      painter.setBrush(QColor(lrint(pcolor[0]*255),lrint(pcolor[1]*255),lrint(pcolor[2]*255)));
+      circleBox=QRectF(circleCenter.x()-radius,circleCenter.y()-radius,
+		      radius*2,radius*2);
+      painter.drawEllipse(circleBox);
+      if (ceil(circleCenter.x()+radius)>pixmaxx)
+	pixmaxx=ceil(circleCenter.x()+radius);
+      if (floor(circleCenter.x()-radius)<pixminx)
+	pixminx=floor(circleCenter.x()-radius);
+      if (ceil(circleCenter.y()+radius)>pixmaxy)
+	pixmaxy=ceil(circleCenter.y()+radius);
+      if (floor(circleCenter.y()-radius)<pixminy)
+	pixminy=floor(circleCenter.y()-radius);
+    }
     elapsed=clk.now()-timeStart;
   }
   if (pixminx<=pixmaxx)
