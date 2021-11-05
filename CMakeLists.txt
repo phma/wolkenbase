@@ -48,6 +48,15 @@ add_executable(wolkenbase angle.cpp binio.cpp boundrect.cpp
                threads.cpp tile.cpp unitbutton.cpp wkt.cpp wolkenbase.cpp wolkencanvas.cpp
                ${lib_resources} ${qm_files})
 
+add_executable(lasify angle.cpp binio.cpp boundrect.cpp
+	       brevno.cpp classify.cpp cloudoutput.cpp configdialog.cpp eisenstein.cpp
+               fileio.cpp flowsnake.cpp freeram.cpp point.cpp las.cpp ldecimal.cpp
+               leastsquares.cpp lissajous.cpp mainwindow.cpp manysum.cpp matrix.cpp
+               octree.cpp peano.cpp ps.cpp quaternion.cpp
+               random.cpp relprime.cpp scan.cpp shape.cpp testpattern.cpp
+               threads.cpp tile.cpp unitbutton.cpp wkt.cpp lasify.cpp wolkencanvas.cpp
+               ${lib_resources} ${qm_files})
+
 add_executable(wolkencli angle.cpp binio.cpp boundrect.cpp
 	       brevno.cpp classify.cpp eisenstein.cpp
                flowsnake.cpp freeram.cpp point.cpp las.cpp ldecimal.cpp
@@ -69,15 +78,18 @@ endif (${Boost_FOUND})
 if (${Mitobrevno_FOUND})
 target_link_libraries(wolkencli ${Mitobrevno_LIBRARY})
 target_link_libraries(wolkenbase ${Mitobrevno_LIBRARY})
+target_link_libraries(lasify ${Mitobrevno_LIBRARY})
 target_link_libraries(wolkentest ${Mitobrevno_LIBRARY})
 endif (${Mitobrevno_FOUND})
 target_link_libraries(wolkentest ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(wolkencli ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(wolkenbase ${CMAKE_THREAD_LIBS_INIT} Qt5::Widgets Qt5::Core)
+target_link_libraries(lasify ${CMAKE_THREAD_LIBS_INIT} Qt5::Widgets Qt5::Core)
 target_compile_definitions(wolkencli PUBLIC _USE_MATH_DEFINES)
 target_compile_definitions(wolkenbase PUBLIC _USE_MATH_DEFINES GUI)
+target_compile_definitions(lasify PUBLIC _USE_MATH_DEFINES GUI)
 target_compile_definitions(wolkentest PUBLIC _USE_MATH_DEFINES)
-install(TARGETS wolkenbase DESTINATION bin)
+install(TARGETS wolkenbase lasify DESTINATION bin)
 
 include(CheckIncludeFiles)
 check_include_files(time.h HAVE_TIME_H)
