@@ -29,7 +29,7 @@
 #include "octree.h"
 #include "angle.h"
 #include "relprime.h"
-#include "mainwindow.h"
+#include "lasifywindow.h"
 #include "brevno.h"
 
 using namespace std;
@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
     //cout<<"Translations found in share directory"<<endl;
     app.installTranslator(&translator);
   }
-  MainWindow window;
+  LasifyWindow window;
   nthreads=window.getNumberThreads();
   fillTanTables();
   if (nthreads<1)
