@@ -281,21 +281,6 @@ void LasifyWindow::closeEvent(QCloseEvent *event)
 {
   int result;
   writeSettings();
-  /*if (conversionBusy())
-  {
-    msgBox->setWindowTitle(tr("PerfectTIN"));
-    msgBox->setIcon(QMessageBox::Warning);
-    msgBox->setText(tr("A conversion is in progress."));
-    msgBox->setInformativeText(tr("Do you want to abort it and exit?"));
-    msgBox->setStandardButtons(QMessageBox::Yes|QMessageBox::No);
-    msgBox->setDefaultButton(QMessageBox::No);
-    result=msgBox->exec();
-    if (result==QMessageBox::Yes)
-      event->accept();
-    else
-      event->ignore();
-  }
-  else*/
     event->accept();
 }
 
