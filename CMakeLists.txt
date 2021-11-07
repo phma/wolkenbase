@@ -40,7 +40,8 @@ qt5_add_translation(qm_files wolkenbase_en.ts wolkenbase_es.ts)
 
 # point.cpp must be before las.cpp for noPoint to be initialized to nanxyz.
 add_executable(wolkenbase angle.cpp binio.cpp boundrect.cpp
-	       brevno.cpp classify.cpp cloudoutput.cpp configdialog.cpp eisenstein.cpp
+	       brevno.cpp classify.cpp cloud.cpp
+	       cloudoutput.cpp configdialog.cpp eisenstein.cpp
                fileio.cpp flowsnake.cpp freeram.cpp point.cpp las.cpp ldecimal.cpp
                leastsquares.cpp lissajous.cpp mainwindow.cpp manysum.cpp matrix.cpp
                octree.cpp peano.cpp ps.cpp quaternion.cpp
@@ -59,14 +60,14 @@ add_executable(lasify angle.cpp binio.cpp boundrect.cpp
                ${lib_resources} ${qm_files})
 
 add_executable(wolkencli angle.cpp binio.cpp boundrect.cpp
-	       brevno.cpp classify.cpp eisenstein.cpp
+	       brevno.cpp classify.cpp cloud.cpp eisenstein.cpp
                flowsnake.cpp freeram.cpp point.cpp las.cpp ldecimal.cpp
                leastsquares.cpp manysum.cpp matrix.cpp octree.cpp ps.cpp quaternion.cpp
                random.cpp relprime.cpp scan.cpp shape.cpp testpattern.cpp
                threads.cpp tile.cpp wkt.cpp wolkencli.cpp)
 
 add_executable(wolkentest angle.cpp binio.cpp boundrect.cpp
-	       brevno.cpp classify.cpp eisenstein.cpp
+	       brevno.cpp classify.cpp cloud.cpp eisenstein.cpp
                flowsnake.cpp freeram.cpp point.cpp las.cpp ldecimal.cpp leastsquares.cpp
                manysum.cpp matrix.cpp octree.cpp peano.cpp ps.cpp quaternion.cpp
                random.cpp relprime.cpp scan.cpp shape.cpp testpattern.cpp

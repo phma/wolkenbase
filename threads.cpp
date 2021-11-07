@@ -31,6 +31,7 @@
 #include "relprime.h"
 #include "brevno.h"
 #include "las.h"
+#include "cloud.h"
 #include "freeram.h"
 #include "octree.h"
 #include "scan.h"
@@ -406,6 +407,8 @@ void countClasses(int thread)
   map<int,size_t> threadTotals,blockCounts;
   int i;
   map<int,size_t>::iterator j;
+  if (thread==0) // Count points read in from XYZ or PLY as raw in LASify
+    threadTotals[0]=cloud.size();
   for (i=thread;i<octStore.getNumBlocks();i+=nThreads())
   {
     blockCounts=octStore.countClasses(i);
