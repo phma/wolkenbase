@@ -89,7 +89,7 @@ target_link_libraries(wolkenbase ${CMAKE_THREAD_LIBS_INIT} Qt5::Widgets Qt5::Cor
 target_link_libraries(lasify ${CMAKE_THREAD_LIBS_INIT} Qt5::Widgets Qt5::Core)
 target_compile_definitions(wolkencli PUBLIC _USE_MATH_DEFINES)
 target_compile_definitions(wolkenbase PUBLIC _USE_MATH_DEFINES GUI)
-target_compile_definitions(lasify PUBLIC _USE_MATH_DEFINES GUI)
+target_compile_definitions(lasify PUBLIC _USE_MATH_DEFINES GUI XYZ)
 target_compile_definitions(wolkentest PUBLIC _USE_MATH_DEFINES)
 install(TARGETS wolkenbase lasify DESTINATION bin)
 
