@@ -3,7 +3,7 @@
 /* cloud.cpp - point cloud                            */
 /*                                                    */
 /******************************************************/
-/* Copyright 2019 Pierre Abbat.
+/* Copyright 2019,2021 Pierre Abbat.
  * This file is part of Wolkenbase.
  *
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -21,6 +21,25 @@
  */
 
 #include "cloud.h"
+#include "octree.h"
 using namespace std;
 
 vector<xyz> cloud;
+
+int64_t getNumCloudBlocks()
+{
+  return (cloud.size()+RECORDS-1)/RECORDS;
+}
+
+vector<LasPoint> getCloudBlock(int64_t n)
+{
+  LasPoint pnt;
+  vector<LasPoint> ret;
+  int64_t i;
+  for (i=n*RECORDS;i<(n+1)*RECORDS && i<cloud.size();i++)
+  {
+    pnt.location=cloud[i];
+    ret.push_back(pnt);
+  }
+  return ret;
+}

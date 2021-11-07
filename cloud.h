@@ -3,7 +3,7 @@
 /* cloud.h - point cloud                              */
 /*                                                    */
 /******************************************************/
-/* Copyright 2019 Pierre Abbat.
+/* Copyright 2019,2021 Pierre Abbat.
  * This file is part of Wolkenbase.
  *
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -22,5 +22,8 @@
 
 #include <vector>
 #include "point.h"
+#include "las.h"
 
 extern std::vector<xyz> cloud;
+int64_t getNumCloudBlocks();
+std::vector<LasPoint> getCloudBlock(int64_t n);

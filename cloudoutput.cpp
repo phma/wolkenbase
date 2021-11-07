@@ -21,6 +21,7 @@
  */
 #include "cloudoutput.h"
 #include "octree.h"
+#include "cloud.h"
 using namespace std;
 
 string ndecimal(size_t n,int dig)
@@ -145,6 +146,24 @@ void CloudOutput::writeFiles()
 	}
     }
     blockPoints=octStore.getAll(i);
+    for (j=0;j<blockPoints.size();j++)
+      headers[blockPoints[j].classification]
+	     [nextBlocks[blockPoints[j].classification]].
+	     writePoint(blockPoints[j]);
+  }
+  for (i=0;i<getNumCloudBlocks();i++)
+  {
+    for (k=headers.begin();k!=headers.end();++k)
+    {
+      min=grandTotal;
+      for (j=0;j<k->second.size();j++)
+	if (k->second[j].numberPoints()<min)
+	{
+	  nextBlocks[k->first]=j;
+	  min=k->second[j].numberPoints();
+	}
+    }
+    blockPoints=getCloudBlock(i);
     for (j=0;j<blockPoints.size();j++)
       headers[blockPoints[j].classification]
 	     [nextBlocks[blockPoints[j].classification]].
