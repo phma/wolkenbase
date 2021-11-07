@@ -125,6 +125,7 @@ public:
   LasHeader();
   ~LasHeader();
   void openRead(std::string fileName);
+  void openFake(std::string fileName);
   void openWrite(std::string fileName,int sysId);
   void writeHeader();
   bool isValid();
