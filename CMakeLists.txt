@@ -55,7 +55,7 @@ add_executable(lasify angle.cpp binio.cpp boundrect.cpp
 	       cloudoutput.cpp configdialog.cpp eisenstein.cpp
                fileio.cpp flowsnake.cpp freeram.cpp point.cpp las.cpp ldecimal.cpp
                leastsquares.cpp lissajous.cpp lasifywindow.cpp manysum.cpp matrix.cpp
-               octree.cpp peano.cpp ps.cpp quaternion.cpp
+               octree.cpp peano.cpp ply.cpp ps.cpp quaternion.cpp
                random.cpp relprime.cpp scan.cpp shape.cpp testpattern.cpp
                threads.cpp tile.cpp unitbutton.cpp wkt.cpp lasify.cpp wolkencanvas.cpp xyzfile.cpp
                ${lib_resources} ${qm_files})
