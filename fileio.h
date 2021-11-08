@@ -26,4 +26,8 @@
 std::string noExt(std::string fileName);
 std::string extension(std::string fileName);
 std::string baseName(std::string fileName);
+
+#ifdef XYZ
+int readCloud(std::string &inputFile,double inUnit,int flags);
+#endif
 #endif

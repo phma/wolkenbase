@@ -20,6 +20,8 @@
  * along with Wolkenbase. If not, see <http://www.gnu.org/licenses/>.
  */
 #include "fileio.h"
+#include "cloud.h"
+#include "threads.h"
 using namespace std;
 
 string noExt(string fileName)
@@ -64,3 +66,27 @@ string baseName(string fileName)
   slashPos=fileName.rfind('/');
   return fileName.substr(slashPos+1);
 }
+
+#ifdef XYZ
+#include "ply.h"
+#include "xyzfile.h"
+
+int readCloud(string &inputFile,double inUnit,int flags)
+{
+  int i,already=cloud.size(),ret=0;
+  readPly(inputFile);
+  if (cloud.size()>already)
+    ret=RES_LOAD_PLY;
+  if (cloud.size()==already)
+  {
+    readXyzText(inputFile);
+    if (cloud.size()>already)
+      ret=RES_LOAD_XYZ;
+  }
+  if (cloud.size()>already)
+    cout<<"Read "<<cloud.size()-already<<" dots\n";
+  for (i=already;i<cloud.size();i++)
+    cloud[i]*=inUnit;
+  return ret;
+}
+#endif

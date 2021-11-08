@@ -60,6 +60,9 @@ class Flowsnake;
 #define ACT_COUNT 2
 #define ACT_WRITE 3
 
+#define RES_LOAD_PLY 1
+#define RES_LOAD_XYZ 2
+
 struct ThreadAction
 {
   int opcode;
