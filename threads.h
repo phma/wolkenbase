@@ -59,6 +59,7 @@ class Flowsnake;
 #define ACT_READ 1
 #define ACT_COUNT 2
 #define ACT_WRITE 3
+#define ACT_LOAD 4
 
 #define RES_LOAD_PLY 1
 #define RES_LOAD_XYZ 2
