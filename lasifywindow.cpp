@@ -23,6 +23,7 @@
 #include "lasifywindow.h"
 #include "ldecimal.h"
 #include "angle.h"
+#include "cloud.h"
 #include "fileio.h"
 #include "brevno.h"
 #include "octree.h"
@@ -155,7 +156,7 @@ void LasifyWindow::tick()
     ta=dequeueResult();
     gotResult(ta);
   }
-  dotTriangleMsg->setText(tr("%n points","",octStore.countPoints()));
+  dotTriangleMsg->setText(tr("%n points","",cloud.size()));
   memoryMsg->setText(QString::fromStdString(threePrefix(freeRam())+'B'));
   lpfBusyFraction=(16*lpfBusyFraction+busyFraction())/17;
   busyBar->setValue(lrint(lpfBusyFraction*16777216));
