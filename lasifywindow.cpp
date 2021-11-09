@@ -176,11 +176,15 @@ void LasifyWindow::openFile()
   string fileName;
   ThreadAction ta;
   fileDialog=new QFileDialog(this);
-  fileDialog->setWindowTitle(tr("Open LAS File"));
-  fileDialog->setFileMode(QFileDialog::ExistingFiles);
+  fileDialog->setWindowTitle(tr("Open Point Cloud"));
+  fileDialog->setFileMode(QFileDialog::ExistingFile);
   fileDialog->setAcceptMode(QFileDialog::AcceptOpen);
   fileDialog->selectFile("");
-  fileDialog->setNameFilter(tr("(*.las);;(*)"));
+#ifdef Plytapus_FOUND
+  fileDialog->setNameFilter(tr("(*.ply);;(*.xyz);;(*)"));
+#else
+  fileDialog->setNameFilter(tr("(*.xyz);;(*)"));
+#endif
   dialogResult=fileDialog->exec();
   if (dialogResult)
   {
