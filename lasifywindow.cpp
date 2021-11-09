@@ -267,6 +267,9 @@ void LasifyWindow::handleResult(ThreadAction ta)
 	threadsCountedPoints=0;
       }
       break;
+    case ACT_LOAD:
+      cout<<"Finished loading cloud\n";
+      break;
   }
   showingResult=false;
 }

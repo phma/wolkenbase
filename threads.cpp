@@ -647,6 +647,8 @@ void WolkenThread::operator()(int thread)
 	case ACT_LOAD:
 	  cloud.clear();
 	  readCloud(act.filename,1,0);
+	  enqueueResult(act);
+	  unsleep(thread);
 	  break;
 #endif
 	default:
