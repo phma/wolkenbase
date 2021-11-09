@@ -607,7 +607,8 @@ void WolkenCanvas::paintEvent(QPaintEvent *event)
       }
       break;
     case TH_READ:
-      if (!(actionQueueEmpty() && pointBufferEmpty()))
+    case -ACT_LOAD:
+      if (!(actionQueueEmpty() && pointBufferEmpty()) || state<0)
       {
 	painter.setPen(Qt::NoPen);
 	painter.setBrush(Qt::lightGray);
