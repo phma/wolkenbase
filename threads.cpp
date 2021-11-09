@@ -34,6 +34,7 @@
 #include "cloud.h"
 #include "freeram.h"
 #include "octree.h"
+#include "fileio.h"
 #include "scan.h"
 #include "classify.h"
 
@@ -642,6 +643,12 @@ void WolkenThread::operator()(int thread)
 	act=dequeueAction();
       switch (act.opcode)
       {
+#ifdef XYZ
+	case ACT_LOAD:
+	  cloud.clear();
+	  readCloud(act.filename,1,0);
+	  break;
+#endif
 	default:
 	  sleep(thread);
       }
