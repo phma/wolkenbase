@@ -198,6 +198,9 @@ void LasifyWindow::openFile()
       fileNames+=baseName(fileName);
       lastFileName=fileName;
       ta.filename=fileName;
+      canvas->inFileHeaders.resize(1);
+      canvas->inFileHeaders[0].openFake(fileName);
+      ta.hdr=&canvas->inFileHeaders[0];
       ta.opcode=ACT_LOAD;
       enqueueAction(ta);
     }

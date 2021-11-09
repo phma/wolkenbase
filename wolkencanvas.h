@@ -41,6 +41,7 @@ public:
   QPointF worldToWindow(xy pnt);
   xy windowToWorld(QPointF pnt);
   double tileSize;
+  std::deque<LasHeader> inFileHeaders;
   int state;
 signals:
   void splashScreenStarted();
@@ -78,7 +79,6 @@ private:
   double scale;
   double lengthUnit;
   double maxScaleSize,scaleSize;
-  std::deque<LasHeader> inFileHeaders;
   xy ballPos;
   xy leftScaleEnd,rightScaleEnd,scaleEnd;
   int penPos;
