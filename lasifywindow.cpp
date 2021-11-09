@@ -196,7 +196,9 @@ void LasifyWindow::openFile()
 	fileNames+=';';
       fileNames+=baseName(fileName);
       lastFileName=fileName;
-      fileOpened(fileName);
+      ta.filename=fileName;
+      ta.opcode=ACT_LOAD;
+      enqueueAction(ta);
     }
   }
   delete fileDialog;
