@@ -272,6 +272,7 @@ void LasifyWindow::handleResult(ThreadAction ta)
       break;
     case ACT_LOAD:
       cout<<"Finished loading cloud\n";
+      tinSizeChanged();
       break;
   }
   showingResult=false;

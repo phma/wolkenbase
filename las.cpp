@@ -523,6 +523,16 @@ void LasHeader::setScale(xyz minCor,xyz maxCor,xyz scale)
     zScale=(maxCor.getz()-minCor.getz())/4132485216./unit;
 }
 
+void LasHeader::setMinMax(xyz minCor,xyz maxCor)
+{
+  minX=minCor.getx();
+  minY=minCor.gety();
+  minZ=minCor.getz();
+  maxX=maxCor.getx();
+  maxY=maxCor.gety();
+  maxZ=maxCor.getz();
+}
+
 void LasHeader::close()
 {
   delete(lasfile);

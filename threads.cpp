@@ -651,8 +651,8 @@ void WolkenThread::operator()(int thread)
 	  br.clear();
 	  for (i=0;i<cloud.size();i++)
 	    br.include(cloud[i]);
-	  act.hdr->setScale(xyz(br.left(),br.bottom(),br.low()),
-			    xyz(br.right(),br.top(),br.high()),xyz(0,0,0));
+	  act.hdr->setMinMax(xyz(br.left(),br.bottom(),br.low()),
+			     xyz(br.right(),br.top(),br.high()));
 	  enqueueResult(act);
 	  unsleep(thread);
 	  break;

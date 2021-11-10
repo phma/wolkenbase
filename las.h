@@ -132,6 +132,7 @@ public:
   void setVersion(int major,int minor);
   void setPointFormat(int format);
   void setScale(xyz minCor,xyz maxCor,xyz scale);
+  void setMinMax(xyz minCor,xyz maxCor);
   xyz getScale()
   {
     return xyz(xScale*unit,yScale*unit,zScale*unit);
