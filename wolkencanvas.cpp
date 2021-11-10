@@ -136,6 +136,7 @@ void WolkenCanvas::sizeToFit()
 {
   int i;
   double xscale,yscale;
+  br.clear();
   for (i=0;i<inFileHeaders.size();i++)
   {
     br.include(inFileHeaders[i].minCorner());
