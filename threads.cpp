@@ -429,6 +429,7 @@ void WolkenThread::operator()(int thread)
   bool dropZeros;
   xyz offset,scale;
   ThreadAction act;
+  BoundRect br;
   LasPoint point,gotPoint;
   Eisenstein cylAddress;
   logStartThread();
@@ -647,6 +648,11 @@ void WolkenThread::operator()(int thread)
 	case ACT_LOAD:
 	  cloud.clear();
 	  readCloud(act.filename,1,0);
+	  br.clear();
+	  for (i=0;i<cloud.size();i++)
+	    br.include(cloud[i]);
+	  act.hdr->setScale(xyz(br.left(),br.bottom(),br.low()),
+			    xyz(br.right(),br.top(),br.high()),xyz(0,0,0));
 	  enqueueResult(act);
 	  unsleep(thread);
 	  break;
