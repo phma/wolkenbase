@@ -358,7 +358,7 @@ void LasHeader::openFake(string fileName)
   versionMinor=4;
   xScale=yScale=zScale=0;
   xOffset=yOffset=zOffset=NAN;
-  pointFormat=pointLength=0;
+  setPointFormat(6); // could be 0 if <4G points
   maxX=maxY=maxZ=-INFINITY;
   minX=minY=minZ=INFINITY;
   nVariableLength=nExtendedVariableLength=0;
