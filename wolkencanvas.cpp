@@ -24,6 +24,7 @@
 #include <cmath>
 #include <climits>
 #include "wolkencanvas.h"
+#include "cloud.h"
 #include "fileio.h"
 #include "relprime.h"
 #include "angle.h"
@@ -516,6 +517,7 @@ void WolkenCanvas::writeFile()
 void WolkenCanvas::clearCloud()
 {
   inFileHeaders.clear();
+  cloud.clear();
   setSize();
 }
 
