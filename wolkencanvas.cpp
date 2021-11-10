@@ -398,6 +398,51 @@ void WolkenCanvas::readFileHeader(string name)
   setSize();
 }
 
+void WolkenCanvas::saveFile()
+// Save the point cloud that was read in as PLY or XYZ without classifying
+{
+  int i,dialogResult;
+  vector<xyz> limits;
+  QStringList files;
+  string fileName;
+  ThreadAction ta;
+  BoundRect br;
+  double side;
+  multimap<int64_t,LasHeader *> sorter;
+  multimap<int64_t,LasHeader *>::iterator j;
+  fileDialog=new QFileDialog(this);
+  fileDialog->setWindowTitle(tr("Save point cloud"));
+  fileDialog->setFileMode(QFileDialog::AnyFile);
+  fileDialog->setAcceptMode(QFileDialog::AcceptSave);
+  fileDialog->setNameFilter(tr("(*.las)"));
+  dialogResult=fileDialog->exec();
+  if (dialogResult)
+  {
+    files=fileDialog->selectedFiles();
+    saveFileName=files[0].toStdString();
+    if (extension(saveFileName)==".las")
+      saveFileName=noExt(saveFileName);
+    for (i=0;i<inFileHeaders.size();i++)
+    {
+      limits.push_back(inFileHeaders[i].minCorner());
+      limits.push_back(inFileHeaders[i].maxCorner());
+      br.include(inFileHeaders[i].minCorner());
+      br.include(inFileHeaders[i].maxCorner());
+      sorter.insert(pair<int64_t,LasHeader *>(-inFileHeaders[i].numberPoints(),&inFileHeaders[i]));
+    }
+    side=br.right()-br.left();
+    if (br.top()-br.bottom()>side)
+      side=br.top()-br.bottom();
+    if (br.high()-br.low()>side)
+      side=br.high()-br.low();
+    cube=Cube(xyz((br.right()+br.left())/2,(br.top()+br.bottom())/2,
+		  (br.high()+br.low())/2),side);
+  }
+  delete fileDialog;
+  fileDialog=nullptr;
+  writeFile();
+}
+
 void WolkenCanvas::startProcess()
 {
   int i,dialogResult;

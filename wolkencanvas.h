@@ -52,6 +52,7 @@ public slots:
   void setSize();
   void readFileHeader(std::string name);
   void clearCloud();
+  void saveFile();
   void startProcess();
   void startScan();
   void startPostscan();

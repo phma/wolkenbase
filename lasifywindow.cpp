@@ -319,9 +319,9 @@ void LasifyWindow::makeActions()
   connect(clearAction,SIGNAL(triggered(bool)),canvas,SLOT(clearCloud()));
   processAction=new QAction(this);
   //procesAction->setIcon(QIcon::fromTheme("edit-clear"));
-  processAction->setText(tr("Process"));
+  processAction->setText(tr("Save as LAS"));
   fileMenu->addAction(processAction);
-  connect(processAction,SIGNAL(triggered(bool)),canvas,SLOT(startProcess()));
+  connect(processAction,SIGNAL(triggered(bool)),canvas,SLOT(saveFile()));
   stopAction=new QAction(this);
   stopAction->setIcon(QIcon::fromTheme("process-stop"));
   stopAction->setText(tr("Stop"));
