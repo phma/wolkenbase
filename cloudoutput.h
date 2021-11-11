@@ -29,7 +29,7 @@
 
 class CloudOutput: public QObject
 {
-  Q_OBJECT
+  Q_OBJECT // Needs to be a QObject because it has translated strings.
 public:
   xyz minCor,maxCor,scale;
   int nInputFiles;
