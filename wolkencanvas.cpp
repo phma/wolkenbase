@@ -430,6 +430,8 @@ void WolkenCanvas::saveFile()
       br.include(inFileHeaders[i].maxCorner());
       sorter.insert(pair<int64_t,LasHeader *>(-inFileHeaders[i].numberPoints(),&inFileHeaders[i]));
     }
+    classTotals.clear();
+    classTotals[0]=cloud.size();
     side=br.right()-br.left();
     if (br.top()-br.bottom()>side)
       side=br.top()-br.bottom();
@@ -440,7 +442,8 @@ void WolkenCanvas::saveFile()
   }
   delete fileDialog;
   fileDialog=nullptr;
-  writeFile();
+  if (dialogResult)
+    writeFile();
 }
 
 void WolkenCanvas::startProcess()
