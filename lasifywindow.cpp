@@ -385,10 +385,10 @@ void LasifyWindow::readSettings()
   resize(settings.value("size",QSize(707,500)).toSize());
   move(settings.value("pos",QPoint(0,0)).toPoint());
   numberThreads=settings.value("threads",0).toInt();
-  lengthUnit=settings.value("lengthUnit",1).toDouble();
+  lengthUnit=1; // convert the file format, not the unit
   cloudOutput.pointsPerFile=settings.value("pointsPerFile",0).toInt();
-  cloudOutput.separateClasses=settings.value("separateClasses",true).toBool();
-  canvas->tileSize=settings.value("tileSize",1).toDouble();
+  cloudOutput.separateClasses=false; // all points are raw
+  canvas->tileSize=1; // irrelevant
   maxSlope=settings.value("maxSlope",1).toDouble();
   minHyperboloidSize=settings.value("minimumHyperboloidSize",0.1).toDouble();
   lengthUnitChanged(lengthUnit);
@@ -400,10 +400,7 @@ void LasifyWindow::writeSettings()
   settings.setValue("size",size());
   settings.setValue("pos",pos());
   settings.setValue("threads",numberThreads);
-  settings.setValue("lengthUnit",lengthUnit);
   settings.setValue("pointsPerFile",cloudOutput.pointsPerFile);
-  settings.setValue("separateClasses",cloudOutput.separateClasses);
-  settings.setValue("tileSize",canvas->tileSize);
   settings.setValue("maxSlope",maxSlope);
   settings.setValue("minimumHyperboloidSize",minHyperboloidSize);
 }
