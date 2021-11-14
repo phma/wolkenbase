@@ -2,26 +2,211 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="en_US">
 <context>
-    <name>MainWindow</name>
+    <name>CloudOutput</name>
     <message>
-        <location filename="mainwindow.cpp" line="119"/>
-        <source>Open LAS File</source>
-        <translation>Open LAS File</translation>
+        <location filename="cloudoutput.cpp" line="48"/>
+        <source>raw</source>
+        <translation>raw</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="123"/>
-        <source>(*.las);;(*)</source>
-        <translation>Laser files (*.las);;All files(*)</translation>
+        <location filename="cloudoutput.cpp" line="51"/>
+        <source>nonground</source>
+        <translation>nonground</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="198"/>
-        <location filename="mainwindow.cpp" line="199"/>
-        <location filename="mainwindow.cpp" line="206"/>
+        <location filename="cloudoutput.cpp" line="54"/>
+        <source>ground</source>
+        <translation>ground</translation>
+    </message>
+    <message>
+        <location filename="cloudoutput.cpp" line="57"/>
+        <source>lownoise</source>
+        <translation>lownoise</translation>
+    </message>
+</context>
+<context>
+    <name>ConfigurationDialog</name>
+    <message>
+        <location filename="configdialog.cpp" line="32"/>
+        <source>Meter</source>
+        <translation>Meter</translation>
+    </message>
+    <message>
+        <location filename="configdialog.cpp" line="33"/>
+        <source>Int&apos;l foot</source>
+        <translation>International foot</translation>
+    </message>
+    <message>
+        <location filename="configdialog.cpp" line="34"/>
+        <source>US foot</source>
+        <translation>US foot</translation>
+    </message>
+    <message>
+        <location filename="configdialog.cpp" line="35"/>
+        <source>Indian foot</source>
+        <translation>Indian foot</translation>
+    </message>
+    <message>
+        <location filename="configdialog.cpp" line="44"/>
+        <source>1 M</source>
+        <translation>1 million</translation>
+    </message>
+    <message>
+        <location filename="configdialog.cpp" line="45"/>
+        <source>2 M</source>
+        <translation>2 million</translation>
+    </message>
+    <message>
+        <location filename="configdialog.cpp" line="46"/>
+        <source>5 M</source>
+        <translation>5 million</translation>
+    </message>
+    <message>
+        <location filename="configdialog.cpp" line="47"/>
+        <source>10 M</source>
+        <translation>10 million</translation>
+    </message>
+    <message>
+        <location filename="configdialog.cpp" line="48"/>
+        <source>20 M</source>
+        <translation>20 million</translation>
+    </message>
+    <message>
+        <location filename="configdialog.cpp" line="49"/>
+        <source>50 M</source>
+        <translation>50 million</translation>
+    </message>
+    <message>
+        <location filename="configdialog.cpp" line="50"/>
+        <source>100 M</source>
+        <translation>100 million</translation>
+    </message>
+    <message>
+        <location filename="configdialog.cpp" line="51"/>
+        <source>200 M</source>
+        <translation>200 million</translation>
+    </message>
+    <message>
+        <location filename="configdialog.cpp" line="52"/>
+        <source>500 M</source>
+        <translation>500 million</translation>
+    </message>
+    <message>
+        <location filename="configdialog.cpp" line="53"/>
+        <source>1 G</source>
+        <translation>1 billion</translation>
+    </message>
+    <message>
+        <location filename="configdialog.cpp" line="54"/>
+        <source>2 G</source>
+        <translation>2 billion</translation>
+    </message>
+    <message>
+        <location filename="configdialog.cpp" line="55"/>
+        <source>nolmt</source>
+        <translation>No limit</translation>
+    </message>
+    <message>
+        <location filename="configdialog.cpp" line="140"/>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <location filename="configdialog.cpp" line="141"/>
+        <source>Cancel</source>
+        <translation>Cancel</translation>
+    </message>
+    <message>
+        <location filename="configdialog.cpp" line="146"/>
+        <source>General</source>
+        <translation>General</translation>
+    </message>
+    <message>
+        <location filename="configdialog.cpp" line="147"/>
+        <source>Classify</source>
+        <translation>Classify</translation>
+    </message>
+    <message>
+        <location filename="configdialog.cpp" line="156"/>
+        <source>Length unit</source>
+        <translation>Length unit</translation>
+    </message>
+    <message>
+        <location filename="configdialog.cpp" line="157"/>
+        <source>Threads:</source>
+        <translation>Threads:</translation>
+    </message>
+    <message>
+        <location filename="configdialog.cpp" line="158"/>
+        <source>Points per file:</source>
+        <translation>Points per file:</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="configdialog.cpp" line="159"/>
+        <source>default is %n</source>
+        <translation>
+            <numerusform>default is %n</numerusform>
+            <numerusform>default is %n</numerusform>
+        </translation>
+    </message>
+    <message>
+        <location filename="configdialog.cpp" line="160"/>
+        <source>Tile size</source>
+        <translation>Tile size</translation>
+    </message>
+    <message>
+        <location filename="configdialog.cpp" line="161"/>
+        <source>Minimum smoothness</source>
+        <translation>Minimum smoothness</translation>
+    </message>
+    <message>
+        <location filename="configdialog.cpp" line="162"/>
+        <source>Maximum slope</source>
+        <translation>Maximum slope</translation>
+    </message>
+</context>
+<context>
+    <name>GeneralTab</name>
+    <message>
+        <location filename="configdialog.cpp" line="104"/>
+        <source>Separate classes</source>
+        <translation>Separate classes</translation>
+    </message>
+</context>
+<context>
+    <name>LasifyWindow</name>
+    <message numerus="yes">
+        <location filename="lasifywindow.cpp" line="159"/>
+        <source>%n points</source>
+        <translation>
+            <numerusform>%n point</numerusform>
+            <numerusform>%n points</numerusform>
+        </translation>
+    </message>
+    <message>
+        <location filename="lasifywindow.cpp" line="180"/>
+        <source>Open Point Cloud</source>
+        <translation>Open point cloud</translation>
+    </message>
+    <message>
+        <location filename="lasifywindow.cpp" line="185"/>
+        <source>(*.ply);;(*.xyz);;(*)</source>
+        <translation>Polygon files (*.ply);;XYZ files (*.xyz);;All files(*)</translation>
+    </message>
+    <message>
+        <location filename="lasifywindow.cpp" line="187"/>
+        <source>(*.xyz);;(*)</source>
+        <translation>XYZ files (*.xyz);;All files(*)</translation>
+    </message>
+    <message>
+        <location filename="lasifywindow.cpp" line="284"/>
+        <location filename="lasifywindow.cpp" line="285"/>
+        <location filename="lasifywindow.cpp" line="292"/>
         <source>Wolkenbase</source>
         <translation>Wolkenbase</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="200"/>
+        <location filename="lasifywindow.cpp" line="286"/>
         <source>%1
 Version %2
 Copyright %3 Pierre Abbat
@@ -32,72 +217,205 @@ Copyright %3 Pierre Abbat
 License GPL 3 or later</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="234"/>
+        <location filename="lasifywindow.cpp" line="305"/>
         <source>&amp;File</source>
         <translation>&amp;File</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="235"/>
+        <location filename="lasifywindow.cpp" line="306"/>
         <source>&amp;View</source>
         <translation>&amp;View</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="236"/>
+        <location filename="lasifywindow.cpp" line="307"/>
         <source>&amp;Settings</source>
         <translation>&amp;Settings</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="237"/>
+        <location filename="lasifywindow.cpp" line="308"/>
         <source>&amp;Help</source>
         <translation>&amp;Help</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="241"/>
+        <location filename="lasifywindow.cpp" line="312"/>
         <source>Open</source>
         <translation>Open</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="275"/>
-        <source>About Wolkenbase</source>
-        <translation>About Wolkenbase</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.cpp" line="246"/>
+        <location filename="lasifywindow.cpp" line="317"/>
         <source>Clear</source>
         <translation>Clear</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="251"/>
+        <location filename="lasifywindow.cpp" line="322"/>
+        <source>Save as LAS</source>
+        <translation>Save as LAS</translation>
+    </message>
+    <message>
+        <location filename="lasifywindow.cpp" line="327"/>
         <source>Stop</source>
         <translation>Stop</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="257"/>
+        <location filename="lasifywindow.cpp" line="333"/>
         <source>Resume</source>
         <translation>Resume</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="263"/>
+        <location filename="lasifywindow.cpp" line="339"/>
         <source>Exit</source>
         <translation>Exit</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="270"/>
+        <location filename="lasifywindow.cpp" line="346"/>
         <source>Configure</source>
         <translation>Configure</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="279"/>
+        <location filename="lasifywindow.cpp" line="351"/>
+        <source>About Wolkenbase</source>
+        <translation>About Wolkenbase</translation>
+    </message>
+    <message>
+        <location filename="lasifywindow.cpp" line="355"/>
         <source>About Qt</source>
         <translation>About Qt</translation>
     </message>
 </context>
 <context>
-    <name>main</name>
+    <name>MainWindow</name>
     <message>
-        <location filename="mainwindow.cpp" line="37"/>
+        <location filename="mainwindow.cpp" line="179"/>
+        <source>Open LAS File</source>
+        <translation>Open LAS File</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="183"/>
+        <source>(*.las);;(*)</source>
+        <translation>Laser files (*.las);;All files(*)</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="269"/>
+        <location filename="mainwindow.cpp" line="270"/>
+        <location filename="mainwindow.cpp" line="277"/>
         <source>Wolkenbase</source>
         <translation>Wolkenbase</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="271"/>
+        <source>%1
+Version %2
+Copyright %3 Pierre Abbat
+License GPL 3 or later</source>
+        <translation>%1
+Version %2
+Copyright %3 Pierre Abbat
+License GPL 3 or later</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="290"/>
+        <source>&amp;File</source>
+        <translation>&amp;File</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="291"/>
+        <source>&amp;View</source>
+        <translation>&amp;View</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="292"/>
+        <source>&amp;Settings</source>
+        <translation>&amp;Settings</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="293"/>
+        <source>&amp;Help</source>
+        <translation>&amp;Help</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="297"/>
+        <source>Open</source>
+        <translation>Open</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="307"/>
+        <source>Process</source>
+        <translation>Process</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="336"/>
+        <source>About Wolkenbase</source>
+        <translation>About Wolkenbase</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="302"/>
+        <source>Clear</source>
+        <translation>Clear</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="mainwindow.cpp" line="158"/>
+        <source>%n points</source>
+        <translation>
+            <numerusform>%n point</numerusform>
+            <numerusform>%n points</numerusform>
+        </translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="312"/>
+        <source>Stop</source>
+        <translation>Stop</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="318"/>
+        <source>Resume</source>
+        <translation>Resume</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="324"/>
+        <source>Exit</source>
+        <translation>Exit</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="331"/>
+        <source>Configure</source>
+        <translation>Configure</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="340"/>
+        <source>About Qt</source>
+        <translation>About Qt</translation>
+    </message>
+</context>
+<context>
+    <name>WolkenCanvas</name>
+    <message>
+        <location filename="wolkencanvas.cpp" line="414"/>
+        <source>Save point cloud</source>
+        <translation>Save point cloud</translation>
+    </message>
+    <message>
+        <location filename="wolkencanvas.cpp" line="417"/>
+        <location filename="wolkencanvas.cpp" line="464"/>
+        <source>(*.las)</source>
+        <translation>Laser files (*.las)</translation>
+    </message>
+    <message>
+        <location filename="wolkencanvas.cpp" line="461"/>
+        <source>Save classified point cloud</source>
+        <translation>Save classified point cloud</translation>
+    </message>
+</context>
+<context>
+    <name>main</name>
+    <message>
+        <location filename="mainwindow.cpp" line="87"/>
+        <source>Wolkenbase</source>
+        <translation>Wolkenbase</translation>
+    </message>
+    <message>
+        <location filename="lasifywindow.cpp" line="88"/>
+        <source>LASify</source>
+        <translation>LASify</translation>
     </message>
 </context>
 </TS>
