@@ -561,7 +561,6 @@ void WolkenCanvas::writeFile()
   cloudOutput.nInputFiles=inFileHeaders.size();
   cloudOutput.pointsPerFile=10000000;
   cloudOutput.unit=lengthUnit;
-  cloudOutput.separateClasses=true;
   cloudOutput.openFiles(saveFileName,classTotals);
   ta.opcode=ACT_WRITE;
   enqueueAction(ta);
