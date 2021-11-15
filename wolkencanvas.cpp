@@ -414,6 +414,11 @@ void WolkenCanvas::saveFile()
   fileDialog->setWindowTitle(tr("Save point cloud"));
   fileDialog->setFileMode(QFileDialog::AnyFile);
   fileDialog->setAcceptMode(QFileDialog::AcceptSave);
+  if (inFileHeaders.size())
+  {
+    fileName=noExt(inFileHeaders[0].getFileName())+".las";
+    fileDialog->selectFile(QString::fromStdString(fileName));
+  }
   fileDialog->setNameFilter(tr("(*.las)"));
   dialogResult=fileDialog->exec();
   if (dialogResult)
