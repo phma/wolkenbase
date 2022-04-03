@@ -3,7 +3,7 @@
 /* classify.cpp - classify points                     */
 /*                                                    */
 /******************************************************/
-/* Copyright 2020,2021 Pierre Abbat.
+/* Copyright 2020-2022 Pierre Abbat.
  * This file is part of Wolkenbase.
  *
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -89,7 +89,7 @@ bool surround(set<int> &directions)
   return ret;
 }
 
-void classifyCylinder(Eisenstein cylAddress)
+void classifyCylinder(Eisenstein cylAddress,double thickness)
 {
   Cylinder cyl=snake.cyl(cylAddress);
   vector<LasPoint> cylPoints=octStore.pointsIn(cyl,true);
@@ -101,10 +101,10 @@ void classifyCylinder(Eisenstein cylAddress)
   {
     /* Classifying a cylinder (which circumscribes a hexagonal tile) is done
      * like this:
-     * • For each point in the cylinder, construct a downward-facing paraboloid
+     * • For each point in the cylinder, construct a downward-facing hyperboloid
      *   with the point as vertex. Also construct an upward-facing paraboloid
-     *   and a sphere.
-     * • For each point in the downward paraboloid, if it's not on the axis,
+     *   and a sphere (not done yet, for finding stray points).
+     * • For each point in the downward hyperboloid, if it's not on the axis,
      *   compute its bearing from the axis.
      * • If six of the points surround the axis, and the angles between them
      *   are less than 72°, then the point is off ground.
@@ -127,7 +127,7 @@ void classifyCylinder(Eisenstein cylAddress)
       set<int> directions;
       aboveGround=false;
       cone=Hyperboloid(cylPoints[i].location,0,10);
-      downward=Hyperboloid(cylPoints[i].location,thisTile->hyperboloidSize,maxSlope);
+      downward=Hyperboloid(cylPoints[i].location-xyz(0,0,thickness),thisTile->hyperboloidSize,maxSlope);
       //conePoints=octStore.pointsIn(cone,false);
       //if (conePoints.size()>=3)
 	//aboveGround=true;

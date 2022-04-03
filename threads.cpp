@@ -3,7 +3,7 @@
 /* threads.cpp - multithreading                       */
 /*                                                    */
 /******************************************************/
-/* Copyright 2020,2021 Pierre Abbat.
+/* Copyright 2020-2022 Pierre Abbat.
  * This file is part of Wolkenbase.
  *
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -627,7 +627,7 @@ void WolkenThread::operator()(int thread)
       cylAddress=snake.next();
       if (cylAddress.getx()!=INT_MIN)
       {
-	classifyCylinder(cylAddress);
+	classifyCylinder(cylAddress,0);
 	enqueueTileDone(cylAddress);
       }
       else
