@@ -433,6 +433,8 @@ void WolkenCanvas::saveFile()
       limits.push_back(inFileHeaders[i].maxCorner());
       br.include(inFileHeaders[i].minCorner());
       br.include(inFileHeaders[i].maxCorner());
+      if (cloud.size()<4294967295)
+	inFileHeaders[i].setPointFormat(0);
       sorter.insert(pair<int64_t,LasHeader *>(-inFileHeaders[i].numberPoints(),&inFileHeaders[i]));
     }
     classTotals.clear();
