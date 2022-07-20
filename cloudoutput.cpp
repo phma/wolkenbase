@@ -3,7 +3,7 @@
 /* cloudoutput.cpp - write LAS files after classifying*/
 /*                                                    */
 /******************************************************/
-/* Copyright 2021 Pierre Abbat.
+/* Copyright 2021,2022 Pierre Abbat.
  * This file is part of Wolkenbase.
  *
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -100,7 +100,8 @@ void CloudOutput::openFiles(string name,map<int,size_t> classTotals)
       {
 	headers[j->first].push_back(LasHeader());
 	headers[j->first][i].openWrite(name+'-'+className(j->first)+
-				       (pointsPerFile?"-":"")+ndecimal(i,nDigits)+".las",sysId);
+				       (pointsPerFile?"-":"")+ndecimal(i,nDigits)+
+				       ".las",sysId);
 	headers[j->first][i].setUnit(unit);
 	headers[j->first][i].setScale(minCor,maxCor,scale);
 	headers[j->first][i].setVersion(1,4);
@@ -116,7 +117,8 @@ void CloudOutput::openFiles(string name,map<int,size_t> classTotals)
     for (i=0;i<quot;i++)
     {
       headers[0].push_back(LasHeader());
-      headers[0][i].openWrite(name+(pointsPerFile?"-":"")+ndecimal(i,nDigits),sysId);
+      headers[0][i].openWrite(name+(pointsPerFile?"-":"")+
+			      ndecimal(i,nDigits)+".las",sysId);
       headers[0][i].setUnit(unit);
       headers[0][i].setScale(minCor,maxCor,scale);
       headers[0][i].setVersion(1,4);
