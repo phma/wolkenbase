@@ -3,7 +3,7 @@
 /* lasifywindow.cpp - main window of lasify           */
 /*                                                    */
 /******************************************************/
-/* Copyright 2020,2021 Pierre Abbat.
+/* Copyright 2020-2022 Pierre Abbat.
  * This file is part of Wolkenbase.
  *
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -23,6 +23,7 @@
 #include "lasifywindow.h"
 #include "ldecimal.h"
 #include "angle.h"
+#include "ply.h"
 #include "cloud.h"
 #include "fileio.h"
 #include "brevno.h"
@@ -282,9 +283,15 @@ void LasifyWindow::handleResult(ThreadAction ta)
 void LasifyWindow::aboutProgram()
 {
   QString progName=tr("Wolkenbase");
+#ifdef Plytapus_FOUND
+  QString rajotte=tr("\nPlytapus library version %1\nCopyright %2\nSimon Rajotte and Pierre Abbat\nMIT license")
+  .arg(QString::fromStdString(plytapusVersion())).arg(plytapusYear());
+#else
+  QString rajotte("");
+#endif
   QMessageBox::about(this,tr("Wolkenbase"),
-		     tr("%1\nVersion %2\nCopyright %3 Pierre Abbat\nLicense GPL 3 or later")
-		     .arg(progName).arg(QString(VERSION)).arg(COPY_YEAR));
+		     tr("%1\nVersion %2\nCopyright %3 Pierre Abbat\nLicense GPL 3 or later%4")
+		     .arg(progName).arg(QString(VERSION)).arg(COPY_YEAR).arg(rajotte));
 }
 
 void LasifyWindow::aboutQt()
