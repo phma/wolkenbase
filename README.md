@@ -1,7 +1,9 @@
 # Overview
 Wolkenbase reads a point cloud in LAS format and extracts the ground layer. It can write the ground and nonground points to separate files, or write them all to one file with the classification byte showing which is which. You can also tell it to limit the number of points per file.
 
-The GUI program needs Qt5; the command-line program needs Boost.
+It builds and installs two programs: `wolkenbase`, which classifies point clouds, and `lasify`, which converts point clouds in XYZ or PLY format to LAS.
+
+The program needs Qt5 for the GUI. LASify needs the Plytapus library (https://github.com/phma/plytapus) to read PLY files, but can be built without it.
 
 Wolkenbase compiles on Ubuntu Focal and Eoan and DragonFly 5.9.
 
