@@ -1,3 +1,8 @@
 Before 0.1.1:
 •Convert a PLY or XYZ file to LAS ✓
 
+Before 0.1.2:
+•Allow entry of the thickness of the point cloud, and use it when classifying
+
+Before 0.2.0:
+•Detect buildings and set radius of curvature of tiles in buildings to span the buildings
