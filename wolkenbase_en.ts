@@ -176,7 +176,7 @@
 <context>
     <name>LasifyWindow</name>
     <message numerus="yes">
-        <location filename="lasifywindow.cpp" line="159"/>
+        <location filename="lasifywindow.cpp" line="160"/>
         <source>%n points</source>
         <translation>
             <numerusform>%n point</numerusform>
@@ -184,100 +184,123 @@
         </translation>
     </message>
     <message>
-        <location filename="lasifywindow.cpp" line="180"/>
+        <location filename="lasifywindow.cpp" line="181"/>
         <source>Open Point Cloud</source>
         <translation>Open point cloud</translation>
     </message>
     <message>
-        <location filename="lasifywindow.cpp" line="185"/>
+        <location filename="lasifywindow.cpp" line="186"/>
         <source>(*.ply);;(*.xyz);;(*)</source>
         <translation>Polygon files (*.ply);;XYZ files (*.xyz);;All files(*)</translation>
     </message>
     <message>
-        <location filename="lasifywindow.cpp" line="187"/>
+        <location filename="lasifywindow.cpp" line="188"/>
         <source>(*.xyz);;(*)</source>
         <translation>XYZ files (*.xyz);;All files(*)</translation>
     </message>
     <message>
-        <location filename="lasifywindow.cpp" line="284"/>
         <location filename="lasifywindow.cpp" line="285"/>
         <location filename="lasifywindow.cpp" line="292"/>
+        <location filename="lasifywindow.cpp" line="299"/>
         <source>Wolkenbase</source>
         <translation>Wolkenbase</translation>
     </message>
     <message>
-        <location filename="lasifywindow.cpp" line="286"/>
         <source>%1
 Version %2
 Copyright %3 Pierre Abbat
 License GPL 3 or later</source>
-        <translation>%1
+        <translation type="vanished">%1
 Version %2
 Copyright %3 Pierre Abbat
 License GPL 3 or later</translation>
     </message>
     <message>
-        <location filename="lasifywindow.cpp" line="305"/>
+        <location filename="lasifywindow.cpp" line="287"/>
+        <source>
+Plytapus library version %1
+Copyright %2
+Simon Rajotte and Pierre Abbat
+MIT license</source>
+        <translation>
+Plytapus library version %1
+Copyright %2
+Simon Rajotte and Pierre Abbat
+MIT license</translation>
+    </message>
+    <message>
+        <location filename="lasifywindow.cpp" line="293"/>
+        <source>%1
+Version %2
+Copyright %3 Pierre Abbat
+License GPL 3 or later%4</source>
+        <translation>%1
+Version %2
+Copyright %3 Pierre Abbat
+License GPL 3 or later%4</translation>
+    </message>
+    <message>
+        <location filename="lasifywindow.cpp" line="312"/>
         <source>&amp;File</source>
         <translation>&amp;File</translation>
     </message>
     <message>
-        <location filename="lasifywindow.cpp" line="306"/>
+        <location filename="lasifywindow.cpp" line="313"/>
         <source>&amp;View</source>
         <translation>&amp;View</translation>
     </message>
     <message>
-        <location filename="lasifywindow.cpp" line="307"/>
+        <location filename="lasifywindow.cpp" line="314"/>
         <source>&amp;Settings</source>
         <translation>&amp;Settings</translation>
     </message>
     <message>
-        <location filename="lasifywindow.cpp" line="308"/>
+        <location filename="lasifywindow.cpp" line="315"/>
         <source>&amp;Help</source>
         <translation>&amp;Help</translation>
     </message>
     <message>
-        <location filename="lasifywindow.cpp" line="312"/>
+        <location filename="lasifywindow.cpp" line="319"/>
         <source>Open</source>
         <translation>Open</translation>
     </message>
     <message>
-        <location filename="lasifywindow.cpp" line="317"/>
+        <location filename="lasifywindow.cpp" line="324"/>
         <source>Clear</source>
         <translation>Clear</translation>
     </message>
     <message>
-        <location filename="lasifywindow.cpp" line="322"/>
+        <location filename="lasifywindow.cpp" line="329"/>
         <source>Save as LAS</source>
         <translation>Save as LAS</translation>
     </message>
     <message>
-        <location filename="lasifywindow.cpp" line="327"/>
+        <location filename="lasifywindow.cpp" line="334"/>
         <source>Stop</source>
         <translation>Stop</translation>
     </message>
     <message>
-        <location filename="lasifywindow.cpp" line="333"/>
+        <location filename="lasifywindow.cpp" line="340"/>
         <source>Resume</source>
         <translation>Resume</translation>
     </message>
     <message>
-        <location filename="lasifywindow.cpp" line="339"/>
+        <location filename="lasifywindow.cpp" line="346"/>
         <source>Exit</source>
         <translation>Exit</translation>
     </message>
     <message>
-        <location filename="lasifywindow.cpp" line="346"/>
+        <location filename="lasifywindow.cpp" line="353"/>
         <source>Configure</source>
         <translation>Configure</translation>
     </message>
     <message>
-        <location filename="lasifywindow.cpp" line="351"/>
+        <location filename="lasifywindow.cpp" line="358"/>
         <source>About Wolkenbase</source>
         <translation>About Wolkenbase</translation>
     </message>
     <message>
-        <location filename="lasifywindow.cpp" line="355"/>
+        <location filename="lasifywindow.cpp" line="362"/>
         <source>About Qt</source>
         <translation>About Qt</translation>
     </message>
@@ -394,13 +417,13 @@ License GPL 3 or later</translation>
         <translation>Save point cloud</translation>
     </message>
     <message>
-        <location filename="wolkencanvas.cpp" line="417"/>
-        <location filename="wolkencanvas.cpp" line="464"/>
+        <location filename="wolkencanvas.cpp" line="422"/>
+        <location filename="wolkencanvas.cpp" line="471"/>
         <source>(*.las)</source>
         <translation>Laser files (*.las)</translation>
     </message>
     <message>
-        <location filename="wolkencanvas.cpp" line="461"/>
+        <location filename="wolkencanvas.cpp" line="468"/>
         <source>Save classified point cloud</source>
         <translation>Save classified point cloud</translation>
     </message>
@@ -413,7 +436,7 @@ License GPL 3 or later</translation>
         <translation>Wolkenbase</translation>
     </message>
     <message>
-        <location filename="lasifywindow.cpp" line="88"/>
+        <location filename="lasifywindow.cpp" line="89"/>
         <source>LASify</source>
         <translation>LASify</translation>
     </message>
