@@ -1,0 +1,7 @@
+# Version 0.1.1
+- There's a new program LASify, which reads a point cloud in XYZ or PLY format and converts it to LAS. This is needed, because the octree has to start with a bounding cube, and only LAS, of these formats, has bounds in the header.
+
+# Version 0.1.0
+- Wolkenbase does reasonably well with forests, as long as some laser shots make it to the floor, but does not yet understand buildings, and often gets stuck on walls.
+- When reading files, it spends a lot of time in unlockCube waiting for cubeMutex.
+- It seems to lose a few points, less than one in a million.
