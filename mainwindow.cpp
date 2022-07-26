@@ -288,7 +288,7 @@ void MainWindow::makeActions()
 {
   int i;
   fileMenu=menuBar()->addMenu(tr("&File"));
-  viewMenu=menuBar()->addMenu(tr("&View"));
+  //viewMenu=menuBar()->addMenu(tr("&View"));
   settingsMenu=menuBar()->addMenu(tr("&Settings"));
   helpMenu=menuBar()->addMenu(tr("&Help"));
   // File menu
