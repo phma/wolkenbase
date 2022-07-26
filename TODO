@@ -6,3 +6,5 @@ Before 0.1.2:
 
 Before 0.2.0:
 •Detect buildings and set radius of curvature of tiles in buildings to span the buildings
+•Speed up locking and unlocking of cubes
+•Read and write LAZ files
