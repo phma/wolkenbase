@@ -3,7 +3,7 @@
 /* wolkencanvas.h - canvas for drawing point cloud    */
 /*                                                    */
 /******************************************************/
-/* Copyright 2020,2021 Pierre Abbat.
+/* Copyright 2020-2022 Pierre Abbat.
  * This file is part of Wolkenbase.
  *
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -53,7 +53,7 @@ public slots:
   void readFileHeader(std::string name);
   void clearCloud();
   void saveFile();
-  void startProcess();
+  void startProcess(bool clfy);
   void startScan();
   void startPostscan();
   void startClassify();
@@ -82,6 +82,7 @@ private:
   double maxScaleSize,scaleSize;
   xy ballPos;
   xy leftScaleEnd,rightScaleEnd,scaleEnd;
+  bool shallClassify; // false to split an already classified file
   int penPos;
   int fileCountdown;
   int lastOpcount;

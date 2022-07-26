@@ -3,7 +3,7 @@
 /* wolkencanvas.cpp - canvas for drawing point cloud  */
 /*                                                    */
 /******************************************************/
-/* Copyright 2020,2021 Pierre Abbat.
+/* Copyright 2020-2022 Pierre Abbat.
  * This file is part of Wolkenbase.
  *
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -453,7 +453,7 @@ void WolkenCanvas::saveFile()
     writeFile();
 }
 
-void WolkenCanvas::startProcess()
+void WolkenCanvas::startProcess(bool clfy)
 {
   int i,dialogResult;
   vector<xyz> limits;
@@ -495,6 +495,7 @@ void WolkenCanvas::startProcess()
 		  (br.high()+br.low())/2),side);
     snake.setSize(cube,tileSize);
     initTiles();
+    shallClassify=clfy;
     for (j=sorter.begin();j!=sorter.end();++j)
     {
       cout<<"Read file "<<baseName(j->second->getFileName())<<endl;
