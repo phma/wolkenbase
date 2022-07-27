@@ -295,33 +295,39 @@ void MainWindow::makeActions()
   openAction=new QAction(this);
   openAction->setIcon(QIcon::fromTheme("document-open"));
   openAction->setText(tr("Open"));
+  openAction->setStatusTip(tr("Open point cloud files"));
   fileMenu->addAction(openAction);
   connect(openAction,SIGNAL(triggered(bool)),this,SLOT(openFile()));
   clearAction=new QAction(this);
   clearAction->setIcon(QIcon::fromTheme("edit-clear"));
   clearAction->setText(tr("Clear"));
+  clearAction->setStatusTip(tr("Clear point cloud"));
   fileMenu->addAction(clearAction);
   connect(clearAction,SIGNAL(triggered(bool)),canvas,SLOT(clearCloud()));
   processAction=new QAction(this);
   //procesAction->setIcon(QIcon::fromTheme("edit-clear"));
   processAction->setText(tr("Process"));
+  processAction->setStatusTip(tr("Classify point cloud and save"));
   fileMenu->addAction(processAction);
   connect(processAction,SIGNAL(triggered(bool)),canvas,SLOT(startProcessClassify()));
   stopAction=new QAction(this);
   stopAction->setIcon(QIcon::fromTheme("process-stop"));
   stopAction->setText(tr("Stop"));
+  stopAction->setStatusTip(tr("Stop processing point cloud"));
   stopAction->setEnabled(false);
   fileMenu->addAction(stopAction);
   connect(stopAction,SIGNAL(triggered(bool)),this,SLOT(stopConversion()));
   resumeAction=new QAction(this);
   //resumeAction->setIcon(QIcon::fromTheme("edit-clear"));
   resumeAction->setText(tr("Resume"));
+  resumeAction->setStatusTip(tr("Resume processing point cloud"));
   resumeAction->setEnabled(false);
   fileMenu->addAction(resumeAction);
   connect(resumeAction,SIGNAL(triggered(bool)),this,SLOT(resumeConversion()));
   exitAction=new QAction(this);
   exitAction->setIcon(QIcon::fromTheme("application-exit"));
   exitAction->setText(tr("Exit"));
+  exitAction->setStatusTip(tr("Exit program"));
   fileMenu->addAction(exitAction);
   connect(exitAction,SIGNAL(triggered(bool)),this,SLOT(close()));
   // View menu
@@ -329,6 +335,7 @@ void MainWindow::makeActions()
   configureAction=new QAction(this);
   configureAction->setIcon(QIcon::fromTheme("configure"));
   configureAction->setText(tr("Configure"));
+  configureAction->setStatusTip(tr("Classification parameters, max points per file"));
   settingsMenu->addAction(configureAction);
   connect(configureAction,SIGNAL(triggered(bool)),this,SLOT(configure()));
   // Help menu
