@@ -508,6 +508,16 @@ void WolkenCanvas::startProcess(bool clfy)
   fileDialog=nullptr;
 }
 
+void WolkenCanvas::startProcessClassify()
+{
+  startProcess(true);
+}
+
+void WolkenCanvas::startProcessAsIs()
+{
+  startProcess(false);
+}
+
 void WolkenCanvas::startScan()
 {
   waitForThreads(TH_SCAN);

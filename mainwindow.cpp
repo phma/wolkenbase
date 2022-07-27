@@ -306,7 +306,7 @@ void MainWindow::makeActions()
   //procesAction->setIcon(QIcon::fromTheme("edit-clear"));
   processAction->setText(tr("Process"));
   fileMenu->addAction(processAction);
-  connect(processAction,SIGNAL(triggered(bool)),canvas,SLOT(startProcess(bool)));
+  connect(processAction,SIGNAL(triggered(bool)),canvas,SLOT(startProcessClassify()));
   stopAction=new QAction(this);
   stopAction->setIcon(QIcon::fromTheme("process-stop"));
   stopAction->setText(tr("Stop"));

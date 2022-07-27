@@ -54,6 +54,8 @@ public slots:
   void clearCloud();
   void saveFile();
   void startProcess(bool clfy);
+  void startProcessClassify();
+  void startProcessAsIs();
   void startScan();
   void startPostscan();
   void startClassify();
