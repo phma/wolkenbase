@@ -347,7 +347,10 @@ void WolkenCanvas::tick()
   if (state==TH_SCAN && snake.progress()==1)
     startPostscan();
   if (state==TH_READ && actionQueueEmpty() && pointBufferEmpty() && sofar==total)
-    startScan();
+    if (shallClassify)
+      startScan();
+    else
+      startCount();
 }
 
 void WolkenCanvas::setSize()
