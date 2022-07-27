@@ -3,7 +3,7 @@
 /* threads.h - multithreading                         */
 /*                                                    */
 /******************************************************/
-/* Copyright 2020,2021 Pierre Abbat.
+/* Copyright 2020-2022 Pierre Abbat.
  * This file is part of Wolkenbase.
  *
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -38,9 +38,11 @@ class Flowsnake;
 #include <chrono>
 #include <vector>
 #include <array>
+#include <map>
 #include "las.h"
 #include "eisenstein.h"
 #include "flowsnake.h"
+#include "shape.h"
 #ifdef GUI
 #include "cloudoutput.h"
 #endif
@@ -76,6 +78,8 @@ struct ThreadAction
   int result;
 };
 
+extern std::map<int,std::mutex> cubeMutex;
+extern std::map<int,std::map<int,Cube> > lockedCubes,readLockedCubes;
 extern int currentAction;
 extern std::chrono::steady_clock clk;
 extern Flowsnake snake;

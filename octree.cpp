@@ -3,7 +3,7 @@
 /* octree.cpp - octrees                               */
 /*                                                    */
 /******************************************************/
-/* Copyright 2019-2021 Pierre Abbat.
+/* Copyright 2019-2022 Pierre Abbat.
  * This file is part of Wolkenbase.
  * 
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -25,6 +25,7 @@
 #include <algorithm>
 #include "ldecimal.h"
 #include "octree.h"
+#include "threads.h"
 #include "brevno.h"
 #include "freeram.h"
 #define DEBUG_STORE 0
@@ -38,9 +39,7 @@ OctStore octStore;
 double lowRam;
 set<int> watchedBuffers;
 mutex msgMutex;
-mutex cubeMutex;
 mutex alreadyMutex;
-map<int,Cube> lockedCubes,readLockedCubes;
 vector<xyz> alreadyInOctree;
 
 #if defined(_WIN32) || defined(__CYGWIN__)
@@ -60,7 +59,7 @@ bool cubeLocked(xyz pnt)
   int t=thisThread();
   map<int,Cube>::iterator i;
   bool ret=false;
-  for (i=lockedCubes.begin();!ret && i!=lockedCubes.end();++i)
+  for (i=lockedCubes[0].begin();!ret && i!=lockedCubes[0].end();++i)
     ret=t!=i->first && i->second.in(pnt);
   return ret;
 }
@@ -73,7 +72,7 @@ bool cubeReadLocked(xyz pnt)
   int t=thisThread();
   map<int,Cube>::iterator i;
   bool ret=false;
-  for (i=readLockedCubes.begin();!ret && i!=readLockedCubes.end();++i)
+  for (i=readLockedCubes[0].begin();!ret && i!=readLockedCubes[0].end();++i)
     ret=t!=i->first && i->second.in(pnt);
   return ret;
 }
@@ -82,11 +81,11 @@ bool lockCube(Cube cube)
 // Returns true if successful.
 {
   bool ret;
-  cubeMutex.lock();
+  cubeMutex[0].lock();
   ret=!(cubeLocked(cube.getCenter()) || cubeReadLocked(cube.getCenter()));
   if (ret)
-    lockedCubes.insert(pair<int,Cube>(thisThread(),cube));
-  cubeMutex.unlock();
+    lockedCubes[0].insert(pair<int,Cube>(thisThread(),cube));
+  cubeMutex[0].unlock();
   return ret;
 }
 
@@ -94,20 +93,20 @@ bool readLockCube(Cube cube)
 // Returns true if successful.
 {
   bool ret;
-  cubeMutex.lock();
+  cubeMutex[0].lock();
   ret=!cubeLocked(cube.getCenter());
   if (ret)
-    readLockedCubes.insert(pair<int,Cube>(thisThread(),cube));
-  cubeMutex.unlock();
+    readLockedCubes[0].insert(pair<int,Cube>(thisThread(),cube));
+  cubeMutex[0].unlock();
   return ret;
 }
 
 void unlockCube()
 {
-  cubeMutex.lock();
-  lockedCubes.erase(thisThread());
-  readLockedCubes.erase(thisThread());
-  cubeMutex.unlock();
+  cubeMutex[0].lock();
+  lockedCubes[0].erase(thisThread());
+  readLockedCubes[0].erase(thisThread());
+  cubeMutex[0].unlock();
 }
 
 Octree::Octree()

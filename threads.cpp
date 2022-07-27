@@ -20,7 +20,6 @@
  * along with Wolkenbase. If not, see <http://www.gnu.org/licenses/>.
  */
 #include <queue>
-#include <map>
 #include <set>
 #include <cassert>
 #include <climits>
@@ -45,7 +44,7 @@ namespace cr=std::chrono;
 
 mutex actMutex;
 mutex startMutex;
-map<int,mutex> pointBufferMutex;
+map<int,mutex> pointBufferMutex,cubeMutex;
 shared_mutex threadStatusMutex;
 mutex tileDoneMutex;
 mutex classTotalMutex;
@@ -61,6 +60,7 @@ queue<Eisenstein> tileDoneQueue;
 map<int,vector<LasPoint> > pointBuffer;
 map<int,size_t> pbsz,classTotals;
 map<int,int> bufferPos;
+map<int,map<int,Cube> > lockedCubes,readLockedCubes;
 int currentAction;
 map<thread::id,int> threadNums;
 Flowsnake snake;
@@ -87,12 +87,19 @@ double busyFraction()
 
 void startThreads(int n)
 {
-  int i;
+  int i,m;
   threadCommand=TH_WAIT;
   openThreadLog();
   logStartThread();
   sleepTime.resize(n);
+  m=n*33;
   threadNums[this_thread::get_id()]=-1;
+  for (i=0;i<m;i++)
+  {
+    cubeMutex[i];
+    lockedCubes[i];
+    readLockedCubes[i];
+  }
   for (i=0;i<n;i++)
   {
     threads.push_back(thread(WolkenThread(),i));
