@@ -3,7 +3,7 @@
 /* mainwindow.h - main window                         */
 /*                                                    */
 /******************************************************/
-/* Copyright 2020,2021 Pierre Abbat.
+/* Copyright 2020-2022 Pierre Abbat.
  * This file is part of Wolkenbase.
  *
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -87,7 +87,7 @@ private:
   QMenu *fileMenu,*viewMenu,*settingsMenu,*helpMenu,*colorMenu;
   QLabel *fileMsg,*dotTriangleMsg,*memoryMsg,*densityMsg;
   QProgressBar *doneBar,*busyBar;
-  QAction *openAction,*loadAction,*processAction,*clearAction;
+  QAction *openAction,*loadAction,*classifyAction,*asisAction,*clearAction;
   QAction *exportAction,*stopAction,*resumeAction,*exitAction;
   QAction *configureAction;
   QAction *aboutProgramAction,*aboutQtAction;
