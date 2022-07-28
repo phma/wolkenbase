@@ -589,6 +589,7 @@ void WolkenCanvas::clearCloud()
   octRoot.clear();
   tiles.clear();
   setSize();
+  waitForThreads(TH_WAIT);
 }
 
 void WolkenCanvas::setScalePos()
