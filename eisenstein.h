@@ -3,7 +3,7 @@
 /* eisenstein.h - Eisenstein integers                 */
 /*                                                    */
 /******************************************************/
-/* Copyright 2019,2021 Pierre Abbat.
+/* Copyright 2019,2021,2022 Pierre Abbat.
  * This file is part of Wolkenbase.
  *
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -135,7 +135,7 @@ template <typename T> int harray<T>::count(Eisenstein i)
 template <typename T> void harray<T>::clear()
 {
   typename std::map<Eisenstein,T *>::iterator i;
-  for (i=index.start();i!=index.end();i++)
+  for (i=index.begin();i!=index.end();i++)
   {
     free(i->second);
     i->second=NULL;

@@ -586,6 +586,8 @@ void WolkenCanvas::clearCloud()
 {
   inFileHeaders.clear();
   cloud.clear();
+  octRoot.clear();
+  tiles.clear();
   setSize();
 }
 
