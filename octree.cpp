@@ -116,6 +116,22 @@ Octree::Octree()
   count=0;
 }
 
+Octree::~Octree()
+{
+  clear();
+}
+
+void Octree::clear()
+{
+  int i;
+  for (i=0;i<8;i++)
+  {
+    if (sub[i] && !(sub[i]&1))
+      delete (Octree *)sub[i];
+    sub[i]=0;
+  }
+}
+
 long long Octree::findBlock(xyz pnt)
 // Returns the disk block number that contains pnt, or -1 if none.
 {
