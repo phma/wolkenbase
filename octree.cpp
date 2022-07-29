@@ -519,6 +519,13 @@ void OctBuffer::flush()
     write();
 }
 
+void OctBuffer::clear()
+{
+  blockMutex.lock();
+  points.clear();
+  blockMutex.unlock();
+}
+
 void OctBuffer::shrink()
 {
   blockMutex.lock();
@@ -1099,6 +1106,24 @@ OctBuffer *OctStore::getBlock(xyz key,bool writing)
   }
   assert(ret->blockNumber>=0);
   return ret;
+}
+
+void OctStore::clearBlocks()
+// Do this before clearing the octree.
+{
+  long long i;
+  OctBuffer *buf;
+  for (i=0;i<nBlocks;i++)
+  {
+    buf=getBlock(i);
+    buf->clear();
+  }
+}
+
+void OctStore::clear()
+// Do this after clearing the octree.
+{
+  nBlocks=0;
 }
 
 bool lowerThan(const LasPoint &a,const LasPoint &b)

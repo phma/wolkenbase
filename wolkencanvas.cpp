@@ -586,7 +586,9 @@ void WolkenCanvas::clearCloud()
 {
   inFileHeaders.clear();
   cloud.clear();
+  octStore.clearBlocks();
   octRoot.clear();
+  octStore.clear();
   tiles.clear();
   setSize();
   waitForThreads(TH_WAIT);

@@ -104,6 +104,7 @@ public:
   void read(long long block);
   void update();
   void flush();
+  void clear();
   void shrink();
   LasPoint get(xyz key);
   bool put(LasPoint pnt);
@@ -148,6 +149,8 @@ public:
   OctStore();
   ~OctStore();
   void flush(int thread=0,int nthreads=1);
+  void clearBlocks();
+  void clear();
   void disown();
   bool setTransit(int buffer,bool t);
   void resize(int n);
