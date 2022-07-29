@@ -124,7 +124,8 @@ ThreadAction dequeueAction()
   {
     ret=actQueue.front();
     actQueue.pop();
-    currentAction=ret.opcode;
+    if (ret.opcode)
+      currentAction=ret.opcode;
   }
   actMutex.unlock();
   return ret;
