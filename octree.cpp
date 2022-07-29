@@ -1124,6 +1124,8 @@ void OctStore::clear()
 // Do this after clearing the octree.
 {
   nBlocks=0;
+  blockGroupCount.clear();
+  blockPointCount.clear();
 }
 
 bool lowerThan(const LasPoint &a,const LasPoint &b)
