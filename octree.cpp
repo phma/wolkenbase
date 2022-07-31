@@ -70,7 +70,7 @@ set<int> whichLocks(Cube cube)
     lo+=i;
     hi+=i;
   }
-  for (i=0;cube.getSide() && i<=hi;i++)
+  for (i=lo;cube.getSide() && i<=hi;i++)
     ret.insert(i%cubeMutex.size());
   return ret;
 }
@@ -81,9 +81,13 @@ bool cubeLocked(xyz pnt)
  */
 {
   int t=thisThread();
+  int64_t b=band(pnt);
   map<int,Cube>::iterator i;
   bool ret=false;
-  for (i=lockedCubes[0].begin();!ret && i!=lockedCubes[0].end();++i)
+  b%=cubeMutex.size();
+  if (b<0)
+    b+=cubeMutex.size();
+  for (i=lockedCubes[b].begin();!ret && i!=lockedCubes[b].end();++i)
     ret=t!=i->first && i->second.in(pnt);
   return ret;
 }
@@ -94,9 +98,13 @@ bool cubeReadLocked(xyz pnt)
  */
 {
   int t=thisThread();
+  int64_t b=band(pnt);
   map<int,Cube>::iterator i;
   bool ret=false;
-  for (i=readLockedCubes[0].begin();!ret && i!=readLockedCubes[0].end();++i)
+  b%=cubeMutex.size();
+  if (b<0)
+    b+=cubeMutex.size();
+  for (i=readLockedCubes[b].begin();!ret && i!=readLockedCubes[b].end();++i)
     ret=t!=i->first && i->second.in(pnt);
   return ret;
 }
@@ -106,14 +114,19 @@ bool lockCube(Cube cube)
 {
   bool ret;
   int t=thisThread();
-  cubeMutex[0].lock();
+  set<int> lockSet=whichLocks(cube);
+  set<int>::iterator j;
+  for (j=lockSet.begin();j!=lockSet.end();++j)
+    cubeMutex[*j].lock();
   ret=!(cubeLocked(cube.getCenter()) || cubeReadLocked(cube.getCenter()));
   if (ret)
   {
     heldCubes[t]=cube;
-    lockedCubes[0].insert(pair<int,Cube>(t,cube));
+    for (j=lockSet.begin();j!=lockSet.end();++j)
+      lockedCubes[*j].insert(pair<int,Cube>(t,cube));
   }
-  cubeMutex[0].unlock();
+  for (j=lockSet.begin();j!=lockSet.end();++j)
+    cubeMutex[*j].unlock();
   return ret;
 }
 
@@ -123,25 +136,36 @@ bool readLockCube(Cube cube)
   bool ret;
   int t=thisThread();
   set<int> lockSet=whichLocks(cube);
-  cubeMutex[0].lock();
+  set<int>::iterator j;
+  for (j=lockSet.begin();j!=lockSet.end();++j)
+    cubeMutex[*j].lock();
   ret=!cubeLocked(cube.getCenter());
   if (ret)
   {
     heldCubes[t]=cube;
-    readLockedCubes[0].insert(pair<int,Cube>(t,cube));
+    for (j=lockSet.begin();j!=lockSet.end();++j)
+      readLockedCubes[*j].insert(pair<int,Cube>(t,cube));
   }
-  cubeMutex[0].unlock();
+  for (j=lockSet.begin();j!=lockSet.end();++j)
+    cubeMutex[*j].unlock();
   return ret;
 }
 
 void unlockCube()
 {
   int t=thisThread();
-  cubeMutex[0].lock();
-  lockedCubes[0].erase(t);
-  readLockedCubes[0].erase(t);
+  set<int> lockSet=whichLocks(heldCubes[t]);
+  set<int>::iterator j;
+  for (j=lockSet.begin();j!=lockSet.end();++j)
+    cubeMutex[*j].lock();
+  for (j=lockSet.begin();j!=lockSet.end();++j)
+  {
+    lockedCubes[*j].erase(t);
+    readLockedCubes[*j].erase(t);
+  }
   heldCubes[t]=Cube();
-  cubeMutex[0].unlock();
+  for (j=lockSet.begin();j!=lockSet.end();++j)
+    cubeMutex[*j].unlock();
 }
 
 Octree::Octree()

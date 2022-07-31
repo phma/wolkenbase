@@ -93,7 +93,7 @@ void startThreads(int n)
   openThreadLog();
   logStartThread();
   sleepTime.resize(n);
-  m=n*33;
+  m=n*3;
   threadNums[this_thread::get_id()]=-1;
   heldCubes.resize(n);
   for (i=0;i<m;i++)
