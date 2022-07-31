@@ -51,11 +51,28 @@ double significand(double x)
 }
 #endif
 
-int band(xyz pnt)
+int64_t band(xyz pnt)
 // Separates the space into bands, which are used for locking cubes.
 {
-  return lrint((pnt.getx()+pnt.gety()+pnt.getz())*cubeMutex.size()/
-	       octRoot.getSide()+((sqrt(5)-1)/2));
+  return llrint((pnt.getx()+pnt.gety()+pnt.getz())*cubeMutex.size()/
+		octRoot.getSide()+((sqrt(5)-1)/2));
+}
+
+set<int> whichLocks(Cube cube)
+{
+  set<int> ret;
+  int64_t lo,hi,i;
+  lo=band(cube.corner(0));
+  hi=band(cube.corner(7));
+  if (lo<0)
+  {
+    i=((-lo-hi)/cubeMutex.size())*cubeMutex.size();
+    lo+=i;
+    hi+=i;
+  }
+  for (i=0;i<=hi;i++)
+    ret.insert(i%cubeMutex.size());
+  return ret;
 }
 
 bool cubeLocked(xyz pnt)
