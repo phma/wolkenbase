@@ -70,7 +70,7 @@ set<int> whichLocks(Cube cube)
     lo+=i;
     hi+=i;
   }
-  for (i=0;i<=hi;i++)
+  for (i=0;cube.getSide() && i<=hi;i++)
     ret.insert(i%cubeMutex.size());
   return ret;
 }
@@ -105,10 +105,14 @@ bool lockCube(Cube cube)
 // Returns true if successful.
 {
   bool ret;
+  int t=thisThread();
   cubeMutex[0].lock();
   ret=!(cubeLocked(cube.getCenter()) || cubeReadLocked(cube.getCenter()));
   if (ret)
-    lockedCubes[0].insert(pair<int,Cube>(thisThread(),cube));
+  {
+    heldCubes[t]=cube;
+    lockedCubes[0].insert(pair<int,Cube>(t,cube));
+  }
   cubeMutex[0].unlock();
   return ret;
 }
@@ -117,19 +121,26 @@ bool readLockCube(Cube cube)
 // Returns true if successful.
 {
   bool ret;
+  int t=thisThread();
+  set<int> lockSet=whichLocks(cube);
   cubeMutex[0].lock();
   ret=!cubeLocked(cube.getCenter());
   if (ret)
-    readLockedCubes[0].insert(pair<int,Cube>(thisThread(),cube));
+  {
+    heldCubes[t]=cube;
+    readLockedCubes[0].insert(pair<int,Cube>(t,cube));
+  }
   cubeMutex[0].unlock();
   return ret;
 }
 
 void unlockCube()
 {
+  int t=thisThread();
   cubeMutex[0].lock();
-  lockedCubes[0].erase(thisThread());
-  readLockedCubes[0].erase(thisThread());
+  lockedCubes[0].erase(t);
+  readLockedCubes[0].erase(t);
+  heldCubes[t]=Cube();
   cubeMutex[0].unlock();
 }
 

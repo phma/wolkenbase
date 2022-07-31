@@ -61,6 +61,7 @@ map<int,vector<LasPoint> > pointBuffer;
 map<int,size_t> pbsz,classTotals;
 map<int,int> bufferPos;
 map<int,map<int,Cube> > lockedCubes,readLockedCubes;
+vector<Cube> heldCubes; // Used in unlockCube to know which mutexes to get
 int currentAction;
 map<thread::id,int> threadNums;
 Flowsnake snake;
@@ -94,6 +95,7 @@ void startThreads(int n)
   sleepTime.resize(n);
   m=n*33;
   threadNums[this_thread::get_id()]=-1;
+  heldCubes.resize(n);
   for (i=0;i<m;i++)
   {
     cubeMutex[i];

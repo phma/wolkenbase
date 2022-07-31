@@ -80,6 +80,7 @@ struct ThreadAction
 
 extern std::map<int,std::mutex> cubeMutex;
 extern std::map<int,std::map<int,Cube> > lockedCubes,readLockedCubes;
+extern std::vector<Cube> heldCubes;
 extern int currentAction;
 extern std::chrono::steady_clock clk;
 extern Flowsnake snake;
