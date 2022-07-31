@@ -51,6 +51,13 @@ double significand(double x)
 }
 #endif
 
+int band(xyz pnt)
+// Separates the space into bands, which are used for locking cubes.
+{
+  return lrint((pnt.getx()+pnt.gety()+pnt.getz())*cubeMutex.size()/
+	       octRoot.getSide()+((sqrt(5)-1)/2));
+}
+
 bool cubeLocked(xyz pnt)
 /* cubeMutex must be locked when calling this.
  * Returns true iff pnt is in a cube locked by another thread.
