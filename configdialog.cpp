@@ -3,7 +3,7 @@
 /* configdialog.cpp - configuration dialog            */
 /*                                                    */
 /******************************************************/
-/* Copyright 2020,2021 Pierre Abbat.
+/* Copyright 2020-2022 Pierre Abbat.
  * This file is part of Wolkenbase.
  * 
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -149,7 +149,7 @@ ConfigurationDialog::ConfigurationDialog(QWidget *parent):QDialog(parent)
   connect(cancelButton,SIGNAL(clicked()),this,SLOT(reject()));
 }
 
-void ConfigurationDialog::set(double lengthUnit,int threads,int pointsPerFile,bool separateClasses,double tileSize,double maximumSlope,double minimumSmoothness)
+void ConfigurationDialog::set(double lengthUnit,int threads,int pointsPerFile,bool separateClasses,double tileSize,double maximumSlope,double thickness,double minimumSmoothness)
 {
   int i;
   general->lengthUnitBox->clear();
@@ -221,6 +221,7 @@ void ConfigurationDialog::accept()
 		  general->separateClassesCheck->checkState()>0,
 		  ts[classify->tileSizeBox->currentIndex()],
 		  maxsl[classify->maximumSlopeBox->currentIndex()],
+		  0, // thickness
 		  minsm[classify->minimumSmoothnessBox->currentIndex()]);
   QDialog::accept();
 }

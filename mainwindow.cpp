@@ -93,8 +93,8 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent)
   canvas=new WolkenCanvas(this);
   configDialog=new ConfigurationDialog(this);
   msgBox=new QMessageBox(this);
-  connect(configDialog,SIGNAL(settingsChanged(double,int,int,bool,double,double,double)),
-	  this,SLOT(setSettings(double,int,int,bool,double,double,double)));
+  connect(configDialog,SIGNAL(settingsChanged(double,int,int,bool,double,double,double,double)),
+	  this,SLOT(setSettings(double,int,int,bool,double,double,double,double)));
   connect(this,SIGNAL(tinSizeChanged()),canvas,SLOT(setSize()));
   connect(this,SIGNAL(lengthUnitChanged(double)),canvas,SLOT(setLengthUnit(double)));
   connect(this,SIGNAL(fileOpened(std::string)),canvas,SLOT(readFileHeader(std::string)));
@@ -241,7 +241,7 @@ void MainWindow::readFileProgress(size_t sofar,size_t total)
 
 void MainWindow::configure()
 {
-  configDialog->set(lengthUnit,numberThreads,cloudOutput.pointsPerFile,cloudOutput.separateClasses,canvas->tileSize,maxSlope,minHyperboloidSize);
+  configDialog->set(lengthUnit,numberThreads,cloudOutput.pointsPerFile,cloudOutput.separateClasses,canvas->tileSize,maxSlope,thickness,minHyperboloidSize);
   configDialog->open();
 }
 
@@ -388,6 +388,7 @@ void MainWindow::readSettings()
   cloudOutput.separateClasses=settings.value("separateClasses",true).toBool();
   canvas->tileSize=settings.value("tileSize",1).toDouble();
   maxSlope=settings.value("maxSlope",1).toDouble();
+  thickness=settings.value("thickness",0).toDouble();
   minHyperboloidSize=settings.value("minimumHyperboloidSize",0.1).toDouble();
   lengthUnitChanged(lengthUnit);
 }
@@ -403,10 +404,11 @@ void MainWindow::writeSettings()
   settings.setValue("separateClasses",cloudOutput.separateClasses);
   settings.setValue("tileSize",canvas->tileSize);
   settings.setValue("maxSlope",maxSlope);
+  settings.setValue("thickness",thickness);
   settings.setValue("minimumHyperboloidSize",minHyperboloidSize);
 }
 
-void MainWindow::setSettings(double lu,int thr,int ppf,bool sc,double ts,double maxsl,double minhs)
+void MainWindow::setSettings(double lu,int thr,int ppf,bool sc,double ts,double maxsl,double thick,double minhs)
 {
   lengthUnit=lu;
   numberThreads=thr;
@@ -414,6 +416,7 @@ void MainWindow::setSettings(double lu,int thr,int ppf,bool sc,double ts,double 
   cloudOutput.separateClasses=sc;
   canvas->tileSize=ts;
   maxSlope=maxsl;
+  thickness=thick;
   minHyperboloidSize=minhs;
   writeSettings();
   lengthUnitChanged(lengthUnit);

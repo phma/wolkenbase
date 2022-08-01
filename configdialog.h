@@ -3,7 +3,7 @@
 /* configdialog.h - configuration dialog              */
 /*                                                    */
 /******************************************************/
-/* Copyright 2020,2021 Pierre Abbat.
+/* Copyright 2020-2022 Pierre Abbat.
  * This file is part of Wolkenbase.
  * 
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -64,9 +64,9 @@ class ConfigurationDialog: public QDialog
 public:
   ConfigurationDialog(QWidget *parent=nullptr);
 signals:
-  void settingsChanged(double lu,int thr,int ppf,bool sc,double ts,double maxsl,double minsm);
+  void settingsChanged(double lu,int thr,int ppf,bool sc,double ts,double maxsl,double thick,double minsm);
 public slots:
-  void set(double lengthUnit,int threads,int pointsPerFile,bool separateClasses,double tileSize,double maximumSlope,double minimumSmoothness);
+  void set(double lengthUnit,int threads,int pointsPerFile,bool separateClasses,double tileSize,double maximumSlope,double thickness,double minimumSmoothness);
   void checkValid();
   virtual void accept();
 private:

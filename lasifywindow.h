@@ -3,7 +3,7 @@
 /* lasifywindow.h - main window of lasify             */
 /*                                                    */
 /******************************************************/
-/* Copyright 2020,2021 Pierre Abbat.
+/* Copyright 2020-2022 Pierre Abbat.
  * This file is part of Wolkenbase.
  *
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -55,7 +55,7 @@ signals:
   void allPointsCounted();
 public slots:
   void tick();
-  void setSettings(double lu,int thr,int ppf,bool sc,double ts,double maxsl,double minhs);
+  void setSettings(double lu,int thr,int ppf,bool sc,double ts,double maxsl,double thick,double minhs);
   void setUnit(double lu);
   void openFile();
   void disableMenuSplash();
