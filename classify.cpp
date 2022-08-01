@@ -89,7 +89,7 @@ bool surround(set<int> &directions)
   return ret;
 }
 
-void classifyCylinder(Eisenstein cylAddress,double thickness)
+void classifyCylinder(Eisenstein cylAddress)
 {
   Cylinder cyl=snake.cyl(cylAddress);
   vector<LasPoint> cylPoints=octStore.pointsIn(cyl,true);

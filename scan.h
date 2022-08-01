@@ -3,7 +3,7 @@
 /* scan.h - scan the cloud                            */
 /*                                                    */
 /******************************************************/
-/* Copyright 2020,2021 Pierre Abbat.
+/* Copyright 2020-2022 Pierre Abbat.
  * This file is part of Wolkenbase.
  *
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -22,7 +22,7 @@
 #include "tile.h"
 #define M_SQRT7 2.6457513110645905905016
 
-extern double minHyperboloidSize,maxSlope;
+extern double minHyperboloidSize,maxSlope,thickness;
 
 void scanCylinder(Eisenstein cylAddress);
 void postscanCylinder(Eisenstein cylAddress);

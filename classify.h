@@ -21,4 +21,4 @@
  */
 #include "tile.h"
 
-void classifyCylinder(Eisenstein cylAddress,double thickness);
+void classifyCylinder(Eisenstein cylAddress);

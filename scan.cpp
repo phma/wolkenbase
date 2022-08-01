@@ -3,7 +3,7 @@
 /* scan.cpp - scan the cloud                          */
 /*                                                    */
 /******************************************************/
-/* Copyright 2020,2021 Pierre Abbat.
+/* Copyright 2020-2022 Pierre Abbat.
  * This file is part of Wolkenbase.
  *
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@
 #include "leastsquares.h"
 using namespace std;
 
-double minHyperboloidSize,maxSlope;
+double minHyperboloidSize,maxSlope,thickness;
 
 void scanCylinder(Eisenstein cylAddress)
 {
