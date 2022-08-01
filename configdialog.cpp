@@ -85,6 +85,14 @@ const char maxslStr[9][12]=
   "0.84 (40°)","1 (45°)","1.2 (50°)",
   "1.4 (55°)","1.7 (60°)","2.1 (65°)"
 };
+const double thick[8]=
+{
+  0,0.001,0.002,0.005,0.01,0.02,0.05,0.1
+};
+const char thickStr[8][7]=
+{
+  "0 mm","1 mm","2 mm","5 mm","10 mm","20 mm","50 mm","100 mm"
+};
 
 /* Minimum smoothness is what the config dialog calls minimum paraboloid size.
  * It is the size of the smallest hump of ground that the algorithm will call
@@ -118,9 +126,11 @@ ClassifyTab::ClassifyTab(QWidget *parent):QWidget(parent)
   tileSizeLabel=new QLabel(this);
   minimumSmoothnessLabel=new QLabel(this);
   maximumSlopeLabel=new QLabel(this);
+  thicknessLabel=new QLabel(this);
   tileSizeBox=new QComboBox(this);
   minimumSmoothnessBox=new QComboBox(this);
   maximumSlopeBox=new QComboBox(this);
+  thicknessBox=new QComboBox(this);
   gridLayout=new QGridLayout(this);
   gridLayout->addWidget(tileSizeLabel,0,0);
   gridLayout->addWidget(tileSizeBox,0,1);
@@ -128,6 +138,8 @@ ClassifyTab::ClassifyTab(QWidget *parent):QWidget(parent)
   gridLayout->addWidget(minimumSmoothnessBox,1,1);
   gridLayout->addWidget(maximumSlopeLabel,2,0);
   gridLayout->addWidget(maximumSlopeBox,2,1);
+  gridLayout->addWidget(thicknessLabel,3,0);
+  gridLayout->addWidget(thicknessBox,3,1);
 }
 
 ConfigurationDialog::ConfigurationDialog(QWidget *parent):QDialog(parent)
@@ -160,6 +172,7 @@ void ConfigurationDialog::set(double lengthUnit,int threads,int pointsPerFile,bo
   classify->tileSizeLabel->setText(tr("Tile size"));
   classify->minimumSmoothnessLabel->setText(tr("Minimum smoothness"));
   classify->maximumSlopeLabel->setText(tr("Maximum slope"));
+  classify->thicknessLabel->setText(tr("Thickness"));
   for (i=0;i<sizeof(conversionFactors)/sizeof(conversionFactors[1]);i++)
   {
     general->lengthUnitBox->addItem(tr(unitNames[i]));
@@ -205,6 +218,15 @@ void ConfigurationDialog::set(double lengthUnit,int threads,int pointsPerFile,bo
     if (maximumSlope==maxsl[i])
       classify->maximumSlopeBox->setCurrentIndex(i);
   }
+  for (i=0;i<sizeof(thick)/sizeof(thick[1]);i++)
+  {
+    classify->thicknessBox->addItem(QString::fromStdString(thickStr[i]));
+  }
+  for (i=0;i<sizeof(thick)/sizeof(thick[1]);i++)
+  {
+    if (thickness==thick[i])
+      classify->thicknessBox->setCurrentIndex(i);
+  }
   general->threadInput->setText(QString::number(threads));
   general->separateClassesCheck->setCheckState(separateClasses?Qt::Checked:Qt::Unchecked);
 }
@@ -221,7 +243,7 @@ void ConfigurationDialog::accept()
 		  general->separateClassesCheck->checkState()>0,
 		  ts[classify->tileSizeBox->currentIndex()],
 		  maxsl[classify->maximumSlopeBox->currentIndex()],
-		  0, // thickness
+		  thick[classify->thicknessBox->currentIndex()],
 		  minsm[classify->minimumSmoothnessBox->currentIndex()]);
   QDialog::accept();
 }
