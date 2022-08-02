@@ -148,7 +148,12 @@ MainWindow::~MainWindow()
 void MainWindow::tick()
 {
   double toleranceRatio;
+  bool aqEmpty=actionQueueEmpty();
   int tstatus=getThreadStatus();
+  /* Get aqEmpty before tstatus, else if a thread starts writing before checking
+   * actionQueueEmpty, but after checking getThreadStatus, no writing icon will
+   * appear on the screen.
+   */
   ThreadAction ta;
   if (!showingResult && !resultQueueEmpty())
   {
@@ -163,7 +168,7 @@ void MainWindow::tick()
     doneBar->setValue(lrint((double)readFileSoFar/readFileTotal*16777216));
   if ((tstatus&0x3ffbfeff)==1048577*TH_SCAN || (tstatus&0x3ffbfeff)==1048577*TH_SPLIT)
     doneBar->setValue(lrint(snake.progress()*16777216));
-  if (tstatus==1048577*TH_PAUSE+TH_ASLEEP && actionQueueEmpty())
+  if (tstatus==1048577*TH_PAUSE+TH_ASLEEP && aqEmpty)
     currentAction=0;
   writeBufLog();
 }
