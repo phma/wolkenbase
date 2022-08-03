@@ -53,9 +53,65 @@ string CloudOutput::className(int n)
     case 2:
       qret=tr("ground");
       break;
+    case 3:
+      qret=tr("lowveg");
+      break;
+    case 4:
+      qret=tr("medveg");
+      break;
+    case 5:
+      qret=tr("highveg");
+      break;
+    case 6:
+      qret=tr("building");
+      break;
     case 7:
       qret=tr("lownoise");
       break;
+    case 9:
+      qret=tr("water");
+      break;
+    case 10:
+      qret=tr("rail");
+      break;
+    case 11:
+      qret=tr("road");
+      break;
+    case 12:
+      qret=tr("overlap"); // in formats 0-5, reserved in 6-10
+      break;
+    case 13:
+      qret=tr("wireguard");
+      break;
+    case 14:
+      qret=tr("conductor");
+      break;
+    case 15:
+      qret=tr("tower");
+      break;
+    case 16:
+      qret=tr("insulator");
+      break;
+    case 17:
+      qret=tr("bridge");
+      break;
+    case 18:
+      qret=tr("highnoise");
+      break;
+    case 19:
+      qret=tr("overhead");
+      break;
+    case 20:
+      qret=tr("ignground");
+      break;
+    case 21:
+      qret=tr("snow");
+      break;
+    case 22:
+      qret=tr("temporal");
+      break;
+    default:
+      qret=tr("reserved")+QString::number(n);
   }
   return qret.toStdString();
 }

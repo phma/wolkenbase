@@ -46,14 +46,18 @@ namespace cr=std::chrono;
  * 9	Water
  * 10	Rail
  * 11	Road surface
- * 12	Reserved
+ * 12	Overlap / Reserved
  * 13	Wire - Guard
  * 14	Wire - Conductor
  * 15	Transmission tower
  * 16	Wire-structure connector
  * 17	Bridge deck
  * 18	High noise (e.g. bird)
- * 19	Reserved
+ * 19	Overhead structure
+ * 20	Ignored ground
+ * 21	Snow
+ * 22	Temporal exclusion
+ * 23	Reserved
  * :63	Reserved
  * 64	User definable
  * :255	User definable
