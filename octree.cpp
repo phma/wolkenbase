@@ -1122,7 +1122,8 @@ OctBuffer *OctStore::getBlock(long long block,bool mustExist)
     buf=&blocks[bufnum];
     bufferMutex.unlock_shared();
     assert(buf->iOwn());
-    updateCount(block,buf->points.size());
+    if (getThreadCommand()!=TH_SPLIT)
+      updateCount(block,buf->points.size());
     return buf;
   }
 }

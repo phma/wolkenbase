@@ -105,6 +105,7 @@ size_t pointBufferSize();
 bool pointBufferEmpty();
 void sleepDead(int thread);
 void setThreadCommand(int newStatus);
+int getThreadCommand();
 int getThreadStatus();
 void waitForThreads(int newStatus);
 void waitForQueueEmpty();

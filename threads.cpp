@@ -339,6 +339,11 @@ void setThreadCommand(int newStatus)
   //cout<<statusNames[newStatus]<<endl;
 }
 
+int getThreadCommand()
+{
+  return threadCommand;
+}
+
 int getThreadStatus()
 /* Returns aaaaaaaaaabbbbbbbbbbcccccccccc where
  * aaaaaaaaaa is the status all threads should be in,
