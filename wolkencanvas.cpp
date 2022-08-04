@@ -525,7 +525,7 @@ void WolkenCanvas::startScan()
 {
   waitForThreads(TH_SCAN);
   cout<<"Starting scan\n";
-  octStore.shrink();
+  octStore.shrink(); // This is where the GUI freezes.
   currentAction=0;
 }
 
