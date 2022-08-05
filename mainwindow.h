@@ -71,6 +71,8 @@ protected:
   void closeEvent(QCloseEvent *event) override;
 private:
   int threadsCountedPoints;
+  int64_t numPoints,lastNumPoints;
+  time_t pointTime,lastPointTime;
   double lastTolerance,lastStageTolerance,writtenTolerance,lastDensity,rmsadj;
   int numberThreads;
   int lastState; // state is in WolkenCanvas

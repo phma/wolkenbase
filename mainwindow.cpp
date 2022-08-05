@@ -160,7 +160,16 @@ void MainWindow::tick()
     ta=dequeueResult();
     gotResult(ta);
   }
-  dotTriangleMsg->setText(tr("%n points","",octStore.countPoints()));
+  numPoints=octStore.countPoints();
+  pointTime=time(nullptr);
+  if (pointTime!=lastPointTime)
+  {
+    //cout<<numPoints-lastNumPoints<<" pts/s  \r";
+    //cout.flush();
+    lastPointTime=pointTime;
+    lastNumPoints=numPoints;
+  }
+  dotTriangleMsg->setText(tr("%n points","",numPoints));
   memoryMsg->setText(QString::fromStdString(threePrefix(freeRam())+'B'));
   lpfBusyFraction=(16*lpfBusyFraction+busyFraction())/17;
   busyBar->setValue(lrint(lpfBusyFraction*16777216));
