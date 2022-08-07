@@ -3,7 +3,7 @@
 /* testpattern.cpp - test patterns                    */
 /*                                                    */
 /******************************************************/
-/* Copyright 2019,2021 Pierre Abbat.
+/* Copyright 2019,2021,2022 Pierre Abbat.
  * This file is part of Wolkenbase.
  * 
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -32,6 +32,7 @@ using namespace std;
 unsigned int areaPhase;
 int anglePhase;
 vector<LasPoint> testCloud;
+deque<uint64_t> pointCensus;
 bool storePoints=true;
 
 void setStorePoints(bool s)
@@ -50,6 +51,19 @@ void reputPoints()
       break;
     octStore.put(pnt);
   }
+}
+
+int censusPoints(vector<LasPoint> points)
+/* Sets a bit in pointCensus for each point, if they are test data.
+ * Returns 1 if a bit was already set, -1 if GPS time is not an integer
+ * (which means not test data), and 0 if all points are test points
+ * not previously counted.
+ */
+{
+  int i;
+  for (i=0;i<points.size();i++)
+    ;
+  return 0;
 }
 
 void initPhases()
