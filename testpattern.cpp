@@ -60,10 +60,64 @@ int censusPoints(vector<LasPoint> points)
  * not previously counted.
  */
 {
-  int i;
-  for (i=0;i<points.size();i++)
-    ;
-  return 0;
+  int i,n,ret=0;
+  int64_t mask;
+  for (i=0;i<points.size() && ret>=0;i++)
+  {
+    n=lrint(points[i].gpsTime);
+    if (n!=points[i].gpsTime || n<0)
+      ret=-1;
+    else
+    {
+      if (pointCensus.size()<n/64+1)
+	pointCensus.resize(n/64+1);
+      mask=1<<(n%64);
+      if (pointCensus[n/64]&mask)
+	ret=1;
+      pointCensus[n/64]|=mask;
+    }
+  }
+  return ret;
+}
+
+void censusPoints()
+{
+  int64_t i,maxPoint;
+  int err=0;
+  vector<int64_t> missing;
+  pointCensus.clear();
+  for (i=0;i<octStore.getNumBlocks() && err>=0;i++)
+    err=censusPoints(octStore.getAll(i));
+  if (err>0 && pointCensus.size()>1)
+    // If all gpsTimes are 0, it may be because the point format has no gpsTime.
+    cout<<"Duplicate point\n";
+  if (err>=0)
+  {
+    for (i=0;i<64 && pointCensus.size() && (pointCensus.back()>>i);i++)
+      ;
+    if (pointCensus.size())
+      maxPoint=0;
+    else
+      maxPoint=(pointCensus.size()-1)*64+i;
+    for (i=0;i<maxPoint;i++)
+    {
+      if (pointCensus[i/64]==0xffffffffffffffff)
+	i+=63;
+      if ((pointCensus[i/64]&(1<<(i&63)))==0)
+	missing.push_back(i);
+    }
+  }
+  if (missing.size())
+  {
+    cout<<"Missing points: ";
+    for (i=0;i<missing.size();i++)
+    {
+      if (i)
+	cout<<',';
+      cout<<missing[i];
+    }
+    cout<<endl;
+  }
 }
 
 void initPhases()

@@ -24,6 +24,7 @@
 #include <cassert>
 #include <climits>
 #include <atomic>
+#include "testpattern.h"
 #include "threads.h"
 #include "angle.h"
 #include "random.h"
@@ -601,6 +602,7 @@ void WolkenThread::operator()(int thread)
 	  cloudOutput.writeFiles();
 	  cloudOutput.closeFiles();
 #endif
+	  censusPoints();
 	  break;
 	default:
 	  sleep(thread);
