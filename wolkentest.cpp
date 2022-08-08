@@ -3,7 +3,7 @@
 /* wolkentest.cpp - test program                      */
 /*                                                    */
 /******************************************************/
-/* Copyright 2019-2021 Pierre Abbat.
+/* Copyright 2019-2022 Pierre Abbat.
  * This file is part of Wolkenbase.
  *
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -870,12 +870,13 @@ void test1splitfile(int p,int proot)
   LasPoint pnt;
   lasHeader.openWrite(to_string(p)+".las",SI_TEST);
   lasHeader.setVersion(1,2);
-  lasHeader.setPointFormat(0);
+  lasHeader.setPointFormat(1);
   lasHeader.setScale(xyz(0,0,0),xyz(1,1,1),xyz(1./p,1./p,1./p));
   for (i=0;i<p;i++)
   {
     pnt.location=xyz((i+0.5)/p,((i*proot)%p+0.5)/p,((i*zstep)%p+0.5)/p);
     pnt.returnNum=1;
+    pnt.gpsTime=i;
     lasHeader.writePoint(pnt);
   }
   lasHeader.writeHeader();
