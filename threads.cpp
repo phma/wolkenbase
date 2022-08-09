@@ -432,6 +432,8 @@ void countClasses(int thread)
     for (j=blockCounts.begin();j!=blockCounts.end();++j)
       threadTotals[j->first]+=j->second;
   }
+  while (actQueue.size())
+    sleep(thread); // Make sure that each thread runs one countClasses instance
   classTotalMutex.lock();
   for (j=threadTotals.begin();j!=threadTotals.end();++j)
     classTotals[j->first]+=j->second;
