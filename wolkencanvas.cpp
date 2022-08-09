@@ -550,6 +550,7 @@ void WolkenCanvas::startCount()
   ThreadAction ta;
   waitForThreads(TH_PAUSE);
   cout<<"Counting points\n";
+  classTotals.clear();
   octStore.setIgnoreDupes(false);
   for (i=0;i<nThreads();i++)
   {
