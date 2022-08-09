@@ -72,7 +72,7 @@ int censusPoints(vector<LasPoint> points)
     {
       if (pointCensus.size()<n/64+1)
 	pointCensus.resize(n/64+1);
-      mask=1<<(n%64);
+      mask=((uint64_t)1)<<(n%64);
       if (pointCensus[n/64]&mask)
 	ret=1;
       pointCensus[n/64]|=mask;
