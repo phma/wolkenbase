@@ -883,9 +883,16 @@ void test1splitfile(int p,int proot)
 }
 
 void testsplitfile()
+/* The two numbers are a prime near 1 or 8 times the number of records per
+ * block (see octree.h) and a primitive root near ± its cube root.
+ */
 {
+  test1splitfile(523,516);
+  test1splitfile(541,10);
   test1splitfile(719,710);
   test1splitfile(727,10);
+  test1splitfile(4289,17);
+  test1splitfile(4297,15);
   test1splitfile(5749,18);
   test1splitfile(5779,5762);
 }
