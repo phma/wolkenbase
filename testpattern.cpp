@@ -62,7 +62,7 @@ int censusPoints(vector<LasPoint> points)
 {
   int i,n,ret=0;
   uint64_t mask;
-  cout<<points.size()<<'+';
+  //cout<<points.size()<<'+';
   for (i=0;i<points.size() && ret>=0;i++)
   {
     n=lrint(points[i].gpsTime);
