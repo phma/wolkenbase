@@ -95,10 +95,11 @@ void censusPoints()
   {
     for (i=0;i<64 && pointCensus.size() && (pointCensus.back()>>i);i++)
       ;
-    if (pointCensus.size())
+    if (!pointCensus.size())
       maxPoint=0;
     else
       maxPoint=(pointCensus.size()-1)*64+i;
+    cout<<"Max point "<<maxPoint<<endl;
     for (i=0;i<maxPoint;i++)
     {
       if (pointCensus[i/64]==0xffffffffffffffff)
