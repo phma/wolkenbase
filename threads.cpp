@@ -45,6 +45,7 @@ namespace cr=std::chrono;
 
 mutex actMutex;
 mutex startMutex;
+mutex anyThreadMutex;
 map<int,mutex> pointBufferMutex,cubeMutex;
 shared_mutex threadStatusMutex;
 mutex tileDoneMutex;
@@ -206,10 +207,12 @@ void embufferPoint(LasPoint point,bool fromFile)
   octStore.setBlockMutex.unlock_shared();
   if (thread<0)
   {
+    anyThreadMutex.lock();
     thread=anyThread;
     anyThread--;
     if (anyThread<0)
       anyThread+=threadStatus.size();
+    anyThreadMutex.unlock();
   }
   thread%=threadStatus.size();
   if (!point.isEmpty())
