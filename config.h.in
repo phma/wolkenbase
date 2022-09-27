@@ -1,4 +1,4 @@
-/* Copyright 2019-2021 Pierre Abbat.
+/* Copyright 2019-2022 Pierre Abbat.
  * This file is part of Wolkenbase.
  * 
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -27,6 +27,7 @@
 #cmakedefine Plytapus_FOUND
 #cmakedefine Mitobrevno_FOUND
 #cmakedefine ENABLE_MITOBREVNO
+#cmakedefine LASzip_FOUND
 #define SYSTEM_NAME @CMAKE_SYSTEM_NAME@
 #define SYSTEM_VERSION @CMAKE_SYSTEM_VERSION@
 #define VERSION "@WOLKENBASE_VERSION@"
