@@ -3,7 +3,7 @@
 /* las.h - laser point cloud files                    */
 /*                                                    */
 /******************************************************/
-/* Copyright 2019-2021 Pierre Abbat.
+/* Copyright 2019-2022 Pierre Abbat.
  * This file is part of Wolkenbase.
  * 
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -37,6 +37,12 @@
 #define SI_MODIFY 1
 #define SI_EXTRACT 2
 #define SI_TEST 3
+
+#ifdef LASzip_FOUND
+
+void laszipCompex(std::string inputFileName,std::string outputFileName,bool compress);
+
+#endif
 
 class OctBlock;
 
