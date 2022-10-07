@@ -977,6 +977,9 @@ int main(int argc, char *argv[])
     args.push_back(argv[i]);
   initPhases();
   fillTanTables();
+  startThreads(1); // so that lockCube doesn't divide by 0
+  waitForThreads(TH_STOP);
+  joinThreads();
   octStore.open("store.oct");
   if (shoulddo("sizeof"))
     testsizeof();
