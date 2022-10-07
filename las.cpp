@@ -23,7 +23,6 @@
 #include <cassert>
 #include <cstring>
 #include <ctime>
-#include <laszip_api.h>
 #include "config.h"
 #include "las.h"
 #include "binio.h"
@@ -37,6 +36,21 @@ const short pointLengths[]={20,28,26,34,57,63,30,36,38,59,67};
 const short pointFeatures[]={0x0,0x1,0x2,0x3,0x9,0xb,0x101,0x103,0x107,0x109,0x10f};
 
 using namespace std;
+
+#ifdef LASzip_FOUND
+#include <laszip_api.h>
+
+void laszipCompex(string inputFileName,string outputFileName,bool compress)
+{
+  laszip_POINTER reader,writer;
+  laszip_BOOL readCompress;
+  laszip_header *header;
+  laszip_create(&reader);
+  laszip_open_reader(&reader,inputFileName.c_str(),&readCompress);
+  laszip_get_header_pointer(reader,&header);
+}
+
+#endif
 
 int joinPointFormat(vector<int> formats)
 /* Computes the join (supremum) of the formats, according to their features.
