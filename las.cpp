@@ -3,7 +3,7 @@
 /* las.cpp - laser point cloud files                  */
 /*                                                    */
 /******************************************************/
-/* Copyright 2019-2021 Pierre Abbat.
+/* Copyright 2019-2022 Pierre Abbat.
  * This file is part of Wolkenbase.
  * 
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -23,6 +23,7 @@
 #include <cassert>
 #include <cstring>
 #include <ctime>
+#include <laszip_api.h>
 #include "config.h"
 #include "las.h"
 #include "binio.h"
