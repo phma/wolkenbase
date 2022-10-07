@@ -927,6 +927,10 @@ void testbigcloud()
     for (j=0;j<totalPoints/7;j++)
       headers[i].writePoint(testCloud[i*(totalPoints/7)+j]);
     headers[i].writeHeader();
+    headers[i].close();
+#ifdef LASzip_FOUND
+    laszipCompex("big"+to_string(i)+".las","big"+to_string(i)+".laz",true);
+#endif
   }
 }
 

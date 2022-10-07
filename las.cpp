@@ -46,15 +46,17 @@ void laszipCompex(string inputFileName,string outputFileName,bool compress)
   laszip_BOOL readCompress;
   laszip_header *header;
   laszip_I64 npoints,i;
+  int rc;
   laszip_point* point;
-  laszip_create(&reader);
-  laszip_open_reader(&reader,inputFileName.c_str(),&readCompress);
-  laszip_get_header_pointer(reader,&header);
+  //rc=laszip_load_dll();
+  rc=laszip_create(&reader);
+  rc=laszip_open_reader(&reader,inputFileName.c_str(),&readCompress);
+  rc=laszip_get_header_pointer(reader,&header);
   npoints=(header->number_of_point_records ? header->number_of_point_records : header->extended_number_of_point_records);
-  laszip_get_point_pointer(reader,&point);
-  laszip_create(&writer);
-  laszip_set_header(writer,header);
-  laszip_open_writer(writer,outputFileName.c_str(),compress);
+  rc=laszip_get_point_pointer(reader,&point);
+  rc=laszip_create(&writer);
+  rc=laszip_set_header(writer,header);
+  rc=laszip_open_writer(writer,outputFileName.c_str(),compress);
   for (i=0;i<npoints;i++)
   {
     laszip_read_point(reader);
