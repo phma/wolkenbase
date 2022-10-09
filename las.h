@@ -127,6 +127,7 @@ private:
   size_t nPoints[16]; // [0] is total; [1]..[15] are each return
   size_t nReadPoints; // for progress bar
   bool reading;
+  bool zipFlag;
   size_t writePos;
 public:
   LasHeader();
@@ -136,6 +137,7 @@ public:
   void openWrite(std::string fileName,int sysId);
   void writeHeader();
   bool isValid();
+  bool isZipped();
   void setVersion(int major,int minor);
   void setPointFormat(int format);
   void setScale(xyz minCor,xyz maxCor,xyz scale);

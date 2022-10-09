@@ -284,6 +284,7 @@ LasHeader::~LasHeader()
 void LasHeader::openRead(string fileName)
 {
   int magicBytes;
+  int64_t lazMagic;
   int i;
   size_t total;
   unsigned int legacyNPoints[6];
@@ -390,6 +391,22 @@ void LasHeader::openRead(string fileName)
 	nPoints[i]=0;
     if (pointLength==0)
       versionMajor=versionMinor=nPoints[0]=0;
+    /* Recognize a LASzip file. There's an extra header between the header
+     * (headerSize=375, in format 1.4) and the start of points (pointOffset=469),
+     * starting "\0\0laszip". If so, the file must be decompressed and the
+     * decompressed file read and deleted.
+     */
+    zipFlag=false;
+    if (pointOffset>=headerSize+8)
+    {
+      lasfile->seekg(headerSize,ios_base::beg);
+      lazMagic=readbelong(*lasfile);
+      if ((lazMagic&0xffffffffffff)==0x6c61737a6970)
+      {
+	zipFlag=true;
+	cout<<filename<<" is laszipped\n";
+      }
+    }
   }
   else // file does not begin with "LASF"
     versionMajor=versionMinor=nPoints[0]=0;
