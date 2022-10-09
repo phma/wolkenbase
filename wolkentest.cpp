@@ -916,6 +916,9 @@ void testbigcloud()
   map<int,LasHeader> headers;
   const int totalPoints=7000000;
   double radius=sqrt(totalPoints/M_PI/density);
+#ifdef LASzip_FOUND
+  laszipInit();
+#endif
   setStorePoints(false);
   wavyScene(radius,density,0.33,0.30,0.1);
   for (i=0;i<7;i++)

@@ -40,6 +40,7 @@
 
 #ifdef LASzip_FOUND
 
+void laszipInit();
 void laszipCompex(std::string inputFileName,std::string outputFileName,bool compress);
 
 #endif

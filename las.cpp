@@ -40,17 +40,38 @@ using namespace std;
 #ifdef LASzip_FOUND
 #include <laszip_api.h>
 
+void laszipInit()
+{
+  int rc;
+  rc=laszip_load_dll();
+}
+
+void laszipError(laszip_POINTER a)
+{
+  if (a)
+  {
+    laszip_CHAR *error;
+    if (laszip_get_error(a,&error))
+      cout<<"LASzip error: "<<error<<endl;
+    else
+      cout<<"unknown LASzip error\n";
+  }
+  else
+    cout<<"null LASzip pointer\n";
+}
+
 void laszipCompex(string inputFileName,string outputFileName,bool compress)
 {
   laszip_POINTER reader,writer;
-  laszip_BOOL readCompress;
+  laszip_BOOL readCompress=0;
   laszip_header *header;
   laszip_I64 npoints,i;
   int rc;
   laszip_point* point;
-  //rc=laszip_load_dll();
   rc=laszip_create(&reader);
-  rc=laszip_open_reader(&reader,inputFileName.c_str(),&readCompress);
+  rc=laszip_open_reader(reader,inputFileName.c_str(),&readCompress);
+  if (rc)
+    laszipError(reader);
   rc=laszip_get_header_pointer(reader,&header);
   npoints=(header->number_of_point_records ? header->number_of_point_records : header->extended_number_of_point_records);
   rc=laszip_get_point_pointer(reader,&point);
