@@ -48,7 +48,8 @@ add_executable(wolkenbase angle.cpp binio.cpp boundrect.cpp
                leastsquares.cpp lissajous.cpp mainwindow.cpp manysum.cpp matrix.cpp
                octree.cpp peano.cpp ps.cpp quaternion.cpp
                random.cpp relprime.cpp scan.cpp shape.cpp testpattern.cpp
-               threads.cpp tile.cpp unitbutton.cpp wkt.cpp wolkenbase.cpp wolkencanvas.cpp
+               threads.cpp tile.cpp unitbutton.cpp
+               wkt.cpp wolkenbase.cpp wolkencanvas.cpp
                ${lib_resources} ${qm_files})
 
 add_executable(lasify angle.cpp binio.cpp boundrect.cpp
@@ -58,19 +59,22 @@ add_executable(lasify angle.cpp binio.cpp boundrect.cpp
                leastsquares.cpp lissajous.cpp lasifywindow.cpp manysum.cpp matrix.cpp
                octree.cpp peano.cpp ply.cpp ps.cpp quaternion.cpp
                random.cpp relprime.cpp scan.cpp shape.cpp testpattern.cpp
-               threads.cpp tile.cpp unitbutton.cpp wkt.cpp lasify.cpp wolkencanvas.cpp xyzfile.cpp
+               threads.cpp tile.cpp unitbutton.cpp wkt.cpp
+               lasify.cpp wolkencanvas.cpp xyzfile.cpp
                ${lib_resources} ${qm_files})
 
 add_executable(wolkencli angle.cpp binio.cpp boundrect.cpp
-	       brevno.cpp classify.cpp cloud.cpp eisenstein.cpp
+	       brevno.cpp classify.cpp cloud.cpp eisenstein.cpp fileio.cpp
                flowsnake.cpp freeram.cpp point.cpp las.cpp ldecimal.cpp
-               leastsquares.cpp manysum.cpp matrix.cpp octree.cpp ps.cpp quaternion.cpp
+               leastsquares.cpp manysum.cpp matrix.cpp
+               octree.cpp ps.cpp quaternion.cpp
                random.cpp relprime.cpp scan.cpp shape.cpp testpattern.cpp
                threads.cpp tile.cpp wkt.cpp wolkencli.cpp)
 
 add_executable(wolkentest angle.cpp binio.cpp boundrect.cpp
-	       brevno.cpp classify.cpp cloud.cpp eisenstein.cpp
-               flowsnake.cpp freeram.cpp point.cpp las.cpp ldecimal.cpp leastsquares.cpp
+	       brevno.cpp classify.cpp cloud.cpp eisenstein.cpp fileio.cpp
+               flowsnake.cpp freeram.cpp point.cpp
+               las.cpp ldecimal.cpp leastsquares.cpp
                manysum.cpp matrix.cpp octree.cpp peano.cpp ps.cpp quaternion.cpp
                random.cpp relprime.cpp scan.cpp shape.cpp testpattern.cpp
                threads.cpp tile.cpp wkt.cpp wolkentest.cpp)

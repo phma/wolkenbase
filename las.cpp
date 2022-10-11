@@ -26,6 +26,7 @@
 #include "config.h"
 #include "las.h"
 #include "binio.h"
+#include "fileio.h"
 #include "angle.h"
 
 const int MASK_GPSTIME=0x7fa; // GPS time takes 8 bytes
@@ -284,6 +285,11 @@ LasHeader::LasHeader()
 LasHeader::~LasHeader()
 {
   close();
+}
+
+string LasHeader::tempName(string name)
+{
+  return noExt(name)+"."+to_string((intptr_t)this);
 }
 
 void LasHeader::openRead(string fileName)
@@ -549,6 +555,16 @@ bool LasHeader::isValid()
 {
   return versionMajor>0 && versionMinor>0 && headerSize>0 && pointLength>0 &&
 	 (headerSize>0xe3 || pointFormat<6);
+}
+
+bool LasHeader::isZipped()
+{
+  return zipFlag;
+}
+
+void LasHeader::setZipped(bool zip)
+{
+  zipFlag=zip;
 }
 
 void LasHeader::setVersion(int major,int minor)

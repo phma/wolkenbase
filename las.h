@@ -107,7 +107,7 @@ class LasHeader
 {
 private:
   std::fstream *lasfile;
-  std::string filename;
+  std::string filename,lasname;
   unsigned short sourceId,globalEncoding;
   unsigned int guid1;
   unsigned short guid2,guid3;
@@ -128,16 +128,20 @@ private:
   size_t nReadPoints; // for progress bar
   bool reading;
   bool zipFlag;
+  bool lasOpened; // true if lasfile is opened with lasname
   size_t writePos;
+  std::string tempName(std::string name);
 public:
   LasHeader();
   ~LasHeader();
   void openRead(std::string fileName);
   void openFake(std::string fileName);
   void openWrite(std::string fileName,int sysId);
+  void reopenLaz();
   void writeHeader();
   bool isValid();
   bool isZipped();
+  void setZipped(bool zip);
   void setVersion(int major,int minor);
   void setPointFormat(int format);
   void setScale(xyz minCor,xyz maxCor,xyz scale);
