@@ -61,6 +61,10 @@ void laszipError(laszip_POINTER a)
 }
 
 void laszipCompex(string inputFileName,string outputFileName,bool compress)
+/* Compress or expand a LAZ file. Using an SSD, testbigcloud spends 85%
+ * of the time writing the LAS file, and this function spends the other 15%
+ * compressing it, taking 0.5 µs per point.
+ */
 {
   laszip_POINTER reader,writer;
   laszip_BOOL readCompress=0;
