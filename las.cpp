@@ -77,6 +77,7 @@ void laszipCompex(string inputFileName,string outputFileName,bool compress)
   rc=laszip_get_point_pointer(reader,&point);
   rc=laszip_create(&writer);
   rc=laszip_set_header(writer,header);
+  rc=laszip_preserve_generating_software(writer,true);
   rc=laszip_open_writer(writer,outputFileName.c_str(),compress);
   for (i=0;i<npoints;i++)
   {
