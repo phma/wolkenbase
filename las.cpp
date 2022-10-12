@@ -531,6 +531,7 @@ void LasHeader::reopenLaz()
   lasfile->seekg(0x60,ios_base::beg);
   pointOffset=readleint(*lasfile);
   nVariableLength=readleint(*lasfile);
+  pointFormat=lasfile->get();
 #endif
 }
 
