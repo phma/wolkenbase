@@ -3,7 +3,7 @@
 /* fileio.h - file I/O                                */
 /*                                                    */
 /******************************************************/
-/* Copyright 2020 Pierre Abbat.
+/* Copyright 2020,2022 Pierre Abbat.
  * This file is part of Wolkenbase.
  *
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -26,6 +26,7 @@
 std::string noExt(std::string fileName);
 std::string extension(std::string fileName);
 std::string baseName(std::string fileName);
+void deleteFile(std::string fileName);
 
 #ifdef XYZ
 int readCloud(std::string &inputFile,double inUnit,int flags);

@@ -3,7 +3,7 @@
 /* fileio.cpp - file I/O                              */
 /*                                                    */
 /******************************************************/
-/* Copyright 2020 Pierre Abbat.
+/* Copyright 2020,2022 Pierre Abbat.
  * This file is part of Wolkenbase.
  *
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -65,6 +65,11 @@ string baseName(string fileName)
   long long slashPos;
   slashPos=fileName.rfind('/');
   return fileName.substr(slashPos+1);
+}
+
+void deleteFile(string fileName)
+{
+  remove(fileName.c_str());
 }
 
 #ifdef XYZ

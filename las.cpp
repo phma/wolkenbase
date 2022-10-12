@@ -407,7 +407,7 @@ void LasHeader::openRead(string fileName)
      * starting "\0\0laszip". If so, the file must be decompressed and the
      * decompressed file read and deleted.
      */
-    zipFlag=false;
+    zipFlag=lasOpened=false;
     if (pointOffset>=headerSize+8)
     {
       lasfile->seekg(headerSize,ios_base::beg);
@@ -492,6 +492,25 @@ void LasHeader::openWrite(string fileName,int sysId)
   nVariableLength=nExtendedVariableLength=0;
   for (i=0;i<16;i++)
     nPoints[i]=0;
+}
+
+void LasHeader::reopenLaz()
+/* The file has been opened and found to be a LAZ file. Close the file,
+ * decompress it to a LAS file, and open the LAS file. If compiled without
+ * LASzip, this does nothing.
+ */
+{
+#ifdef LASzip_FOUND
+  lasname=tempName(filename);
+  assert(reading);
+  assert(zipFlag);
+  assert(!lasOpened);
+  assert(lasfile);
+  close();
+  laszipCompex(filename,lasname,false);
+  lasfile=new fstream(lasname,ios::binary|ios::in);
+  lasOpened=true;
+#endif
 }
 
 void LasHeader::writeHeader()
@@ -630,6 +649,8 @@ void LasHeader::close()
 {
   delete(lasfile);
   lasfile=nullptr;
+  if (lasOpened)
+    deleteFile(lasname);
 }
 
 size_t LasHeader::numberPoints(int r)
