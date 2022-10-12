@@ -3,7 +3,7 @@
 /* wolkenbase.cpp - GUI main program                  */
 /*                                                    */
 /******************************************************/
-/* Copyright 2020-2021 Pierre Abbat.
+/* Copyright 2020-2022 Pierre Abbat.
  * This file is part of Wolkenbase.
  *
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -62,6 +62,7 @@ int main(int argc, char *argv[])
     //cout<<"Translations found in share directory"<<endl;
     app.installTranslator(&translator);
   }
+  laszipInit();
   MainWindow window;
   nthreads=window.getNumberThreads();
   fillTanTables();

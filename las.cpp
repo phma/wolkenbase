@@ -67,8 +67,8 @@ void laszipCompex(string inputFileName,string outputFileName,bool compress)
  * compressing it, taking 0.5 µs per point.
  */
 {
-  laszip_POINTER reader,writer;
-  laszip_BOOL readCompress=0;
+  laszip_POINTER reader=nullptr,writer=nullptr;
+  laszip_BOOL readCompress=false;
   laszip_header *header;
   laszip_I64 npoints,i;
   int rc;
@@ -518,12 +518,12 @@ void LasHeader::reopenLaz()
  */
 {
 #ifdef LASzip_FOUND
-  lasname=tempName(filename);
   assert(reading);
   assert(zipFlag);
   assert(!lasOpened);
   assert(lasfile);
   close();
+  lasname=tempName(filename);
   laszipCompex(filename,lasname,false);
   lasfile=new fstream(lasname,ios::binary|ios::in);
   lasOpened=zipFlag=true; // close cleared them

@@ -482,6 +482,8 @@ void WolkenThread::operator()(int thread)
 	   * * Some photogrammetric point clouds have the return number set to 0
 	   *   on all points. The return number should be set to 1.
 	   */
+	  if (act.hdr->isZipped())
+	    act.hdr->reopenLaz();
 	  try
 	  {
 	    dropZeros=false;
