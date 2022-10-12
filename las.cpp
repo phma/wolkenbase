@@ -291,7 +291,7 @@ LasHeader::~LasHeader()
 
 string LasHeader::tempName(string name)
 {
-  return noExt(name)+"."+to_string((intptr_t)this);
+  return noExt(name)+"."+to_string((intptr_t)this)+".tmplaszip";
 }
 
 void LasHeader::openRead(string fileName)
@@ -527,6 +527,9 @@ void LasHeader::reopenLaz()
   laszipCompex(filename,lasname,false);
   lasfile=new fstream(lasname,ios::binary|ios::in);
   lasOpened=zipFlag=true; // close cleared them
+  // pointOffset differs between LAS and LAZ and must be reread.
+  lasfile->seekg(0x60,ios_base::beg);
+  pointOffset=readleint(*lasfile);
 #endif
 }
 
