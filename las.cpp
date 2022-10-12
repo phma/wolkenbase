@@ -280,6 +280,8 @@ LasHeader::LasHeader()
   lasfile=nullptr;
   versionMajor=versionMinor=0;
   unit=1;
+  zipFlag=lasOpened=false;
+  reading=true;
 }
 
 LasHeader::~LasHeader()
@@ -450,6 +452,7 @@ void LasHeader::openFake(string fileName)
 }
 
 void LasHeader::openWrite(string fileName,int sysId)
+// To open a LAZ file, set zipFlag before calling openWrite.
 {
   int i;
   time_t now=time(nullptr);
@@ -457,7 +460,21 @@ void LasHeader::openWrite(string fileName,int sysId)
   if (lasfile)
     close();
   filename=fileName;
+#ifdef LASzip_FOUND
+  if (zipFlag)
+  {
+    lasname=tempName(filename);
+    lasOpened=true;
+    lasfile=new fstream(lasname,ios::binary|ios::out);
+  }
+  else
+  {
+    lasOpened=false;
+    lasfile=new fstream(filename,ios::binary|ios::out);
+  }
+#else
   lasfile=new fstream(fileName,ios::binary|ios::out);
+#endif
   reading=false;
   switch (sysId)
   {
@@ -509,7 +526,7 @@ void LasHeader::reopenLaz()
   close();
   laszipCompex(filename,lasname,false);
   lasfile=new fstream(lasname,ios::binary|ios::in);
-  lasOpened=true;
+  lasOpened=zipFlag=true; // close cleared them
 #endif
 }
 
@@ -649,8 +666,14 @@ void LasHeader::close()
 {
   delete(lasfile);
   lasfile=nullptr;
+#ifdef LASzip_FOUND
+  if (lasOpened && !reading)
+    laszipCompex(lasname,filename,true);
+#endif
   if (lasOpened)
     deleteFile(lasname);
+  lasOpened=zipFlag=false;
+  lasname="";
 }
 
 size_t LasHeader::numberPoints(int r)
