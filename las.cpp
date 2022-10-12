@@ -530,6 +530,7 @@ void LasHeader::reopenLaz()
   // pointOffset differs between LAS and LAZ and must be reread.
   lasfile->seekg(0x60,ios_base::beg);
   pointOffset=readleint(*lasfile);
+  nVariableLength=readleint(*lasfile);
 #endif
 }
 
