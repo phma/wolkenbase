@@ -562,6 +562,7 @@ void WolkenThread::operator()(int thread)
 	  {
 	    cerr<<"Error reading file\n";
 	  }
+	  act.hdr->close();
 	  break;
       }
       point=debufferPoint(thread);
