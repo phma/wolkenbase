@@ -62,7 +62,9 @@ int main(int argc, char *argv[])
     //cout<<"Translations found in share directory"<<endl;
     app.installTranslator(&translator);
   }
+#ifdef LASzip_FOUND
   laszipInit();
+#endif
   MainWindow window;
   nthreads=window.getNumberThreads();
   fillTanTables();
