@@ -194,7 +194,11 @@ void MainWindow::openFile()
   fileDialog->setFileMode(QFileDialog::ExistingFiles);
   fileDialog->setAcceptMode(QFileDialog::AcceptOpen);
   fileDialog->selectFile("");
+#ifdef LASzip_FOUND
+  fileDialog->setNameFilter(tr("(*.las);;(*.laz);;(*)"));
+#else
   fileDialog->setNameFilter(tr("(*.las);;(*)"));
+#endif
   dialogResult=fileDialog->exec();
   if (dialogResult)
   {

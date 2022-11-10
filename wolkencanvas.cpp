@@ -422,7 +422,11 @@ void WolkenCanvas::saveFile()
     fileName=noExt(inFileHeaders[0].getFileName())+".las";
     fileDialog->selectFile(QString::fromStdString(fileName));
   }
+#ifdef LASzip_FOUND
+  fileDialog->setNameFilter(tr("(*.las);;(*.laz)"));
+#else
   fileDialog->setNameFilter(tr("(*.las)"));
+#endif
   dialogResult=fileDialog->exec();
   if (dialogResult)
   {
@@ -477,7 +481,11 @@ void WolkenCanvas::startProcess(bool clfy)
   fileDialog->setWindowTitle(tr("Save classified point cloud"));
   fileDialog->setFileMode(QFileDialog::AnyFile);
   fileDialog->setAcceptMode(QFileDialog::AcceptSave);
+#ifdef LASzip_FOUND
+  fileDialog->setNameFilter(tr("(*.las);;(*.laz)"));
+#else
   fileDialog->setNameFilter(tr("(*.las)"));
+#endif
   dialogResult=fileDialog->exec();
   if (dialogResult)
   {

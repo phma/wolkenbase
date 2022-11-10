@@ -291,12 +291,12 @@
     <message>
         <location filename="lasifywindow.cpp" line="186"/>
         <source>(*.ply);;(*.xyz);;(*)</source>
-        <translation>Polygon files (*.ply);;XYZ files (*.xyz);;All files(*)</translation>
+        <translation>Polygon files(*.ply);;XYZ files(*.xyz);;All files(*)</translation>
     </message>
     <message>
         <location filename="lasifywindow.cpp" line="188"/>
         <source>(*.xyz);;(*)</source>
-        <translation>XYZ files (*.xyz);;All files(*)</translation>
+        <translation>XYZ files(*.xyz);;All files(*)</translation>
     </message>
     <message>
         <location filename="lasifywindow.cpp" line="285"/>
@@ -407,24 +407,24 @@ License GPL 3 or later%4</translation>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="mainwindow.cpp" line="184"/>
+        <location filename="mainwindow.cpp" line="193"/>
         <source>Open LAS File</source>
         <translation>Open LAS File</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="188"/>
+        <location filename="mainwindow.cpp" line="200"/>
         <source>(*.las);;(*)</source>
-        <translation>Laser files (*.las);;All files(*)</translation>
+        <translation>Laser files(*.las);;All files(*)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="274"/>
-        <location filename="mainwindow.cpp" line="275"/>
-        <location filename="mainwindow.cpp" line="282"/>
+        <location filename="mainwindow.cpp" line="287"/>
+        <location filename="mainwindow.cpp" line="288"/>
+        <location filename="mainwindow.cpp" line="295"/>
         <source>Wolkenbase</source>
         <translation>Wolkenbase</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="276"/>
+        <location filename="mainwindow.cpp" line="289"/>
         <source>%1
 Version %2
 Copyright %3 Pierre Abbat
@@ -435,7 +435,7 @@ Copyright %3 Pierre Abbat
 License GPL 3 or later</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="295"/>
+        <location filename="mainwindow.cpp" line="308"/>
         <source>&amp;File</source>
         <translation>&amp;File</translation>
     </message>
@@ -444,17 +444,17 @@ License GPL 3 or later</translation>
         <translation type="vanished">&amp;View</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="297"/>
+        <location filename="mainwindow.cpp" line="310"/>
         <source>&amp;Settings</source>
         <translation>&amp;Settings</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="298"/>
+        <location filename="mainwindow.cpp" line="311"/>
         <source>&amp;Help</source>
         <translation>&amp;Help</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="302"/>
+        <location filename="mainwindow.cpp" line="315"/>
         <source>Open</source>
         <translation>Open</translation>
     </message>
@@ -463,17 +463,17 @@ License GPL 3 or later</translation>
         <translation type="vanished">Process</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="354"/>
+        <location filename="mainwindow.cpp" line="367"/>
         <source>About Wolkenbase</source>
         <translation>About Wolkenbase</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="308"/>
+        <location filename="mainwindow.cpp" line="321"/>
         <source>Clear</source>
         <translation>Clear</translation>
     </message>
     <message numerus="yes">
-        <location filename="mainwindow.cpp" line="163"/>
+        <location filename="mainwindow.cpp" line="172"/>
         <source>%n points</source>
         <translation>
             <numerusform>%n point</numerusform>
@@ -481,77 +481,82 @@ License GPL 3 or later</translation>
         </translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="303"/>
+        <location filename="mainwindow.cpp" line="198"/>
+        <source>(*.las);;(*.laz);;(*)</source>
+        <translation>Laser files(*.las);;Compressed laser files(*.laz);;All files(*)</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="316"/>
         <source>Open point cloud files</source>
         <translation>Open point cloud files</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="309"/>
+        <location filename="mainwindow.cpp" line="322"/>
         <source>Clear point cloud</source>
         <translation>Clear point cloud</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="314"/>
+        <location filename="mainwindow.cpp" line="327"/>
         <source>Classify</source>
         <translation>Classify</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="315"/>
+        <location filename="mainwindow.cpp" line="328"/>
         <source>Classify point cloud and save</source>
         <translation>Classify point cloud and save</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="320"/>
+        <location filename="mainwindow.cpp" line="333"/>
         <source>Save as is</source>
         <translation>Save as is</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="321"/>
+        <location filename="mainwindow.cpp" line="334"/>
         <source>Save point cloud as is</source>
         <translation>Save point cloud as is</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="326"/>
+        <location filename="mainwindow.cpp" line="339"/>
         <source>Stop</source>
         <translation>Stop</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="327"/>
+        <location filename="mainwindow.cpp" line="340"/>
         <source>Stop processing point cloud</source>
         <translation>Stop processing point cloud</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="333"/>
+        <location filename="mainwindow.cpp" line="346"/>
         <source>Resume</source>
         <translation>Resume</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="334"/>
+        <location filename="mainwindow.cpp" line="347"/>
         <source>Resume processing point cloud</source>
         <translation>Resume processing point cloud</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="340"/>
+        <location filename="mainwindow.cpp" line="353"/>
         <source>Exit</source>
         <translation>Exit</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="341"/>
+        <location filename="mainwindow.cpp" line="354"/>
         <source>Exit program</source>
         <translation>Exit program</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="348"/>
+        <location filename="mainwindow.cpp" line="361"/>
         <source>Configure</source>
         <translation>Configure</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="349"/>
+        <location filename="mainwindow.cpp" line="362"/>
         <source>Classification parameters, max points per file</source>
         <translation>Classification parameters, max points per file</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="358"/>
+        <location filename="mainwindow.cpp" line="371"/>
         <source>About Qt</source>
         <translation>About Qt</translation>
     </message>
@@ -564,13 +569,19 @@ License GPL 3 or later</translation>
         <translation>Save point cloud</translation>
     </message>
     <message>
-        <location filename="wolkencanvas.cpp" line="425"/>
-        <location filename="wolkencanvas.cpp" line="474"/>
-        <source>(*.las)</source>
-        <translation>Laser files (*.las)</translation>
+        <location filename="wolkencanvas.cpp" line="426"/>
+        <location filename="wolkencanvas.cpp" line="485"/>
+        <source>(*.las);;(*.laz)</source>
+        <translation>Laser files(*.las);;Compressed laser files(*.laz)</translation>
     </message>
     <message>
-        <location filename="wolkencanvas.cpp" line="471"/>
+        <location filename="wolkencanvas.cpp" line="428"/>
+        <location filename="wolkencanvas.cpp" line="487"/>
+        <source>(*.las)</source>
+        <translation>Laser files(*.las)</translation>
+    </message>
+    <message>
+        <location filename="wolkencanvas.cpp" line="481"/>
         <source>Save classified point cloud</source>
         <translation>Save classified point cloud</translation>
     </message>
