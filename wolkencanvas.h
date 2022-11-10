@@ -85,6 +85,7 @@ private:
   xy ballPos;
   xy leftScaleEnd,rightScaleEnd,scaleEnd;
   bool shallClassify; // false to split an already classified file
+  bool saveLas;
   int penPos;
   int fileCountdown;
   int lastOpcount;

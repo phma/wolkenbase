@@ -428,8 +428,14 @@ void WolkenCanvas::saveFile()
   {
     files=fileDialog->selectedFiles();
     saveFileName=files[0].toStdString();
+    saveLas=false;
     if (extension(saveFileName)==".las")
       saveFileName=noExt(saveFileName);
+    else if (extension(saveFileName)==".laz")
+    {
+      saveFileName=noExt(saveFileName);
+      saveLas=true;
+    }
     for (i=0;i<inFileHeaders.size();i++)
     {
       limits.push_back(inFileHeaders[i].minCorner());
@@ -477,8 +483,14 @@ void WolkenCanvas::startProcess(bool clfy)
   {
     files=fileDialog->selectedFiles();
     saveFileName=files[0].toStdString();
+    saveLas=false;
     if (extension(saveFileName)==".las")
       saveFileName=noExt(saveFileName);
+    else if (extension(saveFileName)==".laz")
+    {
+      saveFileName=noExt(saveFileName);
+      saveLas=true;
+    }
     waitForThreads(TH_READ);
     for (i=0;i<inFileHeaders.size();i++)
     {
