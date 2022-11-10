@@ -157,7 +157,7 @@ void CloudOutput::openFiles(string name,map<int,size_t> classTotals)
 	headers[j->first].push_back(LasHeader());
 	headers[j->first][i].openWrite(name+'-'+className(j->first)+
 				       (pointsPerFile?"-":"")+ndecimal(i,nDigits)+
-				       ".las",sysId);
+				       (writeLaz?".laz":".las"),sysId);
 	headers[j->first][i].setUnit(unit);
 	headers[j->first][i].setScale(minCor,maxCor,scale);
 	headers[j->first][i].setVersion(1,4);

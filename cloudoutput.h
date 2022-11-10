@@ -36,7 +36,7 @@ public:
   size_t grandTotal;
   int pointsPerFile; // 0 means no limit
   int pointFormat;
-  bool separateClasses;
+  bool separateClasses,writeLaz;
   double unit;
   std::string className(int n);
   void openFiles(std::string name,std::map<int,size_t> classTotals);
