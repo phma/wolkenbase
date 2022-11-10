@@ -155,6 +155,7 @@ void CloudOutput::openFiles(string name,map<int,size_t> classTotals)
       for (i=0;i<quot;i++)
       {
 	headers[j->first].push_back(LasHeader());
+	headers[j->first][i].setZipped(writeLaz);
 	headers[j->first][i].openWrite(name+'-'+className(j->first)+
 				       (pointsPerFile?"-":"")+ndecimal(i,nDigits)+
 				       (writeLaz?".laz":".las"),sysId);
