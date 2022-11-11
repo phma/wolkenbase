@@ -45,7 +45,8 @@ add_executable(wolkenbase angle.cpp binio.cpp boundrect.cpp
 	       brevno.cpp classify.cpp cloud.cpp
 	       cloudoutput.cpp configdialog.cpp eisenstein.cpp
                fileio.cpp flowsnake.cpp freeram.cpp point.cpp las.cpp ldecimal.cpp
-               leastsquares.cpp lissajous.cpp mainwindow.cpp manysum.cpp matrix.cpp
+               leastsquares.cpp lissajous.cpp mainwindow.cpp
+               manygcd.cpp manysum.cpp matrix.cpp
                octree.cpp peano.cpp ps.cpp quaternion.cpp
                random.cpp relprime.cpp scan.cpp shape.cpp testpattern.cpp
                threads.cpp tile.cpp unitbutton.cpp
@@ -74,7 +75,7 @@ add_executable(wolkencli angle.cpp binio.cpp boundrect.cpp
 add_executable(wolkentest angle.cpp binio.cpp boundrect.cpp
 	       brevno.cpp classify.cpp cloud.cpp eisenstein.cpp fileio.cpp
                flowsnake.cpp freeram.cpp point.cpp
-               las.cpp ldecimal.cpp leastsquares.cpp
+               las.cpp ldecimal.cpp leastsquares.cpp manygcd.cpp
                manysum.cpp matrix.cpp octree.cpp peano.cpp ps.cpp quaternion.cpp
                random.cpp relprime.cpp scan.cpp shape.cpp testpattern.cpp
                threads.cpp tile.cpp wkt.cpp wolkentest.cpp)

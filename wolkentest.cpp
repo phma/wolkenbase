@@ -45,6 +45,7 @@
 #include "peano.h"
 #include "relprime.h"
 #include "manysum.h"
+#include "manygcd.h"
 #include "matrix.h"
 #include "leastsquares.h"
 
@@ -516,6 +517,17 @@ void testrelprime()
 
 void testmanygcd()
 {
+  vector<double> numbers;
+  int i,n;
+  for (n=16384,i=14;i<32;i++,n*=2)
+    numbers.push_back(n/1e3);
+  for (n=19683,i=9;i<20;i++,n*=3)
+    numbers.push_back(n/1e3);
+  for (n=15625,i=6;i<14;i++,n*=5)
+    numbers.push_back(n/1e3);
+  for (n=16807,i=5;i<12;i++,n*=7)
+    numbers.push_back(n/1e3);
+  cout<<"manygcd="<<manygcd(numbers,1e-9)<<endl;
 }
 
 void testmanysum()
