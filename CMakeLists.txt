@@ -143,7 +143,7 @@ set(CPACK_SOURCE_IGNORE_FILES /\\\\.git;.*~)
 include(CPack)
 
 include(CTest)
-add_test(arith wolkentest complex pageinx relprime manysum)
+add_test(arith wolkentest complex pageinx relprime manysum manygcd)
 add_test(geom wolkentest paraboloid sphere hyperboloid cylinder flat)
 add_test(angle wolkentest integertrig)
 add_test(fractal wolkentest flowsnake peano)

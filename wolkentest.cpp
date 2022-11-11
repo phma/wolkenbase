@@ -514,6 +514,10 @@ void testrelprime()
   tassert(relprime(6)==5);
 }
 
+void testmanygcd()
+{
+}
+
 void testmanysum()
 {
   manysum ms,negms;
@@ -1010,6 +1014,8 @@ int main(int argc, char *argv[])
     testmatrix();
   if (shoulddo("relprime"))
     testrelprime();
+  if (shoulddo("manygcd"))
+    testmanygcd();
   if (shoulddo("manysum"))
     testmanysum(); // >2 s
   if (shoulddo("ldecimal"))
