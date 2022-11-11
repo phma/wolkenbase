@@ -584,13 +584,33 @@ void WolkenCanvas::writeFile()
   int i;
   map<int,size_t>::iterator j;
   vector<int> formats;
+  vector<double> xSc,ySc,zSc,xOf,yOf,zOf;
+  xyz sca,ofs;
+  double toler=INFINITY;
   ThreadAction ta;
   waitForThreads(TH_PAUSE);
   cout<<"Classified points:\n";
   for (j=classTotals.begin();j!=classTotals.end();++j)
     cout<<j->first<<' '<<j->second<<endl;
   for (i=0;i<inFileHeaders.size();i++)
+  {
     formats.push_back(inFileHeaders[i].getPointFormat());
+    sca=inFileHeaders[i].getScale();
+    ofs=inFileHeaders[i].getOffset();
+    xSc.push_back(sca.getx());
+    ySc.push_back(sca.gety());
+    zSc.push_back(sca.getz());
+    xOf.push_back(ofs.getx());
+    yOf.push_back(ofs.gety());
+    zOf.push_back(ofs.getz());
+    if (fabs(sca.getx())<toler)
+      toler=fabs(sca.getx());
+    if (fabs(sca.gety())<toler)
+      toler=fabs(sca.gety());
+    if (fabs(sca.getz())<toler)
+      toler=fabs(sca.getz());
+  }
+  toler/=1e6;
   cloudOutput.pointFormat=joinPointFormat(formats);
   cloudOutput.minCor=xyz(br.left(),br.bottom(),br.low());
   cloudOutput.maxCor=xyz(br.right(),br.top(),br.high());
