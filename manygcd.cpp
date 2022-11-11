@@ -22,6 +22,7 @@
 
 #include <cmath>
 #include "manygcd.h"
+#include "manysum.h"
 using namespace std;
 
 void bubbleup(vector<double> &numbers)
@@ -70,6 +71,6 @@ double manygcd(vector<double> numbers,double toler)
     }
     bubbleup(numbers);
   }
-  return numbers.size()?numbers[0]:0;
+  return numbers.size()?pairwisesum(numbers)/numbers.size():0;
 }
 

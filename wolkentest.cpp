@@ -527,7 +527,7 @@ void testmanygcd()
     numbers.push_back(n/1e3);
   for (n=16807,i=5;i<12;i++,n*=7)
     numbers.push_back(n/1e3);
-  cout<<"manygcd="<<manygcd(numbers,1e-9)<<endl;
+  cout<<"manygcd="<<ldecimal(manygcd(numbers,1e-9))<<endl;
 }
 
 void testmanysum()
