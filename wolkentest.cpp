@@ -518,6 +518,7 @@ void testrelprime()
 void testmanygcd()
 {
   vector<double> numbers;
+  double g;
   int i,n;
   for (n=16384,i=14;i<32;i++,n*=2)
     numbers.push_back(n/1e3);
@@ -527,7 +528,9 @@ void testmanygcd()
     numbers.push_back(n/1e3);
   for (n=16807,i=5;i<12;i++,n*=7)
     numbers.push_back(n/1e3);
-  cout<<"manygcd="<<ldecimal(manygcd(numbers,1e-9))<<endl;
+  g=manygcd(numbers,1e-9);
+  cout<<"manygcd="<<ldecimal(g)<<endl;
+  tassert(fabs(g-0.001)<1e-9);
 }
 
 void testmanysum()
