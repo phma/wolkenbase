@@ -24,6 +24,7 @@
 #define LAS_H
 #include <string>
 #include <iostream>
+#include <deque>
 #include "config.h"
 #include "point.h"
 
@@ -146,11 +147,11 @@ public:
   void setPointFormat(int format);
   void setScale(xyz minCor,xyz maxCor,xyz scale);
   void setMinMax(xyz minCor,xyz maxCor);
-  xyz getScale()
+  xyz getScale() const
   {
     return xyz(xScale*unit,yScale*unit,zScale*unit);
   }
-  xyz getOffset()
+  xyz getOffset() const
   {
     return xyz(xOffset*unit,yOffset*unit,zOffset*unit);
   }
@@ -184,5 +185,7 @@ public:
   LasPoint readPoint(size_t num);
   void writePoint(const LasPoint &pnt);
 };
+
+xyz combineScales(const std::deque<LasHeader> &headers);
 
 #endif

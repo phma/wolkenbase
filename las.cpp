@@ -28,6 +28,7 @@
 #include "binio.h"
 #include "fileio.h"
 #include "angle.h"
+#include "manygcd.h"
 
 const int MASK_GPSTIME=0x7fa; // GPS time takes 8 bytes
 const int MASK_RGB=    0x5ac; // RGB takes 6 bytes
@@ -886,4 +887,44 @@ void LasHeader::writePoint(const LasPoint &pnt)
     nPoints[pnt.returnNum]++;
   writePos+=pointLength;
   startExtendedVariableLength=writePos;
+}
+
+double combine1Scale(vector<double> &scales,vector<double> &offsets)
+{
+  int i,j;
+  double toler=INFINITY,scalegcd,offsetgcd,ret=0;
+  for (i=0;i<scales.size();i++)
+    if (fabs(scales[i])<toler)
+      toler=fabs(scales[i]);
+  toler/=1e6;
+  scalegcd=manygcd(scales,toler);
+  offsetgcd=manygcd(offsets,toler);
+  if (offsetgcd>10.5*scalegcd && fabs(offsetgcd/scalegcd-rint(offsetgcd/scalegcd))<1e-6)
+    ret=scalegcd;
+  for (i=10;i>0;i--)
+    for (j=10;j>0;j--)
+      if (fabs(scalegcd*i-offsetgcd*j)<toler)
+	ret=scalegcd/j;
+  return ret;
+}
+
+xyz combineScales(const deque<LasHeader> &headers)
+{
+  vector<double> xscales,xoffsets,yscales,yoffsets,zscales,zoffsets;
+  xyz s,o;
+  int i;
+  for (i=0;i<headers.size();i++)
+  {
+    s=headers[i].getScale();
+    o=headers[i].getOffset();
+    xscales.push_back(s.getx());
+    xoffsets.push_back(o.getx());
+    yscales.push_back(s.gety());
+    yoffsets.push_back(o.gety());
+    zscales.push_back(s.getz());
+    zoffsets.push_back(o.getz());
+  }
+  return xyz(combine1Scale(xscales,xoffsets),
+	     combine1Scale(yscales,yoffsets),
+	     combine1Scale(zscales,zoffsets));
 }
