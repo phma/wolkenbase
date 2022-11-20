@@ -614,7 +614,7 @@ void WolkenCanvas::writeFile()
   cloudOutput.pointFormat=joinPointFormat(formats);
   cloudOutput.minCor=xyz(br.left(),br.bottom(),br.low());
   cloudOutput.maxCor=xyz(br.right(),br.top(),br.high());
-  cloudOutput.scale=xyz(0,0,0); // TODO check the inFileHeaders for same scale and offset
+  cloudOutput.scale=combineScales(inFileHeaders);
   cloudOutput.nInputFiles=inFileHeaders.size();
   cloudOutput.pointsPerFile=10000000;
   cloudOutput.unit=lengthUnit;
