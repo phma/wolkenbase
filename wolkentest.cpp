@@ -916,6 +916,15 @@ void testsplitfile()
   test1splitfile(5779,5762);
 }
 
+const short prec[7]=
+{
+  1024,972,1000,1029,1089,1001,1071
+};
+/* The LCM of these numbers is 285290957952000, so the GCD of their reciprocals
+ * is too small to be used as a scale. This is to test setting the scale
+ * when combining several files into one point cloud.
+ */
+
 void testbigcloud()
 /* Creates a big point cloud in seven files to test loading of big point clouds.
  * The density is set so that, except at the edges, each cube containing
@@ -945,7 +954,7 @@ void testbigcloud()
     headers[i].openWrite("big"+to_string(i)+".las",SI_TEST);
     headers[i].setVersion(1,4);
     headers[i].setPointFormat(6);
-    headers[i].setScale(xyz(-radius,-radius,0.03),xyz(radius,radius,0.63),xyz(0,0,0));
+    headers[i].setScale(xyz(-radius,-radius,0.03),xyz(radius,radius,0.63),xyz(1./prec[i],1./prec[i],1./prec[i]));
     for (j=0;j<totalPoints/7;j++)
       headers[i].writePoint(testCloud[i*(totalPoints/7)+j]);
     headers[i].writeHeader();
