@@ -908,7 +908,7 @@ double combine1Scale(vector<double> &scales,vector<double> &offsets)
   toler/=1e6;
   scalegcd=manygcd(scales,toler);
   offsetgcd=manygcd(offsets,toler);
-  if (offsetgcd>10.5*scalegcd && fabs(offsetgcd/scalegcd-rint(offsetgcd/scalegcd))<1e-6)
+  if ((offsetgcd>10.5*scalegcd || offsetgcd==0) && fabs(offsetgcd/scalegcd-rint(offsetgcd/scalegcd))<1e-6)
     ret=scalegcd;
   for (i=10;i>0;i--)
     for (j=10;j>0;j--)
