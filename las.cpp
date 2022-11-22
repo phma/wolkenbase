@@ -641,30 +641,34 @@ void LasHeader::setScale(xyz minCor,xyz maxCor,xyz scale)
  * minCor, maxCor, and scale are in meters. Set unit before setting scale.
  */
 {
+  double xMinScale,yMinScale,zMinScale;
+  xMinScale=(maxCor.getx()-minCor.getx())/4132485216.;
   xOffset=(minCor.getx()+maxCor.getx())/2/unit;
-  if (scale.getx()!=0 && isfinite(scale.getx()))
+  if (scale.getx()>xMinScale && isfinite(scale.getx()))
   {
     xScale=scale.getx()/unit;
     xOffset=rint(xOffset/xScale)*xScale;
   }
   else
-    xScale=(maxCor.getx()-minCor.getx())/4132485216./unit;
+    xScale=xMinScale/unit;
+  yMinScale=(maxCor.gety()-minCor.gety())/4132485216.;
   yOffset=(minCor.gety()+maxCor.gety())/2/unit;
-  if (scale.gety()!=0 && isfinite(scale.gety()))
+  if (scale.gety()>yMinScale && isfinite(scale.gety()))
   {
     yScale=scale.gety()/unit;
     yOffset=rint(yOffset/yScale)*yScale;
   }
   else
-    yScale=(maxCor.gety()-minCor.gety())/4132485216./unit;
+    yScale=yMinScale/unit;
+  zMinScale=(maxCor.getz()-minCor.getz())/4132485216.;
   zOffset=(minCor.getz()+maxCor.getz())/2/unit;
-  if (scale.getz()!=0 && isfinite(scale.getz()))
+  if (scale.getz()>zMinScale && isfinite(scale.getz()))
   {
     zScale=scale.getz()/unit;
     zOffset=rint(zOffset/zScale)*zScale;
   }
   else
-    zScale=(maxCor.getz()-minCor.getz())/4132485216./unit;
+    zScale=zMinScale/unit;
 }
 
 void LasHeader::setMinMax(xyz minCor,xyz maxCor)
