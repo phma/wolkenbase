@@ -196,7 +196,7 @@ void Octree::clear()
   }
 }
 
-long long Octree::findBlock(xyz pnt)
+int64_t Octree::findBlock(xyz pnt)
 // Returns the disk block number that contains pnt, or -1 if none.
 {
   int xbit,ybit,zbit,i;
@@ -231,10 +231,10 @@ Cube Octree::findCube(xyz pnt)
     return ((Octree *)subi)->findCube(pnt);
 }
 
-vector<long long> Octree::findBlocks(const Shape &sh)
+vector<int64_t> Octree::findBlocks(const Shape &sh)
 // Find all blocks that intersect the shape.
 {
-  vector<long long> ret,part;
+  vector<int64_t> ret,part;
   int i,j;
   if (sh.intersect(cube()))
     for (i=0;i<8;i++)
@@ -250,7 +250,7 @@ vector<long long> Octree::findBlocks(const Shape &sh)
   return ret;
 }
 
-void Octree::setBlock(xyz pnt,long long blk)
+void Octree::setBlock(xyz pnt,int64_t blk)
 {
   int xbit,ybit,zbit,i;
   xbit=pnt.getx()>=center.getx();
@@ -505,7 +505,7 @@ bool OctBuffer::iOwn()
   return ret;
 }
 
-void OctBuffer::read(long long block)
+void OctBuffer::read(int64_t block)
 {
   int i,f=block%store->nFiles,b=block/store->nFiles;
   int nPoints=0;
@@ -562,17 +562,16 @@ void OctBuffer::update()
 {
   store->nowUsedMutex.lock();
   store->nowUsed=clk.now().time_since_epoch().count()
-		*chrono::steady_clock::period::num // num is 1, den is 1e9
-		/(chrono::steady_clock::period::den/1000);
+		 *store->clockNum/store->clockDen;
   if (lastUsed+618<store->nowUsed)
   {
-    pair<multimap<long long,int>::iterator,multimap<long long,int>::iterator> range=store->lastUsedMap.equal_range(lastUsed);
+    pair<multimap<int64_t,int>::iterator,multimap<int64_t,int>::iterator> range=store->lastUsedMap.equal_range(lastUsed);
     while (range.first!=range.second && range.first->second!=bufferNumber)
       ++range.first;
     if (range.first!=range.second)
       store->lastUsedMap.erase(range.first);
     lastUsed=store->nowUsed;
-    store->lastUsedMap.insert(pair<long long,int>(lastUsed,bufferNumber));
+    store->lastUsedMap.insert(pair<int64_t,int>(lastUsed,bufferNumber));
   }
   store->nowUsedMutex.unlock();
 }
@@ -703,6 +702,20 @@ OctStore::OctStore()
   nowUsed=0;
   nBlocks=0;
   ignoreDupes=false;
+  clockNum=chrono::steady_clock::period::num;
+  clockDen=chrono::steady_clock::period::den;
+  // count()*clockNum/clockDen is in seconds
+  for (i=0;i<3;i++)
+    if (clockDen%5==0)
+      clockDen/=5;
+    else
+      clockNum*=5;
+  for (i=0;i<3;i++)
+    if (clockDen%2==0)
+      clockDen/=2;
+    else
+      clockNum*=2;
+  // count()*clockNum/clockDen is in milliseconds
   for (i=0;i<9;i++)
   {
     blocks[i].store=this;
@@ -862,12 +875,12 @@ void OctStore::put(LasPoint pnt,bool splitting)
     cout<<"Block number changed\n";
 }
 
-map<int,size_t> OctStore::countClasses(long long block)
+map<int,size_t> OctStore::countClasses(int64_t block)
 {
   return getBlock(block)->countClasses();
 }
 
-vector<LasPoint> OctStore::getAll(long long block)
+vector<LasPoint> OctStore::getAll(int64_t block)
 {
   return getBlock(block)->getAll();
 }
@@ -937,7 +950,7 @@ uint64_t OctStore::countPoints()
   return ret;
 }
 
-void OctStore::updateCount(long long block,int nPoints)
+void OctStore::updateCount(int64_t block,int nPoints)
 {
   uint64_t group=block/256;
   countMutex.lock();
@@ -952,7 +965,7 @@ void OctStore::updateCount(long long block,int nPoints)
 int OctStore::leastRecentlyUsed(int thread,int nthreads)
 {
   int i,age,maxAge=-1,ret=-1;
-  map<long long,int>::iterator j;
+  map<int64_t,int>::iterator j;
   if (thread<0) // called by dump in the main thread after worker threads have finished
   {
     thread=0;
@@ -1001,7 +1014,7 @@ int OctStore::newBlock()
   return i;
 }
 
-OctBuffer *OctStore::getBlock(long long block,bool mustExist)
+OctBuffer *OctStore::getBlock(int64_t block,bool mustExist)
 {
   streampos fileSize;
   int lru=-1,bufnum=-1,i=0,f=block%nFiles,b=block/nFiles;
@@ -1137,7 +1150,7 @@ OctBuffer *OctStore::getBlock(xyz key,bool writing)
 // Leaves the cube locked.
 {
   OctBuffer *ret;
-  long long blknum;
+  int64_t blknum;
   Cube cube;
   bool gotCubeLock=false;
   while (!gotCubeLock)
@@ -1176,7 +1189,7 @@ OctBuffer *OctStore::getBlock(xyz key,bool writing)
 void OctStore::clearBlocks()
 // Do this before clearing the octree.
 {
-  long long i;
+  int64_t i;
   OctBuffer *buf;
   for (i=0;i<nBlocks;i++)
   {
@@ -1200,7 +1213,7 @@ bool lowerThan(const LasPoint &a,const LasPoint &b)
 
 vector<LasPoint> OctStore::pointsIn(const Shape &sh,bool sorted)
 {
-  vector<long long> blockList=octRoot.findBlocks(sh);
+  vector<int64_t> blockList=octRoot.findBlocks(sh);
   OctBuffer *buf;
   Cube cube;
   vector<LasPoint> ret;
@@ -1230,7 +1243,7 @@ vector<LasPoint> OctStore::pointsIn(const Shape &sh,bool sorted)
 
 uint64_t OctStore::countPointsIn(const Shape &sh)
 {
-  vector<long long> blockList=octRoot.findBlocks(sh);
+  vector<int64_t> blockList=octRoot.findBlocks(sh);
   OctBuffer *buf;
   Cube cube;
   uint64_t ret=0;
@@ -1256,7 +1269,7 @@ array<double,2> OctStore::hiLoPointsIn(const Shape &sh)
  * Caller is responsible for disowning.
  */
 {
-  vector<long long> blockList=octRoot.findBlocks(sh);
+  vector<int64_t> blockList=octRoot.findBlocks(sh);
   OctBuffer *buf;
   double hi=-INFINITY,lo=INFINITY;
   array<double,2> ret;
@@ -1279,7 +1292,7 @@ array<double,2> OctStore::hiLoPointsIn(const Shape &sh)
   return ret;
 }
 
-void OctStore::split(long long block,xyz camelStraw)
+void OctStore::split(int64_t block,xyz camelStraw)
 {
   vector<LasPoint> tempPoints;
   OctBuffer *currentBlock;

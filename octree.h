@@ -3,7 +3,7 @@
 /* octree.h - octrees                                 */
 /*                                                    */
 /******************************************************/
-/* Copyright 2019-2021 Pierre Abbat.
+/* Copyright 2019-2022 Pierre Abbat.
  * This file is part of Wolkenbase.
  * 
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -58,10 +58,10 @@ public:
   Octree();
   ~Octree();
   void clear();
-  long long findBlock(xyz pnt);
+  int64_t findBlock(xyz pnt);
   Cube findCube(xyz pnt);
-  std::vector<long long> findBlocks(const Shape &sh);
-  void setBlock(xyz pnt,long long blk);
+  std::vector<int64_t> findBlocks(const Shape &sh);
+  void setBlock(xyz pnt,int64_t blk);
   void sizeFit(std::vector<xyz> pnts);
   void split(xyz pnt);
   xyz getCenter()
@@ -101,7 +101,7 @@ public:
   void own();
   bool ownAlone();
   bool iOwn();
-  void read(long long block);
+  void read(int64_t block);
   void update();
   void flush();
   void clear();
@@ -132,8 +132,8 @@ private:
   bool dirty; // The contents of the buffer may differ from the contents of the block.
   bool inTransit; // The correspondence between buffer and block is being changed.
   int bufferNumber;
-  long long blockNumber;
-  long long lastUsed;
+  int64_t blockNumber;
+  int64_t lastUsed;
   double low,high;
   std::set<int> owningThread;
   std::vector<LasPoint> points;
@@ -167,8 +167,8 @@ public:
   void close();
   LasPoint get(xyz key);
   void put(LasPoint pnt,bool splitting=false);
-  std::map<int,size_t> countClasses(long long block);
-  std::vector<LasPoint> getAll(long long block);
+  std::map<int,size_t> countClasses(int64_t block);
+  std::vector<LasPoint> getAll(int64_t block);
   void dump(std::ofstream &file);
   void plot(PostScript &ps);
   void setIgnoreDupes(bool ig);
@@ -188,24 +188,25 @@ private:
   std::mutex transitMutex; // lock when setting or clearing inTransit
   std::shared_mutex bufferMutex; // lock when adding new buffers to store
   std::mutex countMutex; // lock when growing blockPointCount and blockGroupCount
-  long long nowUsed;
+  int64_t nowUsed;
+  uint64_t clockNum,clockDen;
   int nFiles;
   uint32_t blockGroup;
   bool ignoreDupes;
   int leastRecentlyUsed(int thread,int nthreads);
-  long long nBlocks;
+  int64_t nBlocks;
   int newBlock();
-  void updateCount(long long block,int nPoints);
-  OctBuffer *getBlock(long long block,bool mustExist=false);
+  void updateCount(int64_t block,int nPoints);
+  OctBuffer *getBlock(int64_t block,bool mustExist=false);
   OctBuffer *getBlock(xyz key,bool writing);
   std::map<int,OctBuffer> blocks; // buffer number -> block
   std::map<int,int> revBlocks; // block number -> buffer number
-  std::multimap<long long,int> lastUsedMap; // time counter -> buffer number
+  std::multimap<int64_t,int> lastUsedMap; // time counter -> buffer number
   std::map<int,std::vector<int> > ownMap; // thread -> buffer number
   std::deque<uint16_t> blockPointCount; // block number -> number of points
   std::deque<uint32_t> blockGroupCount; // 256 blocks group -> total number of points
   uint64_t totalPoints;
-  void split(long long block,xyz camelStraw);
+  void split(int64_t block,xyz camelStraw);
   friend class OctBuffer;
   friend class Octree;
 };

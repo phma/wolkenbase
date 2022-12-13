@@ -145,7 +145,7 @@ void testflat()
   ofstream dumpFile("flat.dump");
   PostScript ps;
   xy center=9*randomInCircle();
-  vector<long long> blocks;
+  vector<int64_t> blocks;
   vector<LasPoint> points;
   int i;
   Cylinder cyl(center,1);
