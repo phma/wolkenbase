@@ -3,7 +3,7 @@
 /* ldecimal.cpp - lossless decimal representation     */
 /*                                                    */
 /******************************************************/
-/* Copyright 2019 Pierre Abbat.
+/* Copyright 2019,2023 Pierre Abbat.
  * This file is part of Wolkenbase.
  * 
  * Wolkenbase is free software: you can redistribute it and/or modify
@@ -50,6 +50,8 @@ string ldecimal(double x,double toler)
   }
   else
     iexp=DBL_DIG-1;
+  if (iexp>DBL_DIG)
+    iexp=DBL_DIG+1;
   h=-1;
   i=iexp;
   while (true)
