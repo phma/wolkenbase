@@ -23,6 +23,7 @@
 #include <cassert>
 #include <cstring>
 #include <ctime>
+#include <cstdint>
 #include "config.h"
 #include "las.h"
 #include "binio.h"
